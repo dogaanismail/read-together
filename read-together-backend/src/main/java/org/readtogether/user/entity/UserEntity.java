@@ -8,6 +8,7 @@ import org.readtogether.common.enums.TokenClaims;
 import org.readtogether.common.model.auth.enums.UserStatus;
 import org.readtogether.common.model.auth.enums.UserType;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -49,6 +50,38 @@ public class UserEntity extends BaseEntity {
     @Builder.Default
     @Enumerated(EnumType.STRING)
     private UserStatus userStatus = ACTIVE;
+
+    @Column(name = "username", unique = true, length = 50)
+    private String username;
+
+    @Column(name = "profile_picture_url", length = 500)
+    private String profilePictureUrl;
+
+    @Column(name = "bio", columnDefinition = "TEXT")
+    private String bio;
+
+    @Column(name = "reading_streak")
+    @Builder.Default
+    private int readingStreak = 0;
+
+    @Column(name = "total_sessions")
+    @Builder.Default
+    private long totalSessions = 0L;
+
+    @Column(name = "total_reading_time_seconds")
+    @Builder.Default
+    private Long totalReadingTimeSeconds = 0L;
+
+    @Column(name = "longest_streak")
+    @Builder.Default
+    private Integer longestStreak = 0;
+
+    @Column(name = "total_active_days")
+    @Builder.Default
+    private Long totalActiveDays = 0L;
+
+    @Column(name = "last_activity_date")
+    private LocalDateTime lastActivityDate;
 
     public Map<String, Object> getClaims() {
 

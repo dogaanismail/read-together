@@ -11,6 +11,7 @@ import org.readtogether.user.entity.UserEntity;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import static org.readtogether.readingroom.common.enums.ApprovalStatus.APPROVED;
 import static org.readtogether.readingroom.common.enums.ParticipantStatus.JOINED;
 
 @Getter
@@ -62,7 +63,7 @@ public class ReadingRoomParticipantEntity extends BaseEntity {
     @Column(name = "approval_status")
     @Enumerated(EnumType.STRING)
     @Builder.Default
-    private ApprovalStatus approvalStatus = ApprovalStatus.APPROVED;
+    private ApprovalStatus approvalStatus = APPROVED;
 
     @Column(name = "approved_by")
     private UUID approvedBy;

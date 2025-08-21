@@ -8,6 +8,8 @@ import org.readtogether.readingroom.common.enums.TranscriptionLanguage;
 
 import java.util.UUID;
 
+import static org.readtogether.readingroom.common.enums.TranscriptionLanguage.ENGLISH;
+
 @Getter
 @Setter
 @SuperBuilder
@@ -69,7 +71,7 @@ public class ReadingRoomSettingsEntity extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "transcription_language")
     @Builder.Default
-    private TranscriptionLanguage transcriptionLanguage = TranscriptionLanguage.ENGLISH;
+    private TranscriptionLanguage transcriptionLanguage = ENGLISH;
 
     @Column(name = "enable_speaker_identification")
     @Builder.Default

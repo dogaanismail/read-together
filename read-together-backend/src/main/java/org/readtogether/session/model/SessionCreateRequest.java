@@ -21,9 +21,17 @@ public class SessionCreateRequest {
     @NotNull(message = "Media type is required")
     private SessionEntity.MediaType mediaType;
 
-    private Boolean isPublic = false;
+    private boolean isPublic = false;
 
     private UUID readingRoomId;
 
     private String tags;
+
+    private String bookTitle;
+
+    private String language;
+
+    private boolean isLive = false;
+
+    private String authorName;
 }

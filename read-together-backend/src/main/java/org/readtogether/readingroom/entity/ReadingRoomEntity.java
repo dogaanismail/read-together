@@ -37,7 +37,7 @@ public class ReadingRoomEntity extends BaseEntity {
 
     @Column(name = "max_participants")
     @Builder.Default
-    private Integer maxParticipants = 12;
+    private int maxParticipants = 12;
 
     @Column(name = "is_public")
     @Builder.Default

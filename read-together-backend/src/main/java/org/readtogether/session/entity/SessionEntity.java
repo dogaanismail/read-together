@@ -69,6 +69,10 @@ public class SessionEntity extends BaseEntity {
     @Builder.Default
     private long likeCount = 0L;
 
+    @Column(name = "comment_count")
+    @Builder.Default
+    private long commentCount = 0L;
+
     @Column(name = "reading_room_id")
     private UUID readingRoomId;
 
@@ -77,6 +81,22 @@ public class SessionEntity extends BaseEntity {
 
     @Column(name = "tags")
     private String tags;
+
+    @Column(name = "thumbnail_url", length = 500)
+    private String thumbnailUrl;
+
+    @Column(name = "book_title", length = 200)
+    private String bookTitle;
+
+    @Column(name = "language", length = 50)
+    private String language;
+
+    @Column(name = "is_live")
+    @Builder.Default
+    private boolean isLive = false;
+
+    @Column(name = "author_name", length = 100)
+    private String authorName;
 
     public enum MediaType {
         AUDIO, VIDEO
