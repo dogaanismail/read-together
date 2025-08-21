@@ -1,0 +1,20 @@
+services:
+
+  read_together_app_db:
+    image: postgres:16.2
+    restart: always
+    environment:
+      POSTGRES_USER: default
+      POSTGRES_PASSWORD: default
+      POSTGRES_DB: read-together-app-db
+    ports:
+      - "5433:5432"
+    networks:
+      - host
+
+networks:
+  host:
+    driver: bridge
+
+volumes:
+  read_together_app_db:

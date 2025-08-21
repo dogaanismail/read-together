@@ -1,3 +1,5 @@
 rootProject.name = 'read-together-monorepo'
 
 include 'read-together-backend'
+
+include 'read-together-db-migration-changelog'

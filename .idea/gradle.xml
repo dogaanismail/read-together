@@ -10,6 +10,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/read-together-backend" />
+            <option value="$PROJECT_DIR$/read-together-db-migration-changelog" />
           </set>
         </option>
       </GradleProjectSettings>
