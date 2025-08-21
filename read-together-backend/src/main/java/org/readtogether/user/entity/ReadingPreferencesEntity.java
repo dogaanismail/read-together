@@ -81,7 +81,7 @@ public class ReadingPreferencesEntity extends BaseEntity {
         SLOW,      // 0.75x
         NORMAL,    // 1x
         FAST,      // 1.25x
-        FASTER     // 1.5x
+        FASTER;     // 1.5x
 
         @JsonCreator
         public static ReadingSpeed fromString(String value) {
