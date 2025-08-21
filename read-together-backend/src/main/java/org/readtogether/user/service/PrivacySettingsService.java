@@ -6,7 +6,7 @@ import org.readtogether.user.entity.PrivacySettingsEntity;
 import org.readtogether.user.factory.PrivacySettingsFactory;
 import org.readtogether.user.model.PrivacySettingsUpdateRequest;
 import org.readtogether.user.repository.PrivacySettingsRepository;
-import org.readtogether.user.util.PrivacySettingsUtils;
+import org.readtogether.user.utils.PrivacySettingsUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

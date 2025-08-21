@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.readtogether.session.entity.SessionEntity;
 import org.readtogether.infrastructure.websocket.factory.WebSocketNotificationFactory;
-import org.readtogether.infrastructure.websocket.util.WebSocketUtils;
+import org.readtogether.infrastructure.websocket.utils.WebSocketUtils;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
