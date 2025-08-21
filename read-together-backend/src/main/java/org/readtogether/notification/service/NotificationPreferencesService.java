@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.readtogether.notification.entity.NotificationPreferenceEntity;
 import org.readtogether.notification.entity.NotificationPreferenceType;
 import org.readtogether.notification.factory.NotificationPreferencesFactory;
+import org.readtogether.notification.model.NotificationPreferencesUpdateRequest;
 import org.readtogether.notification.repository.NotificationPreferencesRepository;
 import org.readtogether.notification.util.NotificationPreferencesUtils;
 import org.springframework.stereotype.Service;
@@ -24,18 +25,19 @@ public class NotificationPreferencesService {
     public NotificationPreferenceEntity getUserPreferences(UUID userId) {
 
         return preferencesRepository.findByUserId(userId)
-                .orElseGet(() -> createDefaultPreferences(userId));
+                .orElse(NotificationPreferencesFactory.createDefaultPreferences(userId));
     }
 
     @Transactional
     public NotificationPreferenceEntity updatePreferences(
             UUID userId,
-            NotificationPreferenceEntity preferences) {
+            NotificationPreferencesUpdateRequest request) {
 
         NotificationPreferenceEntity existing = preferencesRepository.findByUserId(userId)
-                .orElse(NotificationPreferencesFactory.createFromUpdateRequest(userId, preferences));
+                .orElse(NotificationPreferencesFactory.createFromDto(userId, request));
 
-        NotificationPreferencesUtils.applyUpdates(existing, preferences);
+        NotificationPreferenceEntity updates = NotificationPreferencesFactory.createFromDto(userId, request);
+        NotificationPreferencesUtils.applyUpdates(existing, updates);
         existing.setUpdatedAt(Instant.now());
 
         return preferencesRepository.save(existing);
@@ -74,7 +76,7 @@ public class NotificationPreferencesService {
             NotificationPreferenceType preferenceType) {
 
         NotificationPreferenceEntity preferences = preferencesRepository.findByUserId(userId)
-                .orElseGet(() -> createDefaultPreferencesInternal(userId));
+                .orElse(NotificationPreferencesFactory.createDefaultPreferences(userId));
         return NotificationPreferencesUtils.shouldSendEmailNotification(preferences, preferenceType);
     }
 
@@ -83,7 +85,7 @@ public class NotificationPreferencesService {
             NotificationPreferenceType preferenceType) {
 
         NotificationPreferenceEntity preferences = preferencesRepository.findByUserId(userId)
-                .orElseGet(() -> createDefaultPreferencesInternal(userId));
+                .orElse(NotificationPreferencesFactory.createDefaultPreferences(userId));
         return NotificationPreferencesUtils.shouldSendPushNotification(preferences, preferenceType);
     }
 
