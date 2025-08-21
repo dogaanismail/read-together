@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.readtogether.common.utils.SecurityUtils;
 import org.readtogether.common.utils.StoragePathUtils;
+import org.readtogether.feed.service.FeedService;
 import org.readtogether.infrastructure.storage.service.StorageService;
 import org.readtogether.session.entity.SessionEntity;
 import org.readtogether.session.factory.SessionEntityFactory;
@@ -34,6 +35,7 @@ public class SessionService {
 
     private final SessionRepository sessionRepository;
     private final StorageService storageService;
+    private final FeedService feedService;
 
     @Transactional
     public CompletableFuture<SessionResponse> createSessionAsync(
@@ -51,6 +53,12 @@ public class SessionService {
         return processFileUploadAsync(sessionId, file)
                 .thenApply(mediaUrl -> {
                     SessionEntity updatedSession = updateSessionAfterUpload(sessionId, mediaUrl);
+
+                    // Create feed item when session is completed
+                    if (updatedSession.getProcessingStatus() == SessionEntity.ProcessingStatus.COMPLETED) {
+                        createFeedItemForSession(updatedSession);
+                    }
+
                     return SessionResponseFactory.createFromEntity(updatedSession);
                 })
                 .exceptionally(ex -> {
@@ -75,6 +83,10 @@ public class SessionService {
         session.setProcessingStatus(SessionEntity.ProcessingStatus.COMPLETED);
 
         session = sessionRepository.save(session);
+
+        // Create feed item immediately for synchronous creation
+        createFeedItemForSession(session);
+
         return SessionResponseFactory.createFromEntity(session);
     }
 
@@ -254,5 +266,17 @@ public class SessionService {
             session.setProcessingStatus(status);
             sessionRepository.save(session);
         });
+    }
+
+    private void createFeedItemForSession(SessionEntity session) {
+        try {
+            if (session.isPublic()) {
+                feedService.createFeedItemFromSession(session);
+                log.info("Created feed item for session: {}", session.getId());
+            }
+        } catch (Exception e) {
+            log.error("Failed to create feed item for session: {}", session.getId(), e);
+            // Don't fail the session creation if feed item creation fails
+        }
     }
 }

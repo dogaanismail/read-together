@@ -50,6 +50,26 @@ public class FeedService {
     }
 
     @Transactional(readOnly = true)
+    public Page<FeedItemResponse> getFeedWithFilters(
+            FeedItemEntity.FeedItemType itemType,
+            String search,
+            String language,
+            String sortBy,
+            String sortDirection,
+            Pageable pageable) {
+
+        // This method should be implemented with custom repository queries
+        // For now, using basic filtering - you'll need to implement custom queries
+        if (itemType != null) {
+            return feedRepository.findByItemTypeAndIsPublicTrueOrderByCreatedAtDesc(itemType, pageable)
+                .map(FeedItemResponseFactory::createFromEntity);
+        }
+
+        return feedRepository.findByIsPublicTrueOrderByCreatedAtDesc(pageable)
+            .map(FeedItemResponseFactory::createFromEntity);
+    }
+
+    @Transactional(readOnly = true)
     public Page<FeedItemResponse> getTrendingFeed(Pageable pageable) {
 
         Instant since = Instant.now().minus(7, ChronoUnit.DAYS);
@@ -102,5 +122,26 @@ public class FeedService {
     public void unlikeFeedItem(UUID feedItemId) {
 
         feedRepository.decrementLikeCount(feedItemId);
+    }
+
+    @Transactional
+    public FeedItemEntity createFeedItemFromSession(SessionEntity session) {
+        log.info("Creating feed item for session: {}", session.getId());
+
+        FeedItemEntity feedItem = FeedItemEntity.builder()
+            .userId(session.getUserId())
+            .itemType(FeedItemEntity.FeedItemType.SESSION)
+            .referenceId(session.getId())
+            .title(session.getTitle())
+            .description(session.getDescription())
+            .mediaUrl(session.getMediaUrl())
+            .thumbnailUrl(session.getThumbnailUrl())
+            .isPublic(session.isPublic())
+            .viewCount(0L)
+            .likeCount(0L)
+            .commentCount(0L)
+            .build();
+
+        return feedRepository.save(feedItem);
     }
 }

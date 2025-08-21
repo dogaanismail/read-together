@@ -25,16 +25,22 @@ public class FeedController {
     public ResponseEntity<Page<FeedItemResponse>> getFeed(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
-            @RequestParam(required = false) String type) {
+            @RequestParam(required = false) String type,
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) String language,
+            @RequestParam(required = false) String sortBy,
+            @RequestParam(defaultValue = "desc") String sortDirection) {
 
         Pageable pageable = PageRequest.of(page, size);
         Page<FeedItemResponse> feedItems;
 
-        if (type != null) {
+        if (type != null || search != null || language != null) {
             try {
-                FeedItemEntity.FeedItemType itemType = FeedItemEntity.FeedItemType.valueOf(type.toUpperCase());
-                feedItems = feedService.getFeedByType(itemType, pageable);
+                FeedItemEntity.FeedItemType itemType = type != null ?
+                    FeedItemEntity.FeedItemType.valueOf(type.toUpperCase()) : null;
+                feedItems = feedService.getFeedWithFilters(itemType, search, language, sortBy, sortDirection, pageable);
             } catch (IllegalArgumentException e) {
+                log.warn("Invalid feed item type: {}", type);
                 return ResponseEntity.badRequest().build();
             }
         } else {

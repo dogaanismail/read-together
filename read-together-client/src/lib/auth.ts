@@ -1,71 +1,21 @@
-// Authentication API service
-const API_BASE_URL = 'http://localhost:8080/api/v1';
-
-export interface LoginRequest {
-  email: string;
-  password: string;
-}
-
-export interface RegisterRequest {
-  email: string;
-  password: string;
-  firstName: string;
-  lastName: string;
-  role: string;
-}
-
-export interface TokenResponse {
-  accessToken: string;
-  refreshToken: string;
-  accessTokenExpiresAt: number;
-  refreshTokenExpiresAt: number;
-}
-
-export interface User {
-  id: string;
-  email: string;
-  firstName: string;
-  lastName: string;
-  username?: string;
-  profilePictureUrl?: string;
-  bio?: string;
-  readingStreak: number;
-  totalSessions: number;
-  totalReadingTimeSeconds: number;
-  longestStreak: number;
-  totalActiveDays: number;
-}
-
-export interface CustomResponse<T> {
-  httpStatus: string;
-  isSuccess: boolean;
-  response: T;
-  time: string;
-}
+// Updated Authentication Service using the new generic API architecture
+import { api } from './api';
+import { LoginRequest, RegisterRequest, TokenResponse, User, ApiResponse } from './api/models';
+import { FEATURE_FLAGS } from './featureFlags';
 
 class AuthService {
-  private getAuthHeaders() {
-    const token = this.getToken();
-    return {
-      'Content-Type': 'application/json',
-      ...(token && { 'Authorization': `Bearer ${token}` })
-    };
-  }
-
   async login(loginRequest: LoginRequest): Promise<TokenResponse> {
-    const response = await fetch(`${API_BASE_URL}/users/login`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(loginRequest),
-    });
-
-    if (!response.ok) {
-      throw new Error('Login failed');
+    if (FEATURE_FLAGS.BYPASS_AUTH) {
+      // Mock token response for UI testing
+      return {
+        accessToken: 'mock-access-token',
+        refreshToken: 'mock-refresh-token',
+        accessTokenExpiresAt: Date.now() + 3600000, // 1 hour
+        refreshTokenExpiresAt: Date.now() + 86400000, // 24 hours
+      };
     }
 
-    const result: CustomResponse<TokenResponse> = await response.json();
+    const result: ApiResponse<TokenResponse> = await api.users.login(loginRequest);
 
     if (result.isSuccess) {
       this.setToken(result.response.accessToken);
@@ -77,19 +27,12 @@ class AuthService {
   }
 
   async register(registerRequest: RegisterRequest): Promise<void> {
-    const response = await fetch(`${API_BASE_URL}/users/register`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(registerRequest),
-    });
-
-    if (!response.ok) {
-      throw new Error('Registration failed');
+    if (FEATURE_FLAGS.BYPASS_AUTH) {
+      console.log('Mock: User registered', registerRequest.email);
+      return;
     }
 
-    const result: CustomResponse<void> = await response.json();
+    const result: ApiResponse<void> = await api.users.register(registerRequest);
 
     if (!result.isSuccess) {
       throw new Error('Registration failed');
@@ -99,13 +42,9 @@ class AuthService {
   async logout(): Promise<void> {
     const refreshToken = this.getRefreshToken();
 
-    if (refreshToken) {
+    if (!FEATURE_FLAGS.BYPASS_AUTH && refreshToken) {
       try {
-        await fetch(`${API_BASE_URL}/users/logout`, {
-          method: 'POST',
-          headers: this.getAuthHeaders(),
-          body: JSON.stringify({ refreshToken }),
-        });
+        await api.users.logout(refreshToken);
       } catch (error) {
         console.warn('Logout request failed, but clearing local storage anyway');
       }
@@ -115,16 +54,11 @@ class AuthService {
   }
 
   async getCurrentUser(): Promise<User> {
-    const response = await fetch(`${API_BASE_URL}/users/current-user`, {
-      method: 'GET',
-      headers: this.getAuthHeaders(),
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to get current user');
+    if (FEATURE_FLAGS.BYPASS_AUTH) {
+      return FEATURE_FLAGS.MOCK_USER_DATA as User;
     }
 
-    const result: CustomResponse<User> = await response.json();
+    const result: ApiResponse<User> = await api.users.getCurrentUser();
 
     if (result.isSuccess) {
       return result.response;
@@ -133,8 +67,19 @@ class AuthService {
     }
   }
 
+  async forgotPassword(email: string): Promise<void> {
+    if (FEATURE_FLAGS.BYPASS_AUTH) {
+      console.log('Mock: Password reset email sent to', email);
+      return;
+    }
+
+    await api.users.forgotPassword(email);
+  }
+
   setToken(token: string): void {
     localStorage.setItem('accessToken', token);
+    // Update API client token
+    api.users.setToken(token);
   }
 
   getToken(): string | null {
@@ -152,6 +97,8 @@ class AuthService {
   removeTokens(): void {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
+    // Clear API client token
+    api.users.clearToken();
   }
 
   isAuthenticated(): boolean {
@@ -160,3 +107,6 @@ class AuthService {
 }
 
 export const authService = new AuthService();
+
+// Re-export types from the API models (no duplication)
+export type { LoginRequest, RegisterRequest, TokenResponse, User } from './api/models';

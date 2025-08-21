@@ -6,6 +6,9 @@ import org.readtogether.session.entity.SessionEntity;
 
 import java.util.UUID;
 
+import static org.readtogether.feed.entity.FeedItemEntity.FeedItemType.ACHIEVEMENT;
+import static org.readtogether.feed.entity.FeedItemEntity.FeedItemType.MILESTONE;
+
 @UtilityClass
 public class FeedItemEntityFactory {
 
@@ -31,7 +34,7 @@ public class FeedItemEntityFactory {
 
         return FeedItemEntity.builder()
                 .userId(userId)
-                .itemType(FeedItemEntity.FeedItemType.ACHIEVEMENT)
+                .itemType(ACHIEVEMENT)
                 .referenceId(achievementId)
                 .title(title)
                 .description(description)
@@ -48,7 +51,7 @@ public class FeedItemEntityFactory {
 
         return FeedItemEntity.builder()
                 .userId(userId)
-                .itemType(FeedItemEntity.FeedItemType.MILESTONE)
+                .itemType(MILESTONE)
                 .referenceId(milestoneId)
                 .title(title)
                 .description(description)

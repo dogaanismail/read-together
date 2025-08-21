@@ -22,7 +22,7 @@ public class SessionEntityFactory {
                 .mediaType(request.getMediaType())
                 .mimeType(file.getContentType())
                 .fileSizeBytes(file.getSize())
-                .isPublic(request.getIsPublic())
+                .isPublic(request.isPublic())
                 .readingRoomId(request.getReadingRoomId())
                 .tags(request.getTags())
                 .build();
@@ -40,7 +40,7 @@ public class SessionEntityFactory {
                 .mediaType(request.getMediaType())
                 .mimeType(file.getContentType())
                 .fileSizeBytes(file.getSize())
-                .isPublic(request.getIsPublic())
+                .isPublic(request.isPublic())
                 .readingRoomId(request.getReadingRoomId())
                 .tags(request.getTags())
                 .processingStatus(SessionEntity.ProcessingStatus.PENDING)
