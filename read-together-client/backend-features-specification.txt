@@ -1,0 +1,93 @@
+STUTTER SUPPORT CIRCLE - BACKEND SPECIFICATION
+==============================================
+
+PROJECT DESCRIPTION
+==================
+Stutter Support Circle is a reading and speech therapy platform that helps people with speech difficulties practice reading together in supportive virtual rooms. Users can join reading sessions, record their progress, chat with others, build personal libraries, and track their improvement through achievements and analytics.
+
+The platform features live reading rooms with audio/video streaming, real-time chat, personal book libraries, progress tracking, social feeds, and gamification elements to encourage consistent practice.
+
+DOMAIN-BASED MONOLITH ARCHITECTURE
+==================================
+
+RECOMMENDED IMPLEMENTATION ORDER:
+1. User Domain (foundation)
+2. Security Domain (authentication)
+3. ReadingRoom Domain (core feature)
+4. Chat Domain (real-time communication)
+5. Session Domain (recordings & media)
+6. Library Domain (book management)
+7. Notification Domain (user engagement)
+8. Achievement Domain (gamification)
+9. Feed Domain (social features)
+10. Settings Domain (configuration)
+
+DOMAINS OVERVIEW
+===============
+
+1. USER DOMAIN
+- User registration, login, profile management
+- Public profiles, account settings, user discovery
+
+Structure: controller/ service/ repository/ entity/ model/
+
+2. SECURITY DOMAIN  
+- JWT authentication, OAuth, password management
+- Session management, privacy controls, two-factor auth
+
+3. READINGROOM DOMAIN
+- Create/join reading rooms, room management
+- Live streaming, participant management, invitations
+
+4. CHAT DOMAIN
+- Real-time messaging, private messages
+- File attachments, voice recordings, message history
+
+5. SESSION DOMAIN
+- Audio/video session recording and playback
+- Session scheduling, progress tracking, AWS S3 storage
+
+6. LIBRARY DOMAIN
+- Book library management, progress tracking
+- Reading goals, statistics, recommendations
+
+7. NOTIFICATION DOMAIN
+- Push/email/in-app notifications
+- Notification preferences and scheduling
+
+8. ACHIEVEMENT DOMAIN
+- Reading badges, streaks, milestones
+- Leaderboards, gamification elements
+
+9. FEED DOMAIN
+- Activity feeds, social posts
+- Content filtering, social interactions
+
+10. SETTINGS DOMAIN
+- App settings, themes, accessibility
+- Localization, user preferences
+
+TECHNOLOGY STACK
+===============
+- Spring Boot 3.x
+- Spring Security 6.x  
+- PostgreSQL + Redis
+- JWT Authentication
+- WebSocket for real-time features
+- AWS S3 for file storage
+- Docker + Maven
+
+API STRUCTURE
+============
+Base URL: /api/v1
+
+- /users (User management)
+- /auth (Authentication)  
+- /rooms (Reading rooms)
+- /chat (Messaging)
+- /sessions (Audio/video sessions)
+- /library (Book management)
+- /notifications (Notifications)
+- /achievements (Badges & streaks)
+- /feed (Social activity)
+- /settings (Configuration)
