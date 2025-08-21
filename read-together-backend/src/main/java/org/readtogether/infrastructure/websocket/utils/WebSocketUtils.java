@@ -1,4 +1,4 @@
-package org.readtogether.infrastructure.websocket.util;
+package org.readtogether.infrastructure.websocket.utils;
 
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;

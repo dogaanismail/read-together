@@ -1,15 +1,12 @@
-package org.readtogether.infrastructure.storage.util;
+package org.readtogether.infrastructure.storage.utils;
 
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
-
-import java.time.Duration;
 
 @Slf4j
 @UtilityClass
 public class S3OperationUtils {
 
-    public static final Duration DEFAULT_PRESIGN_DURATION = Duration.ofHours(1);
     public static final String DEFAULT_CONTENT_TYPE = "application/octet-stream";
 
     public static void logUploadSuccess(
@@ -36,13 +33,6 @@ public class S3OperationUtils {
             Exception exception) {
 
         log.error("Failed to delete file from S3: {}", fileUrl, exception);
-    }
-
-    public static void logPresignUrlFailure(
-            String fileName,
-            Exception exception) {
-
-        log.error("Failed to generate pre-signed URL: {}", fileName, exception);
     }
 
     public static void logFileExistenceCheckFailure(

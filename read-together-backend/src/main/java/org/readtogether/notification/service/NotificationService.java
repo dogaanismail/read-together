@@ -7,7 +7,7 @@ import org.readtogether.notification.entity.NotificationEntity;
 import org.readtogether.notification.entity.NotificationPreferenceType;
 import org.readtogether.notification.factory.NotificationEntityFactory;
 import org.readtogether.notification.repository.NotificationRepository;
-import org.readtogether.notification.util.NotificationMetadataUtils;
+import org.readtogether.notification.utils.NotificationMetadataUtils;
 import org.readtogether.session.entity.SessionEntity;
 import org.readtogether.infrastructure.websocket.service.WebSocketNotificationService;
 import org.springframework.data.domain.Page;

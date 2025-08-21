@@ -7,7 +7,7 @@ import org.readtogether.notification.entity.NotificationPreferenceType;
 import org.readtogether.notification.factory.NotificationPreferencesFactory;
 import org.readtogether.notification.model.NotificationPreferencesUpdateRequest;
 import org.readtogether.notification.repository.NotificationPreferencesRepository;
-import org.readtogether.notification.util.NotificationPreferencesUtils;
+import org.readtogether.notification.utils.NotificationPreferencesUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

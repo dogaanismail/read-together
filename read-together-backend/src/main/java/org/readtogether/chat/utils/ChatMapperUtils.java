@@ -1,4 +1,4 @@
-package org.readtogether.chat.util;
+package org.readtogether.chat.utils;
 
 import lombok.experimental.UtilityClass;
 import org.readtogether.chat.entity.ChatMessageEntity;
@@ -7,7 +7,6 @@ import org.readtogether.chat.entity.ChatRoomEntity;
 import org.readtogether.chat.model.response.ChatMessageResponse;
 import org.readtogether.chat.model.response.ChatParticipantResponse;
 import org.readtogether.chat.model.response.ChatRoomResponse;
-import org.readtogether.common.enums.MessageType;
 import org.readtogether.user.entity.UserEntity;
 
 @UtilityClass

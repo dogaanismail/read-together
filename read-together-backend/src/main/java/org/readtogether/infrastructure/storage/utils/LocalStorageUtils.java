@@ -1,9 +1,8 @@
-package org.readtogether.infrastructure.storage.util;
+package org.readtogether.infrastructure.storage.utils;
 
 import lombok.experimental.UtilityClass;
 
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 @UtilityClass
 public class LocalStorageUtils {

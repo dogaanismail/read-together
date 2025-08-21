@@ -1,4 +1,4 @@
-package org.readtogether.user.util;
+package org.readtogether.user.utils;
 
 import lombok.experimental.UtilityClass;
 import org.readtogether.user.entity.ReadingPreferencesEntity;

@@ -9,7 +9,6 @@ import org.readtogether.chat.model.response.ChatMessageResponse;
 import org.readtogether.chat.model.response.ChatRoomResponse;
 import org.readtogether.chat.service.ChatFileService;
 import org.readtogether.chat.service.ChatService;
-import org.readtogether.chat.service.ChatWebSocketService;
 import org.readtogether.common.model.CustomResponse;
 import org.readtogether.common.utils.SecurityUtils;
 import org.springframework.core.io.Resource;
@@ -35,7 +34,6 @@ import java.util.UUID;
 public class ChatController {
 
     private final ChatService chatService;
-    private final ChatWebSocketService chatWebSocketService;
     private final ChatFileService chatFileService;
 
     @GetMapping("/rooms")

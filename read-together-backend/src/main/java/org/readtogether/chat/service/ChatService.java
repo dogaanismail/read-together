@@ -17,10 +17,8 @@ import org.readtogether.chat.model.response.ChatRoomResponse;
 import org.readtogether.chat.repository.ChatMessageRepository;
 import org.readtogether.chat.repository.ChatParticipantRepository;
 import org.readtogether.chat.repository.ChatRoomRepository;
-import org.readtogether.chat.util.ChatUtils;
-import org.readtogether.chat.util.ChatMapperUtils;
-import org.readtogether.common.enums.MessageType;
-import org.readtogether.chat.exception.ChatRoomNotFoundException;
+import org.readtogether.chat.utils.ChatUtils;
+import org.readtogether.chat.utils.ChatMapperUtils;
 import org.readtogether.user.exception.UserNotFoundException;
 import org.readtogether.user.entity.UserEntity;
 import org.readtogether.user.repository.UserRepository;
@@ -30,10 +28,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -48,19 +44,26 @@ public class ChatService {
     private final UserRepository userRepository;
 
     @Transactional(readOnly = true)
-    public Page<ChatRoomResponse> getUserChatRooms(UUID userId, int page, int size) {
+    public Page<ChatRoomResponse> getUserChatRooms(
+            UUID userId,
+            int page,
+            int size) {
+
         log.debug("Getting chat rooms for user: {}", userId);
-        
+
         Pageable pageable = PageRequest.of(page, size);
         Page<ChatRoomEntity> chatRooms = chatRoomRepository.findUserChatRooms(userId, pageable);
-        
+
         return chatRooms.map(room -> mapToChatRoomResponse(room, userId));
     }
 
     @Transactional
-    public ChatRoomResponse createChatRoom(ChatRoomCreateRequest request, UUID creatorId) {
+    public ChatRoomResponse createChatRoom(
+            ChatRoomCreateRequest request,
+            UUID creatorId) {
+
         log.info("Creating chat room: {} by user: {}", request.getName(), creatorId);
-        
+
         // Validate creator exists
         if (!userRepository.existsById(creatorId)) {
             throw new UserNotFoundException("User not found: " + creatorId);
@@ -72,7 +75,7 @@ public class ChatService {
 
         // Add creator as admin
         ChatParticipantEntity creatorParticipant = ChatParticipantEntityFactory
-            .createAdmin(room.getId(), creatorId);
+                .createAdmin(room.getId(), creatorId);
         chatParticipantRepository.save(creatorParticipant);
 
         // Add other participants if specified
@@ -80,7 +83,7 @@ public class ChatService {
             for (UUID participantId : request.getParticipantIds()) {
                 if (!participantId.equals(creatorId) && userRepository.existsById(participantId)) {
                     ChatParticipantEntity participant = ChatParticipantEntityFactory
-                        .createMember(room.getId(), participantId);
+                            .createMember(room.getId(), participantId);
                     chatParticipantRepository.save(participant);
                 }
             }
@@ -91,9 +94,14 @@ public class ChatService {
     }
 
     @Transactional(readOnly = true)
-    public Page<ChatMessageResponse> getChatMessages(UUID chatRoomId, UUID userId, int page, int size) {
+    public Page<ChatMessageResponse> getChatMessages(
+            UUID chatRoomId,
+            UUID userId,
+            int page,
+            int size) {
+
         log.debug("Getting messages for chat room: {} by user: {}", chatRoomId, userId);
-        
+
         // Verify user is participant
         if (!chatRoomRepository.isUserParticipant(chatRoomId, userId)) {
             throw new AccessDeniedException("User is not a participant in this chat room");
@@ -101,15 +109,18 @@ public class ChatService {
 
         Pageable pageable = PageRequest.of(page, size);
         Page<ChatMessageEntity> messages = chatMessageRepository
-            .findByChatRoomIdOrderBySentAtDesc(chatRoomId, pageable);
-        
+                .findByChatRoomIdOrderBySentAtDesc(chatRoomId, pageable);
+
         return messages.map(this::mapMessageUsingUtils);
     }
 
     @Transactional
-    public ChatMessageResponse sendMessage(ChatMessageWebSocketRequest request, UUID senderId) {
+    public ChatMessageResponse sendMessage(
+            ChatMessageWebSocketRequest request,
+            UUID senderId) {
+
         log.debug("Sending WebSocket message to room: {} from user: {}", request.getChatRoomId(), senderId);
-        
+
         // Verify user is participant
         if (!chatRoomRepository.isUserParticipant(request.getChatRoomId(), senderId)) {
             throw new AccessDeniedException("User is not a participant in this chat room");
@@ -134,9 +145,9 @@ public class ChatService {
             String attachmentName,
             Long attachmentSize,
             String attachmentType) {
-        
+
         log.debug("Sending REST message with attachment to room: {} from user: {}", request.getChatRoomId(), senderId);
-        
+
         // Verify user is participant
         if (!chatRoomRepository.isUserParticipant(request.getChatRoomId(), senderId)) {
             throw new AccessDeniedException("User is not a participant in this chat room");
@@ -144,7 +155,7 @@ public class ChatService {
 
         // Create and save message
         ChatMessageEntity message = ChatMessageEntityFactory.createFromRestRequest(
-            request, senderId, attachmentUrl, attachmentName, attachmentSize, attachmentType
+                request, senderId, attachmentUrl, attachmentName, attachmentSize, attachmentType
         );
         message = chatMessageRepository.save(message);
 
@@ -156,9 +167,12 @@ public class ChatService {
     }
 
     @Transactional
-    public void markMessagesAsRead(UUID chatRoomId, UUID userId) {
+    public void markMessagesAsRead(
+            UUID chatRoomId,
+            UUID userId) {
+
         log.debug("Marking messages as read for room: {} by user: {}", chatRoomId, userId);
-        
+
         if (!chatRoomRepository.isUserParticipant(chatRoomId, userId)) {
             throw new AccessDeniedException("User is not a participant in this chat room");
         }
@@ -167,25 +181,31 @@ public class ChatService {
     }
 
     @Transactional(readOnly = true)
-    public ChatRoomResponse getOrCreateDirectChat(UUID user1Id, UUID user2Id) {
+    public ChatRoomResponse getOrCreateDirectChat
+            (UUID user1Id,
+             UUID user2Id) {
+
         log.debug("Getting or creating direct chat between users: {} and {}", user1Id, user2Id);
-        
+
         // Check if direct chat already exists
         return chatRoomRepository.findDirectChatRoom(user1Id, user2Id)
-            .map(room -> mapToChatRoomResponse(room, user1Id))
-            .orElseGet(() -> createDirectChatRoom(user1Id, user2Id));
+                .map(room -> mapToChatRoomResponse(room, user1Id))
+                .orElseGet(() -> createDirectChatRoom(user1Id, user2Id));
     }
 
-    private ChatRoomResponse createDirectChatRoom(UUID user1Id, UUID user2Id) {
+    private ChatRoomResponse createDirectChatRoom(
+            UUID user1Id,
+            UUID user2Id) {
+
         // Get user names for room name
         UserEntity user1 = userRepository.findById(user1Id)
-            .orElseThrow(() -> new UserNotFoundException("User not found: " + user1Id));
+                .orElseThrow(() -> new UserNotFoundException("User not found: " + user1Id));
         UserEntity user2 = userRepository.findById(user2Id)
-            .orElseThrow(() -> new UserNotFoundException("User not found: " + user2Id));
+                .orElseThrow(() -> new UserNotFoundException("User not found: " + user2Id));
 
         String roomName = ChatUtils.generateDirectChatRoomName(
-            user1.getFirstName() + " " + user1.getLastName(),
-            user2.getFirstName() + " " + user2.getLastName()
+                user1.getFirstName() + " " + user1.getLastName(),
+                user2.getFirstName() + " " + user2.getLastName()
         );
 
         // Create room
@@ -195,7 +215,7 @@ public class ChatService {
         // Add both users as members
         ChatParticipantEntity participant1 = ChatParticipantEntityFactory.createMember(room.getId(), user1Id);
         ChatParticipantEntity participant2 = ChatParticipantEntityFactory.createMember(room.getId(), user2Id);
-        
+
         chatParticipantRepository.save(participant1);
         chatParticipantRepository.save(participant2);
 
@@ -203,61 +223,64 @@ public class ChatService {
         return mapToChatRoomResponse(room, user1Id);
     }
 
-    private ChatRoomResponse mapToChatRoomResponse(ChatRoomEntity room, UUID currentUserId) {
+    private ChatRoomResponse mapToChatRoomResponse(
+            ChatRoomEntity room,
+            UUID currentUserId) {
+
         // Get participants
         List<ChatParticipantEntity> participants = chatParticipantRepository
-            .findByChatRoomIdAndIsActiveTrue(room.getId());
-        
+                .findByChatRoomIdAndIsActiveTrue(room.getId());
+
         List<ChatParticipantResponse> participantResponses = participants.stream()
-            .map(this::mapToChatParticipantResponse)
-            .toList();
+                .map(this::mapToChatParticipantResponse)
+                .toList();
 
         // Get last message
         ChatMessageResponse lastMessage = chatMessageRepository
-            .findLastMessageByChatRoomId(room.getId())
-            .map(this::mapMessageUsingUtils)
-            .orElse(null);
+                .findLastMessageByChatRoomId(room.getId())
+                .map(this::mapMessageUsingUtils)
+                .orElse(null);
 
         // Get unread count for current user
         int unreadCount = participants.stream()
-            .filter(p -> p.getUserId().equals(currentUserId))
-            .findFirst()
-            .map(ChatParticipantEntity::getUnreadCount)
-            .orElse(0);
+                .filter(p -> p.getUserId().equals(currentUserId))
+                .findFirst()
+                .map(ChatParticipantEntity::getUnreadCount)
+                .orElse(0);
 
         return ChatRoomResponse.builder()
-            .id(room.getId())
-            .name(room.getName())
-            .description(room.getDescription())
-            .type(ChatMapperUtils.mapToResponseType(room.getType()))
-            .creatorId(room.getCreatorId())
-            .createdAt(room.getCreatedAt())
-            .updatedAt(room.getUpdatedAt())
-            .isActive(room.getIsActive())
-            .maxParticipants(room.getMaxParticipants())
-            .participants(participantResponses)
-            .lastMessage(lastMessage)
-            .unreadCount(unreadCount)
-            .build();
+                .id(room.getId())
+                .name(room.getName())
+                .description(room.getDescription())
+                .type(ChatMapperUtils.mapToResponseType(room.getType()))
+                .creatorId(room.getCreatorId())
+                .createdAt(room.getCreatedAt())
+                .updatedAt(room.getUpdatedAt())
+                .isActive(room.getIsActive())
+                .maxParticipants(room.getMaxParticipants())
+                .participants(participantResponses)
+                .lastMessage(lastMessage)
+                .unreadCount(unreadCount)
+                .build();
     }
 
     private ChatParticipantResponse mapToChatParticipantResponse(ChatParticipantEntity participant) {
         UserEntity user = userRepository.findById(participant.getUserId()).orElse(null);
-        
+
         return ChatParticipantResponse.builder()
-            .id(participant.getId())
-            .userId(participant.getUserId())
-            .userName(user != null ? user.getFirstName() + " " + user.getLastName() : "Unknown")
-            .username(user != null ? user.getUsername() : "unknown")
-            .avatar(user != null ? user.getProfilePictureUrl() : null)
-            .role(ChatMapperUtils.mapToResponseRole(participant.getRole()))
-            .joinedAt(participant.getJoinedAt())
-            .isActive(participant.isActive())
-            .unreadCount(participant.getUnreadCount())
-            .lastReadAt(participant.getLastReadAt())
-            .online(false) // TODO: Implement online status tracking
-            .lastSeen("Unknown") // TODO: Implement last seen tracking
-            .build();
+                .id(participant.getId())
+                .userId(participant.getUserId())
+                .userName(user != null ? user.getFirstName() + " " + user.getLastName() : "Unknown")
+                .username(user != null ? user.getUsername() : "unknown")
+                .avatar(user != null ? user.getProfilePictureUrl() : null)
+                .role(ChatMapperUtils.mapToResponseRole(participant.getRole()))
+                .joinedAt(participant.getJoinedAt())
+                .isActive(participant.isActive())
+                .unreadCount(participant.getUnreadCount())
+                .lastReadAt(participant.getLastReadAt())
+                .online(false) // TODO: Implement online status tracking
+                .lastSeen("Unknown") // TODO: Implement last seen tracking
+                .build();
     }
 
     private ChatMessageResponse mapMessageUsingUtils(ChatMessageEntity message) {
@@ -265,7 +288,7 @@ public class ChatService {
         if (message.getSenderId() != null) {
             sender = userRepository.findById(message.getSenderId()).orElse(null);
         }
-        
+
         return ChatMapperUtils.mapToChatMessageResponse(message, sender);
     }
 }

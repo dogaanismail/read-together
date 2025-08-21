@@ -1,4 +1,4 @@
-package org.readtogether.chat.util;
+package org.readtogether.chat.utils;
 
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +19,7 @@ public class ChatFileStorageUtils {
     private static final String UPLOAD_DIR = "uploads/chat/";
 
     public static String uploadFile(MultipartFile file) throws IOException {
+
         Path uploadPath = Paths.get(UPLOAD_DIR);
         if (!Files.exists(uploadPath)) {
             Files.createDirectories(uploadPath);
@@ -27,7 +28,7 @@ public class ChatFileStorageUtils {
         String originalFilename = file.getOriginalFilename();
         String extension = ChatFileUtils.getFileExtension(originalFilename);
         String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
-        String uniqueFilename = UUID.randomUUID().toString() + "_" + timestamp + extension;
+        String uniqueFilename = UUID.randomUUID() + "_" + timestamp + extension;
 
         Path filePath = uploadPath.resolve(uniqueFilename);
         Files.copy(file.getInputStream(), filePath);
@@ -37,6 +38,7 @@ public class ChatFileStorageUtils {
     }
 
     public static Path getFilePath(String filename) {
+
         return Paths.get(UPLOAD_DIR).resolve(filename);
     }
 }

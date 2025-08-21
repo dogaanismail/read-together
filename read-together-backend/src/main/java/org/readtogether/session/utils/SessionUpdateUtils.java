@@ -1,4 +1,4 @@
-package org.readtogether.session.util;
+package org.readtogether.session.utils;
 
 import lombok.experimental.UtilityClass;
 import org.readtogether.session.entity.SessionEntity;

@@ -1,4 +1,4 @@
-package org.readtogether.chat.util;
+package org.readtogether.chat.utils;
 
 import lombok.experimental.UtilityClass;
 import org.springframework.web.multipart.MultipartFile;

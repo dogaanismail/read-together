@@ -1,4 +1,4 @@
-package org.readtogether.notification.util;
+package org.readtogether.notification.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.experimental.UtilityClass;

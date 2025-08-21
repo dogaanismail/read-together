@@ -1,4 +1,4 @@
-package org.readtogether.infrastructure.storage.util;
+package org.readtogether.infrastructure.storage.utils;
 
 import lombok.experimental.UtilityClass;
 
