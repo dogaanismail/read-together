@@ -27,7 +27,11 @@ public class RoomSettingsService {
     private final PasswordEncoder passwordEncoder;
 
     @Transactional
-    public RoomSettingsResponse updateRoomSettings(UUID roomId, UpdateRoomSettingsRequest request, UUID userId) {
+    public RoomSettingsResponse updateRoomSettings(
+            UUID roomId,
+            UpdateRoomSettingsRequest request,
+            UUID userId) {
+
         log.info("Updating settings for room {} by user {}", roomId, userId);
 
         ReadingRoomEntity room = roomRepository.findById(roomId)
@@ -49,6 +53,7 @@ public class RoomSettingsService {
 
     @Transactional
     public RoomSettingsResponse getRoomSettings(UUID roomId) {
+
         ReadingRoomSettingsEntity settings = settingsRepository.findByReadingRoomId(roomId)
                 .orElseThrow(() -> new RuntimeException("Settings not found for room: " + roomId));
 
@@ -94,6 +99,7 @@ public class RoomSettingsService {
     }
 
     private void updateSettingsFromRequest(
+
             ReadingRoomSettingsEntity settings,
             UpdateRoomSettingsRequest request) {
 

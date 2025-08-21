@@ -27,10 +27,10 @@ public class CreateReadingRoomRequest {
     @Min(value = 2, message = "Room must allow at least 2 participants")
     @Max(value = 12, message = "Room cannot exceed 50 participants")
     @Builder.Default
-    private Integer maxParticipants = 12;
+    private int maxParticipants = 12;
 
     @Builder.Default
-    private Boolean isPublic = true;
+    private boolean isPublic = true;
 
     private LocalDateTime scheduledStartTime;
 }

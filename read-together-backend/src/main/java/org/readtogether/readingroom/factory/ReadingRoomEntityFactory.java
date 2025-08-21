@@ -19,7 +19,7 @@ public class ReadingRoomEntityFactory {
                 .title(createReadingRoomRequest.getTitle())
                 .description(createReadingRoomRequest.getDescription())
                 .maxParticipants(createReadingRoomRequest.getMaxParticipants())
-                .isPublic(createReadingRoomRequest.getIsPublic())
+                .isPublic(createReadingRoomRequest.isPublic())
                 .roomCode(ReadingRoomUtils.generateRoomCode())
                 .scheduledStartTime(createReadingRoomRequest.getScheduledStartTime())
                 .host(host)

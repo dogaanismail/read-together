@@ -6,6 +6,7 @@ import org.readtogether.common.utils.SecurityUtils;
 import org.readtogether.common.utils.StoragePathUtils;
 import org.readtogether.feed.service.FeedService;
 import org.readtogether.infrastructure.storage.service.StorageService;
+import org.readtogether.notification.service.NotificationService;
 import org.readtogether.session.entity.SessionEntity;
 import org.readtogether.session.factory.SessionEntityFactory;
 import org.readtogether.session.factory.SessionResponseFactory;
@@ -36,6 +37,7 @@ public class SessionService {
     private final SessionRepository sessionRepository;
     private final StorageService storageService;
     private final FeedService feedService;
+    private final NotificationService notificationService;
 
     @Transactional
     public CompletableFuture<SessionResponse> createSessionAsync(
@@ -49,13 +51,17 @@ public class SessionService {
         SessionEntity session = SessionEntityFactory.createPendingSession(userId, request, file);
         session = sessionRepository.save(session);
 
+        // Notify user that upload has started
+        notificationService.notifySessionUploadStarted(userId, session);
+
         final UUID sessionId = session.getId();
-        return processFileUploadAsync(sessionId, file)
+        return processFileUploadAsync(sessionId, file, userId)
                 .thenApply(mediaUrl -> {
                     SessionEntity updatedSession = updateSessionAfterUpload(sessionId, mediaUrl);
 
-                    // Create feed item when session is completed
                     if (updatedSession.getProcessingStatus() == SessionEntity.ProcessingStatus.COMPLETED) {
+                        // Notify user that upload is complete
+                        notificationService.notifySessionUploadCompleted(userId, updatedSession);
                         createFeedItemForSession(updatedSession);
                     }
 
@@ -63,7 +69,11 @@ public class SessionService {
                 })
                 .exceptionally(ex -> {
                     log.error("Failed to upload file for session {}", sessionId, ex);
-                    markSessionAsFailed(sessionId, ex.getMessage());
+                    SessionEntity failedSession = markSessionAsFailed(sessionId, ex.getMessage());
+
+                    // Notify user about the failure
+                    notificationService.notifySessionUploadFailed(userId, failedSession, ex.getMessage());
+
                     throw new RuntimeException("Failed to upload session file", ex);
                 });
     }
@@ -84,7 +94,6 @@ public class SessionService {
 
         session = sessionRepository.save(session);
 
-        // Create feed item immediately for synchronous creation
         createFeedItemForSession(session);
 
         return SessionResponseFactory.createFromEntity(session);
@@ -214,16 +223,21 @@ public class SessionService {
     @Async
     public CompletableFuture<String> processFileUploadAsync(
             UUID sessionId,
-            MultipartFile file) {
+            MultipartFile file,
+            UUID userId) {
 
         try {
             updateProcessingStatus(sessionId, SessionEntity.ProcessingStatus.PROCESSING);
+
+            // Notify user that processing has started
+            SessionEntity session = sessionRepository.findById(sessionId)
+                    .orElseThrow(() -> new RuntimeException("Session not found"));
+            notificationService.notifySessionProcessingStarted(userId, session);
 
             String fileName = StoragePathUtils.generateFileName(file.getOriginalFilename());
             String folder = StoragePathUtils.generateDateFolder("sessions");
 
             return storageService.uploadFileAsync(file, fileName, folder);
-
         } catch (Exception e) {
             log.error("Error processing file upload for session {}", sessionId, e);
             throw new RuntimeException("Failed to process file upload", e);
@@ -237,12 +251,16 @@ public class SessionService {
     }
 
     private String uploadFile(MultipartFile file) {
+
         String fileName = StoragePathUtils.generateFileName(file.getOriginalFilename());
         String folder = StoragePathUtils.generateDateFolder("sessions");
         return storageService.uploadFile(file, fileName, folder);
     }
 
-    private SessionEntity updateSessionAfterUpload(UUID sessionId, String mediaUrl) {
+    private SessionEntity updateSessionAfterUpload(
+            UUID sessionId,
+            String mediaUrl) {
+
         SessionEntity session = sessionRepository.findById(sessionId)
                 .orElseThrow(() -> new RuntimeException("Session not found"));
 
@@ -253,15 +271,23 @@ public class SessionService {
         return sessionRepository.save(session);
     }
 
-    private void markSessionAsFailed(UUID sessionId, String error) {
-        sessionRepository.findById(sessionId).ifPresent(session -> {
-            session.setProcessingStatus(SessionEntity.ProcessingStatus.FAILED);
-            session.setProcessingError(error);
-            sessionRepository.save(session);
-        });
+    private SessionEntity markSessionAsFailed(
+            UUID sessionId,
+            String error) {
+
+        return sessionRepository.findById(sessionId)
+                .map(session -> {
+                    session.setProcessingStatus(SessionEntity.ProcessingStatus.FAILED);
+                    session.setProcessingError(error);
+                    return sessionRepository.save(session);
+                })
+                .orElseThrow(() -> new RuntimeException("Session not found"));
     }
 
-    private void updateProcessingStatus(UUID sessionId, SessionEntity.ProcessingStatus status) {
+    private void updateProcessingStatus(
+            UUID sessionId,
+            SessionEntity.ProcessingStatus status) {
+
         sessionRepository.findById(sessionId).ifPresent(session -> {
             session.setProcessingStatus(status);
             sessionRepository.save(session);
@@ -269,6 +295,7 @@ public class SessionService {
     }
 
     private void createFeedItemForSession(SessionEntity session) {
+
         try {
             if (session.isPublic()) {
                 feedService.createFeedItemFromSession(session);

@@ -11,6 +11,8 @@ import org.readtogether.user.entity.UserEntity;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import static org.readtogether.readingroom.common.enums.InvitationStatus.PENDING;
+
 @Getter
 @Setter
 @SuperBuilder
@@ -51,7 +53,7 @@ public class ReadingRoomInvitationEntity extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     @Builder.Default
-    private InvitationStatus status = InvitationStatus.PENDING;
+    private InvitationStatus status = PENDING;
 
     @Column(name = "expires_at")
     private LocalDateTime expiresAt;

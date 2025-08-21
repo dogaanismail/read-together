@@ -16,10 +16,12 @@ public class ReadingRoomUtils {
     }
 
     public String generateInvitationToken() {
+
         return UUID.randomUUID().toString();
     }
 
     public String generateShareLink(String baseUrl, String invitationToken) {
+
         return String.format("%s/room/join?token=%s", baseUrl, invitationToken);
     }
 

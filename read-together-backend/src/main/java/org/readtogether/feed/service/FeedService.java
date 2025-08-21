@@ -28,7 +28,7 @@ public class FeedService {
     public Page<FeedItemResponse> getFeed(Pageable pageable) {
 
         return feedRepository.findByIsPublicTrueOrderByCreatedAtDesc(pageable)
-            .map(FeedItemResponseFactory::createFromEntity);
+                .map(FeedItemResponseFactory::createFromEntity);
     }
 
     @Transactional(readOnly = true)
@@ -37,7 +37,7 @@ public class FeedService {
             Pageable pageable) {
 
         return feedRepository.findByItemTypeAndIsPublicTrueOrderByCreatedAtDesc(itemType, pageable)
-            .map(FeedItemResponseFactory::createFromEntity);
+                .map(FeedItemResponseFactory::createFromEntity);
     }
 
     @Transactional(readOnly = true)
@@ -46,7 +46,7 @@ public class FeedService {
             Pageable pageable) {
 
         return feedRepository.findByUserIdOrderByCreatedAtDesc(userId, pageable)
-            .map(FeedItemResponseFactory::createFromEntity);
+                .map(FeedItemResponseFactory::createFromEntity);
     }
 
     @Transactional(readOnly = true)
@@ -62,11 +62,11 @@ public class FeedService {
         // For now, using basic filtering - you'll need to implement custom queries
         if (itemType != null) {
             return feedRepository.findByItemTypeAndIsPublicTrueOrderByCreatedAtDesc(itemType, pageable)
-                .map(FeedItemResponseFactory::createFromEntity);
+                    .map(FeedItemResponseFactory::createFromEntity);
         }
 
         return feedRepository.findByIsPublicTrueOrderByCreatedAtDesc(pageable)
-            .map(FeedItemResponseFactory::createFromEntity);
+                .map(FeedItemResponseFactory::createFromEntity);
     }
 
     @Transactional(readOnly = true)
@@ -74,7 +74,7 @@ public class FeedService {
 
         Instant since = Instant.now().minus(7, ChronoUnit.DAYS);
         return feedRepository.findTrendingItems(since, 5L, pageable)
-            .map(FeedItemResponseFactory::createFromEntity);
+                .map(FeedItemResponseFactory::createFromEntity);
     }
 
     @Transactional
@@ -125,23 +125,12 @@ public class FeedService {
     }
 
     @Transactional
-    public FeedItemEntity createFeedItemFromSession(SessionEntity session) {
+    public void createFeedItemFromSession(SessionEntity session) {
+
         log.info("Creating feed item for session: {}", session.getId());
 
-        FeedItemEntity feedItem = FeedItemEntity.builder()
-            .userId(session.getUserId())
-            .itemType(FeedItemEntity.FeedItemType.SESSION)
-            .referenceId(session.getId())
-            .title(session.getTitle())
-            .description(session.getDescription())
-            .mediaUrl(session.getMediaUrl())
-            .thumbnailUrl(session.getThumbnailUrl())
-            .isPublic(session.isPublic())
-            .viewCount(0L)
-            .likeCount(0L)
-            .commentCount(0L)
-            .build();
+        FeedItemEntity feedItem = FeedItemEntityFactory.createFeedItemFromSession(session);
 
-        return feedRepository.save(feedItem);
+        feedRepository.save(feedItem);
     }
 }

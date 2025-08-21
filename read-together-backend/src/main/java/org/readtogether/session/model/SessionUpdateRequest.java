@@ -14,5 +14,5 @@ public class SessionUpdateRequest {
 
     private Boolean isPublic;
 
-    private String tags; // Comma-separated tags
+    private String tags;
 }

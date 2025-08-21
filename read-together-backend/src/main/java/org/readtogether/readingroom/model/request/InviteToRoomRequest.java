@@ -32,5 +32,5 @@ public class InviteToRoomRequest {
     private Boolean generateNewToken;
 
     @Builder.Default
-    private Integer expirationHours = 24;
+    private int expirationHours = 24;
 }

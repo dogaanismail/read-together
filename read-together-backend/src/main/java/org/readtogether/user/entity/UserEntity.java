@@ -70,15 +70,15 @@ public class UserEntity extends BaseEntity {
 
     @Column(name = "total_reading_time_seconds")
     @Builder.Default
-    private Long totalReadingTimeSeconds = 0L;
+    private long totalReadingTimeSeconds = 0L;
 
     @Column(name = "longest_streak")
     @Builder.Default
-    private Integer longestStreak = 0;
+    private int longestStreak = 0;
 
     @Column(name = "total_active_days")
     @Builder.Default
-    private Long totalActiveDays = 0L;
+    private long totalActiveDays = 0L;
 
     @Column(name = "last_activity_date")
     private LocalDateTime lastActivityDate;

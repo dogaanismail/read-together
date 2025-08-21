@@ -6,8 +6,8 @@ import org.readtogether.session.entity.SessionEntity;
 
 import java.util.UUID;
 
-import static org.readtogether.feed.entity.FeedItemEntity.FeedItemType.ACHIEVEMENT;
-import static org.readtogether.feed.entity.FeedItemEntity.FeedItemType.MILESTONE;
+import static org.readtogether.feed.entity.FeedItemEntity.FeedItemType.*;
+import static org.readtogether.feed.entity.FeedItemEntity.FeedItemType.SESSION;
 
 @UtilityClass
 public class FeedItemEntityFactory {
@@ -16,13 +16,30 @@ public class FeedItemEntityFactory {
 
         return FeedItemEntity.builder()
                 .userId(session.getUserId())
-                .itemType(FeedItemEntity.FeedItemType.SESSION)
+                .itemType(SESSION)
                 .referenceId(session.getId())
                 .title(session.getTitle())
                 .description(session.getDescription())
                 .mediaUrl(session.getMediaUrl())
                 .isPublic(session.isPublic())
                 .metadata(createSessionMetadata(session))
+                .build();
+    }
+
+    public static FeedItemEntity createFeedItemFromSession(SessionEntity session) {
+
+        return FeedItemEntity.builder()
+                .userId(session.getUserId())
+                .itemType(SESSION)
+                .referenceId(session.getId())
+                .title(session.getTitle())
+                .description(session.getDescription())
+                .mediaUrl(session.getMediaUrl())
+                .thumbnailUrl(session.getThumbnailUrl())
+                .isPublic(session.isPublic())
+                .viewCount(0L)
+                .likeCount(0L)
+                .commentCount(0L)
                 .build();
     }
 
@@ -63,10 +80,10 @@ public class FeedItemEntityFactory {
     private static String createSessionMetadata(SessionEntity session) {
 
         return String.format(
-            "{\"mediaType\":\"%s\",\"duration\":%d,\"fileSize\":%d}",
-            session.getMediaType(),
-            session.getDurationSeconds() != null ? session.getDurationSeconds() : 0,
-            session.getFileSizeBytes() != null ? session.getFileSizeBytes() : 0
+                "{\"mediaType\":\"%s\",\"duration\":%d,\"fileSize\":%d}",
+                session.getMediaType(),
+                session.getDurationSeconds() != null ? session.getDurationSeconds() : 0,
+                session.getFileSizeBytes() != null ? session.getFileSizeBytes() : 0
         );
     }
 

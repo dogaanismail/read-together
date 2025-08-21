@@ -32,6 +32,7 @@ public class ReadingRoomResponseFactory {
     }
 
     private ReadingRoomResponse.HostInfo createHostInfo(ReadingRoomEntity room) {
+
         return ReadingRoomResponse.HostInfo.builder()
                 .id(room.getHost().getId())
                 .firstName(room.getHost().getFirstName())

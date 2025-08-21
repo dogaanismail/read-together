@@ -20,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import static org.readtogether.readingroom.common.enums.ParticipantStatus.JOINED;
 import static org.readtogether.readingroom.common.enums.RoomStatus.ACTIVE;
@@ -36,7 +35,10 @@ public class ReadingRoomService {
     private final RoomSettingsService roomSettingsService;
 
     @Transactional
-    public ReadingRoomResponse createRoom(CreateReadingRoomRequest request, UUID hostId) {
+    public ReadingRoomResponse createRoom(
+            CreateReadingRoomRequest request,
+            UUID hostId) {
+
         log.info("Creating reading room for host: {}", hostId);
 
         UserEntity host = userService.findUserEntityById(hostId);
@@ -123,7 +125,7 @@ public class ReadingRoomService {
         return readingRoomRepository.findPublicWaitingRooms()
                 .stream()
                 .map(this::createRoomResponse)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public List<ReadingRoomResponse> getUserHostedRooms(UUID userId) {
@@ -131,7 +133,7 @@ public class ReadingRoomService {
         return readingRoomRepository.findByHostId(userId)
                 .stream()
                 .map(this::createRoomResponse)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public ReadingRoomResponse getRoomByCode(String roomCode) {

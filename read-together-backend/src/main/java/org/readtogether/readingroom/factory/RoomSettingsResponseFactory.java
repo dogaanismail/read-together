@@ -9,6 +9,7 @@ import org.springframework.util.StringUtils;
 public class RoomSettingsResponseFactory {
 
     public RoomSettingsResponse createResponse(ReadingRoomSettingsEntity settings) {
+
         return RoomSettingsResponse.builder()
                 .id(settings.getId())
                 .readingRoomId(settings.getReadingRoom().getId())

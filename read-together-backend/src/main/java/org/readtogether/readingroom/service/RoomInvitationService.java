@@ -22,7 +22,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -66,7 +65,7 @@ public class RoomInvitationService {
         List<ReadingRoomInvitationEntity> savedInvitations = invitationRepository.saveAll(invitations);
         return savedInvitations.stream()
                 .map(this::mapToResponse)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Transactional
@@ -127,7 +126,7 @@ public class RoomInvitationService {
         return invitationRepository.findByReadingRoomId(roomId)
                 .stream()
                 .map(this::mapToResponse)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public List<InvitationResponse> getUserPendingInvitations(UUID userId) {
@@ -140,7 +139,7 @@ public class RoomInvitationService {
 
         return invitations.stream()
                 .map(this::mapToResponse)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public InvitationResponse getInvitationByToken(String invitationToken) {
@@ -165,10 +164,12 @@ public class RoomInvitationService {
                 .expirationHours(168) // 7 days for share links
                 .build();
 
+        //TODO: fix here
         List<InvitationResponse> invitations = inviteToRoom(roomId, request, userId);
         return invitations.getFirst().getShareLink();
     }
 
+    //TODO: fix here
     private boolean canInviteToRoom(
             ReadingRoomEntity room,
             UUID userId) {
@@ -193,7 +194,7 @@ public class RoomInvitationService {
         return request.getInvitedEmails().stream()
                 .map(email -> ReadingRoomInvitationEntityFactory.createEmailInvitation(
                         room, inviter, email, request.getMessage(), expiresAt))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private List<ReadingRoomInvitationEntity> createDirectInvitations(
@@ -212,7 +213,7 @@ public class RoomInvitationService {
                     return ReadingRoomInvitationEntityFactory.createDirectInvitation(
                             room, inviter, invitedUser, request.getMessage(), expiresAt);
                 })
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private InvitationResponse mapToResponse(ReadingRoomInvitationEntity invitation) {

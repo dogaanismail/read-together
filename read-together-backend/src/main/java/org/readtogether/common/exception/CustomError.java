@@ -24,7 +24,7 @@ public class CustomError {
     private String message;
 
     @Builder.Default
-    private final Boolean isSuccess = false;
+    private final boolean isSuccess = false;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<CustomSubError> subErrors;
