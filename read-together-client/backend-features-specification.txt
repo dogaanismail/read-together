@@ -61,7 +61,7 @@ Structure: controller/ service/ repository/ entity/ model/
 
 9. FEED DOMAIN
 - Activity feeds, social posts
-- Content filtering, social interactions
+- Content filtering, social interactions.
 
 10. SETTINGS DOMAIN
 - App settings, themes, accessibility
