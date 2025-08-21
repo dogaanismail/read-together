@@ -2,6 +2,7 @@ package org.readtogether.chat.model.request;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.readtogether.common.enums.MessageType;
 
 import java.util.UUID;
 
@@ -26,11 +27,4 @@ public class ChatMessageWebSocketRequest {
     private String attachmentName;
     private Long attachmentSize;
     private String attachmentType;
-
-    public enum MessageType {
-        TEXT,
-        IMAGE,
-        FILE,
-        EMOJI
-    }
 }

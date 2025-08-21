@@ -5,7 +5,10 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.readtogether.common.entity.BaseEntity;
 
+import java.time.Instant;
 import java.util.UUID;
+
+import static org.readtogether.chat.entity.ChatParticipantEntity.ParticipantRole.MEMBER;
 
 @Getter
 @Setter
@@ -34,21 +37,21 @@ public class ChatParticipantEntity extends BaseEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
     @Builder.Default
-    private ParticipantRole role = ParticipantRole.MEMBER;
+    private ParticipantRole role = MEMBER;
 
     @Column(name = "joined_at", nullable = false)
-    private java.time.Instant joinedAt;
+    private Instant joinedAt;
 
     @Column(name = "is_active", nullable = false)
     @Builder.Default
-    private Boolean isActive = true;
+    private boolean isActive = true;
 
     @Column(name = "unread_count", nullable = false)
     @Builder.Default
-    private Integer unreadCount = 0;
+    private int unreadCount = 0;
 
     @Column(name = "last_read_at")
-    private java.time.Instant lastReadAt;
+    private Instant lastReadAt;
 
     public enum ParticipantRole {
         ADMIN,

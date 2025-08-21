@@ -11,6 +11,7 @@ import org.readtogether.chat.service.ChatFileService;
 import org.readtogether.chat.service.ChatService;
 import org.readtogether.chat.service.ChatWebSocketService;
 import org.readtogether.common.model.CustomResponse;
+import org.readtogether.common.utils.SecurityUtils;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
@@ -18,7 +19,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -46,7 +46,7 @@ public class ChatController {
         
         log.info("Getting chat rooms for user, page: {}, size: {}", page, size);
         
-        UUID userId = getUserIdFromAuth(authentication);
+        UUID userId = SecurityUtils.getCurrentUserId(authentication);
         Page<ChatRoomResponse> chatRooms = chatService.getUserChatRooms(userId, page, size);
         
         return CustomResponse.successOf(chatRooms);
@@ -59,7 +59,7 @@ public class ChatController {
         
         log.info("Creating chat room: {}", request.getName());
         
-        UUID userId = getUserIdFromAuth(authentication);
+        UUID userId = SecurityUtils.getCurrentUserId(authentication);
         ChatRoomResponse chatRoom = chatService.createChatRoom(request, userId);
         
         return CustomResponse.successOf(chatRoom);
@@ -74,7 +74,7 @@ public class ChatController {
         
         log.info("Getting messages for chat room: {}, page: {}, size: {}", roomId, page, size);
         
-        UUID userId = getUserIdFromAuth(authentication);
+        UUID userId = SecurityUtils.getCurrentUserId(authentication);
         Page<ChatMessageResponse> messages = chatService.getChatMessages(roomId, userId, page, size);
         
         return CustomResponse.successOf(messages);
@@ -87,7 +87,7 @@ public class ChatController {
         
         log.info("Marking messages as read for room: {}", roomId);
         
-        UUID userId = getUserIdFromAuth(authentication);
+        UUID userId = SecurityUtils.getCurrentUserId(authentication);
         chatService.markMessagesAsRead(roomId, userId);
         
         return CustomResponse.SUCCESS;
@@ -100,7 +100,7 @@ public class ChatController {
         
         log.info("Getting or creating direct chat with user: {}", otherUserId);
         
-        UUID userId = getUserIdFromAuth(authentication);
+        UUID userId = SecurityUtils.getCurrentUserId(authentication);
         ChatRoomResponse chatRoom = chatService.getOrCreateDirectChat(userId, otherUserId);
         
         return CustomResponse.successOf(chatRoom);
@@ -115,7 +115,7 @@ public class ChatController {
         
         log.info("Sending message with file to room: {}", roomId);
         
-        UUID userId = getUserIdFromAuth(authentication);
+        UUID userId = SecurityUtils.getCurrentUserId(authentication);
         request.setChatRoomId(roomId);
         request.setAttachment(file);
         
@@ -147,10 +147,5 @@ public class ChatController {
             log.error("Error downloading file: {}", fileName, e);
             return ResponseEntity.badRequest().build();
         }
-    }
-
-    private UUID getUserIdFromAuth(Authentication authentication) {
-        Jwt jwt = (Jwt) authentication.getPrincipal();
-        return UUID.fromString(jwt.getClaim("userId"));
     }
 }

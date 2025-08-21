@@ -1,6 +1,7 @@
 package org.readtogether.chat.model.response;
 
 import lombok.*;
+import org.readtogether.common.enums.MessageType;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -29,12 +30,4 @@ public class ChatMessageResponse {
     private String attachmentName;
     private Long attachmentSize;
     private String attachmentType;
-
-    public enum MessageType {
-        TEXT,
-        IMAGE,
-        FILE,
-        EMOJI,
-        SYSTEM
-    }
 }

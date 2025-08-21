@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.readtogether.common.entity.BaseEntity;
+import org.readtogether.common.enums.MessageType;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -44,7 +45,7 @@ public class ChatMessageEntity extends BaseEntity {
 
     @Column(name = "is_deleted", nullable = false)
     @Builder.Default
-    private Boolean isDeleted = false;
+    private boolean isDeleted = false;
 
     @Column(name = "reply_to_message_id")
     private UUID replyToMessageId;
@@ -60,12 +61,4 @@ public class ChatMessageEntity extends BaseEntity {
 
     @Column(name = "attachment_type", length = 100)
     private String attachmentType;
-
-    public enum MessageType {
-        TEXT,
-        IMAGE,
-        FILE,
-        EMOJI,
-        SYSTEM
-    }
 }

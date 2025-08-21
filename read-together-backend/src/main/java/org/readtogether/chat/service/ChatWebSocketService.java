@@ -5,6 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.readtogether.chat.factory.ChatWebSocketNotificationFactory;
 import org.readtogether.chat.model.response.ChatMessageResponse;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -97,5 +99,12 @@ public class ChatWebSocketService {
         } catch (Exception e) {
             log.error("Failed to send message read notification to room: {}", chatRoomId, e);
         }
+    }
+
+    public String getUsernameFromAuth(Authentication auth) {
+        if (auth != null && auth.getPrincipal() instanceof Jwt jwt) {
+            return jwt.getClaim("username");
+        }
+        return "Unknown";
     }
 }

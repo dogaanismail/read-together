@@ -18,6 +18,8 @@ import org.readtogether.chat.repository.ChatMessageRepository;
 import org.readtogether.chat.repository.ChatParticipantRepository;
 import org.readtogether.chat.repository.ChatRoomRepository;
 import org.readtogether.chat.util.ChatUtils;
+import org.readtogether.chat.util.ChatMapperUtils;
+import org.readtogether.common.enums.MessageType;
 import org.readtogether.chat.exception.ChatRoomNotFoundException;
 import org.readtogether.user.exception.UserNotFoundException;
 import org.readtogether.user.entity.UserEntity;
@@ -101,7 +103,7 @@ public class ChatService {
         Page<ChatMessageEntity> messages = chatMessageRepository
             .findByChatRoomIdOrderBySentAtDesc(chatRoomId, pageable);
         
-        return messages.map(this::mapToChatMessageResponse);
+        return messages.map(this::mapMessageUsingUtils);
     }
 
     @Transactional
@@ -121,7 +123,7 @@ public class ChatService {
         chatParticipantRepository.incrementUnreadCount(request.getChatRoomId(), senderId);
 
         log.info("Sent message: {} to room: {}", message.getId(), request.getChatRoomId());
-        return mapToChatMessageResponse(message);
+        return mapMessageUsingUtils(message);
     }
 
     @Transactional
@@ -150,7 +152,7 @@ public class ChatService {
         chatParticipantRepository.incrementUnreadCount(request.getChatRoomId(), senderId);
 
         log.info("Sent message with attachment: {} to room: {}", message.getId(), request.getChatRoomId());
-        return mapToChatMessageResponse(message);
+        return mapMessageUsingUtils(message);
     }
 
     @Transactional
@@ -213,11 +215,11 @@ public class ChatService {
         // Get last message
         ChatMessageResponse lastMessage = chatMessageRepository
             .findLastMessageByChatRoomId(room.getId())
-            .map(this::mapToChatMessageResponse)
+            .map(this::mapMessageUsingUtils)
             .orElse(null);
 
         // Get unread count for current user
-        Integer unreadCount = participants.stream()
+        int unreadCount = participants.stream()
             .filter(p -> p.getUserId().equals(currentUserId))
             .findFirst()
             .map(ChatParticipantEntity::getUnreadCount)
@@ -227,7 +229,7 @@ public class ChatService {
             .id(room.getId())
             .name(room.getName())
             .description(room.getDescription())
-            .type(mapToResponseType(room.getType()))
+            .type(ChatMapperUtils.mapToResponseType(room.getType()))
             .creatorId(room.getCreatorId())
             .createdAt(room.getCreatedAt())
             .updatedAt(room.getUpdatedAt())
@@ -248,9 +250,9 @@ public class ChatService {
             .userName(user != null ? user.getFirstName() + " " + user.getLastName() : "Unknown")
             .username(user != null ? user.getUsername() : "unknown")
             .avatar(user != null ? user.getProfilePictureUrl() : null)
-            .role(mapToResponseRole(participant.getRole()))
+            .role(ChatMapperUtils.mapToResponseRole(participant.getRole()))
             .joinedAt(participant.getJoinedAt())
-            .isActive(participant.getIsActive())
+            .isActive(participant.isActive())
             .unreadCount(participant.getUnreadCount())
             .lastReadAt(participant.getLastReadAt())
             .online(false) // TODO: Implement online status tracking
@@ -258,54 +260,12 @@ public class ChatService {
             .build();
     }
 
-    private ChatMessageResponse mapToChatMessageResponse(ChatMessageEntity message) {
+    private ChatMessageResponse mapMessageUsingUtils(ChatMessageEntity message) {
         UserEntity sender = null;
         if (message.getSenderId() != null) {
             sender = userRepository.findById(message.getSenderId()).orElse(null);
         }
         
-        return ChatMessageResponse.builder()
-            .id(message.getId())
-            .chatRoomId(message.getChatRoomId())
-            .senderId(message.getSenderId())
-            .senderName(sender != null ? sender.getFirstName() + " " + sender.getLastName() : "System")
-            .senderUsername(sender != null ? sender.getUsername() : "system")
-            .senderAvatar(sender != null ? sender.getProfilePictureUrl() : null)
-            .content(message.getContent())
-            .messageType(mapToResponseMessageType(message.getMessageType()))
-            .sentAt(message.getSentAt())
-            .editedAt(message.getEditedAt())
-            .isDeleted(message.getIsDeleted())
-            .replyToMessageId(message.getReplyToMessageId())
-            .attachmentUrl(message.getAttachmentUrl())
-            .attachmentName(message.getAttachmentName())
-            .attachmentSize(message.getAttachmentSize())
-            .attachmentType(message.getAttachmentType())
-            .build();
-    }
-
-    private ChatRoomResponse.ChatRoomType mapToResponseType(ChatRoomEntity.ChatRoomType entityType) {
-        return switch (entityType) {
-            case DIRECT -> ChatRoomResponse.ChatRoomType.DIRECT;
-            case GROUP -> ChatRoomResponse.ChatRoomType.GROUP;
-        };
-    }
-
-    private ChatParticipantResponse.ParticipantRole mapToResponseRole(ChatParticipantEntity.ParticipantRole entityRole) {
-        return switch (entityRole) {
-            case ADMIN -> ChatParticipantResponse.ParticipantRole.ADMIN;
-            case MODERATOR -> ChatParticipantResponse.ParticipantRole.MODERATOR;
-            case MEMBER -> ChatParticipantResponse.ParticipantRole.MEMBER;
-        };
-    }
-
-    private ChatMessageResponse.MessageType mapToResponseMessageType(ChatMessageEntity.MessageType entityType) {
-        return switch (entityType) {
-            case TEXT -> ChatMessageResponse.MessageType.TEXT;
-            case IMAGE -> ChatMessageResponse.MessageType.IMAGE;
-            case FILE -> ChatMessageResponse.MessageType.FILE;
-            case EMOJI -> ChatMessageResponse.MessageType.EMOJI;
-            case SYSTEM -> ChatMessageResponse.MessageType.SYSTEM;
-        };
+        return ChatMapperUtils.mapToChatMessageResponse(message, sender);
     }
 }

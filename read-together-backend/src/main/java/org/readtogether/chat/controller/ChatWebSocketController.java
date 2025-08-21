@@ -3,14 +3,17 @@ package org.readtogether.chat.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.readtogether.chat.model.request.ChatMessageWebSocketRequest;
+import org.readtogether.chat.model.request.JoinLeaveWebSocketRequest;
+import org.readtogether.chat.model.request.ReadWebSocketRequest;
+import org.readtogether.chat.model.request.TypingWebSocketRequest;
 import org.readtogether.chat.model.response.ChatMessageResponse;
 import org.readtogether.chat.service.ChatService;
 import org.readtogether.chat.service.ChatWebSocketService;
+import org.readtogether.common.utils.SecurityUtils;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Controller;
 
 import java.util.UUID;
@@ -31,12 +34,11 @@ public class ChatWebSocketController {
         log.debug("Received WebSocket message for room: {}", request.getChatRoomId());
         
         try {
-            UUID userId = getUserIdFromAuth(headerAccessor);
+            Authentication auth = (Authentication) headerAccessor.getUser();
+            UUID userId = SecurityUtils.getCurrentUserId(auth);
             
-            // Send message through service
             ChatMessageResponse message = chatService.sendMessage(request, userId);
             
-            // Broadcast to room subscribers
             chatWebSocketService.sendMessageToRoom(request.getChatRoomId(), message);
             
             log.info("Successfully processed WebSocket message: {}", message.getId());
@@ -48,14 +50,16 @@ public class ChatWebSocketController {
 
     @MessageMapping("/chat/typing")
     public void handleTyping(
-            @Payload TypingRequest request,
+            @Payload TypingWebSocketRequest request,
             SimpMessageHeaderAccessor headerAccessor) {
         
         log.debug("Received typing notification for room: {}", request.getChatRoomId());
         
         try {
-            UUID userId = getUserIdFromAuth(headerAccessor);
-            String username = getUsernameFromAuth(headerAccessor);
+            Authentication auth = (Authentication) headerAccessor.getUser();
+            UUID userId = SecurityUtils.getCurrentUserId(auth);
+            Authentication auth2 = (Authentication) headerAccessor.getUser();
+            String username = chatWebSocketService.getUsernameFromAuth(auth2);
             
             chatWebSocketService.notifyTyping(
                 request.getChatRoomId(),
@@ -71,14 +75,15 @@ public class ChatWebSocketController {
 
     @MessageMapping("/chat/join")
     public void joinRoom(
-            @Payload JoinRoomRequest request,
+            @Payload JoinLeaveWebSocketRequest request,
             SimpMessageHeaderAccessor headerAccessor) {
         
         log.debug("User joining room: {}", request.getChatRoomId());
         
         try {
-            UUID userId = getUserIdFromAuth(headerAccessor);
-            String username = getUsernameFromAuth(headerAccessor);
+            Authentication auth = (Authentication) headerAccessor.getUser();
+            UUID userId = SecurityUtils.getCurrentUserId(auth);
+            String username = chatWebSocketService.getUsernameFromAuth(auth);
             
             chatWebSocketService.notifyUserJoined(request.getChatRoomId(), userId, username);
             
@@ -89,14 +94,15 @@ public class ChatWebSocketController {
 
     @MessageMapping("/chat/leave")
     public void leaveRoom(
-            @Payload LeaveRoomRequest request,
+            @Payload JoinLeaveWebSocketRequest request,
             SimpMessageHeaderAccessor headerAccessor) {
         
         log.debug("User leaving room: {}", request.getChatRoomId());
         
         try {
-            UUID userId = getUserIdFromAuth(headerAccessor);
-            String username = getUsernameFromAuth(headerAccessor);
+            Authentication auth = (Authentication) headerAccessor.getUser();
+            UUID userId = SecurityUtils.getCurrentUserId(auth);
+            String username = chatWebSocketService.getUsernameFromAuth(auth);
             
             chatWebSocketService.notifyUserLeft(request.getChatRoomId(), userId, username);
             
@@ -107,13 +113,14 @@ public class ChatWebSocketController {
 
     @MessageMapping("/chat/read")
     public void markAsRead(
-            @Payload ReadMessageRequest request,
+            @Payload ReadWebSocketRequest request,
             SimpMessageHeaderAccessor headerAccessor) {
         
         log.debug("Marking message as read: {}", request.getMessageId());
         
         try {
-            UUID userId = getUserIdFromAuth(headerAccessor);
+            Authentication auth = (Authentication) headerAccessor.getUser();
+            UUID userId = SecurityUtils.getCurrentUserId(auth);
             
             chatService.markMessagesAsRead(request.getChatRoomId(), userId);
             chatWebSocketService.notifyMessageRead(request.getChatRoomId(), userId, request.getMessageId());
@@ -121,56 +128,5 @@ public class ChatWebSocketController {
         } catch (Exception e) {
             log.error("Error processing read notification for message: {}", request.getMessageId(), e);
         }
-    }
-
-    private UUID getUserIdFromAuth(SimpMessageHeaderAccessor headerAccessor) {
-        Authentication auth = (Authentication) headerAccessor.getUser();
-        if (auth != null && auth.getPrincipal() instanceof Jwt jwt) {
-            return UUID.fromString(jwt.getClaim("userId"));
-        }
-        throw new IllegalStateException("Unable to extract user ID from WebSocket authentication");
-    }
-
-    private String getUsernameFromAuth(SimpMessageHeaderAccessor headerAccessor) {
-        Authentication auth = (Authentication) headerAccessor.getUser();
-        if (auth != null && auth.getPrincipal() instanceof Jwt jwt) {
-            return jwt.getClaim("username");
-        }
-        return "Unknown";
-    }
-
-    // Inner classes for WebSocket request payloads
-    public static class TypingRequest {
-        private UUID chatRoomId;
-        private boolean typing;
-
-        public UUID getChatRoomId() { return chatRoomId; }
-        public void setChatRoomId(UUID chatRoomId) { this.chatRoomId = chatRoomId; }
-        public boolean isTyping() { return typing; }
-        public void setTyping(boolean typing) { this.typing = typing; }
-    }
-
-    public static class JoinRoomRequest {
-        private UUID chatRoomId;
-
-        public UUID getChatRoomId() { return chatRoomId; }
-        public void setChatRoomId(UUID chatRoomId) { this.chatRoomId = chatRoomId; }
-    }
-
-    public static class LeaveRoomRequest {
-        private UUID chatRoomId;
-
-        public UUID getChatRoomId() { return chatRoomId; }
-        public void setChatRoomId(UUID chatRoomId) { this.chatRoomId = chatRoomId; }
-    }
-
-    public static class ReadMessageRequest {
-        private UUID chatRoomId;
-        private UUID messageId;
-
-        public UUID getChatRoomId() { return chatRoomId; }
-        public void setChatRoomId(UUID chatRoomId) { this.chatRoomId = chatRoomId; }
-        public UUID getMessageId() { return messageId; }
-        public void setMessageId(UUID messageId) { this.messageId = messageId; }
     }
 }

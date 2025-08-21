@@ -4,6 +4,7 @@ import lombok.experimental.UtilityClass;
 import org.readtogether.chat.entity.ChatMessageEntity;
 import org.readtogether.chat.model.request.ChatMessageSendRequest;
 import org.readtogether.chat.model.request.ChatMessageWebSocketRequest;
+import org.readtogether.common.enums.MessageType;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -19,7 +20,7 @@ public class ChatMessageEntityFactory {
                 .chatRoomId(request.getChatRoomId())
                 .senderId(senderId)
                 .content(request.getContent())
-                .messageType(mapToEntityType(request.getType()))
+                .messageType(request.getType())
                 .sentAt(Instant.now())
                 .isDeleted(false)
                 .replyToMessageId(request.getReplyToMessageId())
@@ -42,7 +43,7 @@ public class ChatMessageEntityFactory {
                 .chatRoomId(request.getChatRoomId())
                 .senderId(senderId)
                 .content(request.getContent())
-                .messageType(mapRestToEntityType(request.getType()))
+                .messageType(request.getType())
                 .sentAt(Instant.now())
                 .isDeleted(false)
                 .replyToMessageId(request.getReplyToMessageId())
@@ -61,27 +62,9 @@ public class ChatMessageEntityFactory {
                 .chatRoomId(chatRoomId)
                 .senderId(null) // System messages have no sender
                 .content(content)
-                .messageType(ChatMessageEntity.MessageType.SYSTEM)
+                .messageType(MessageType.SYSTEM)
                 .sentAt(Instant.now())
                 .isDeleted(false)
                 .build();
-    }
-
-    private static ChatMessageEntity.MessageType mapToEntityType(ChatMessageWebSocketRequest.MessageType requestType) {
-        return switch (requestType) {
-            case TEXT -> ChatMessageEntity.MessageType.TEXT;
-            case IMAGE -> ChatMessageEntity.MessageType.IMAGE;
-            case FILE -> ChatMessageEntity.MessageType.FILE;
-            case EMOJI -> ChatMessageEntity.MessageType.EMOJI;
-        };
-    }
-
-    private static ChatMessageEntity.MessageType mapRestToEntityType(ChatMessageSendRequest.MessageType requestType) {
-        return switch (requestType) {
-            case TEXT -> ChatMessageEntity.MessageType.TEXT;
-            case IMAGE -> ChatMessageEntity.MessageType.IMAGE;
-            case FILE -> ChatMessageEntity.MessageType.FILE;
-            case EMOJI -> ChatMessageEntity.MessageType.EMOJI;
-        };
     }
 }
