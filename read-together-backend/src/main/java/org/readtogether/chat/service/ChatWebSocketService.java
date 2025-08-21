@@ -2,13 +2,11 @@ package org.readtogether.chat.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.readtogether.chat.factory.ChatWebSocketNotificationFactory;
 import org.readtogether.chat.model.response.ChatMessageResponse;
-import org.readtogether.infrastructure.websocket.util.WebSocketUtils;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 @Slf4j
@@ -24,7 +22,7 @@ public class ChatWebSocketService {
         try {
             messagingTemplate.convertAndSend(
                 "/topic/chat/" + chatRoomId,
-                createMessageNotification(message)
+                ChatWebSocketNotificationFactory.createNewMessageNotification(message)
             );
             
             log.debug("Successfully sent message to room: {}", chatRoomId);
@@ -40,7 +38,7 @@ public class ChatWebSocketService {
             messagingTemplate.convertAndSendToUser(
                 userId.toString(),
                 "/queue/chat",
-                createMessageNotification(message)
+                ChatWebSocketNotificationFactory.createNewMessageNotification(message)
             );
             
             log.debug("Successfully sent private message notification to user: {}", userId);
@@ -51,20 +49,11 @@ public class ChatWebSocketService {
 
     public void notifyTyping(UUID chatRoomId, UUID userId, String username, boolean isTyping) {
         log.debug("Sending typing notification for room: {} from user: {}", chatRoomId, userId);
-        
-        Map<String, Object> typingNotification = Map.of(
-            "type", "TYPING",
-            "chatRoomId", chatRoomId.toString(),
-            "userId", userId.toString(),
-            "username", username,
-            "isTyping", isTyping,
-            "timestamp", System.currentTimeMillis()
-        );
 
         try {
             messagingTemplate.convertAndSend(
                 "/topic/chat/" + chatRoomId + "/typing",
-                typingNotification
+                ChatWebSocketNotificationFactory.createTypingNotification(chatRoomId, userId, username, isTyping)
             );
         } catch (Exception e) {
             log.error("Failed to send typing notification to room: {}", chatRoomId, e);
@@ -73,20 +62,11 @@ public class ChatWebSocketService {
 
     public void notifyUserJoined(UUID chatRoomId, UUID userId, String username) {
         log.debug("Sending user joined notification for room: {}", chatRoomId);
-        
-        Map<String, Object> joinNotification = Map.of(
-            "type", "USER_JOINED",
-            "chatRoomId", chatRoomId.toString(),
-            "userId", userId.toString(),
-            "username", username,
-            "message", username + " joined the chat",
-            "timestamp", System.currentTimeMillis()
-        );
 
         try {
             messagingTemplate.convertAndSend(
                 "/topic/chat/" + chatRoomId + "/events",
-                joinNotification
+                ChatWebSocketNotificationFactory.createUserJoinedNotification(chatRoomId, userId, username)
             );
         } catch (Exception e) {
             log.error("Failed to send user joined notification to room: {}", chatRoomId, e);
@@ -95,20 +75,11 @@ public class ChatWebSocketService {
 
     public void notifyUserLeft(UUID chatRoomId, UUID userId, String username) {
         log.debug("Sending user left notification for room: {}", chatRoomId);
-        
-        Map<String, Object> leaveNotification = Map.of(
-            "type", "USER_LEFT",
-            "chatRoomId", chatRoomId.toString(),
-            "userId", userId.toString(),
-            "username", username,
-            "message", username + " left the chat",
-            "timestamp", System.currentTimeMillis()
-        );
 
         try {
             messagingTemplate.convertAndSend(
                 "/topic/chat/" + chatRoomId + "/events",
-                leaveNotification
+                ChatWebSocketNotificationFactory.createUserLeftNotification(chatRoomId, userId, username)
             );
         } catch (Exception e) {
             log.error("Failed to send user left notification to room: {}", chatRoomId, e);
@@ -117,30 +88,14 @@ public class ChatWebSocketService {
 
     public void notifyMessageRead(UUID chatRoomId, UUID userId, UUID messageId) {
         log.debug("Sending message read notification for room: {}", chatRoomId);
-        
-        Map<String, Object> readNotification = Map.of(
-            "type", "MESSAGE_READ",
-            "chatRoomId", chatRoomId.toString(),
-            "userId", userId.toString(),
-            "messageId", messageId.toString(),
-            "timestamp", System.currentTimeMillis()
-        );
 
         try {
             messagingTemplate.convertAndSend(
                 "/topic/chat/" + chatRoomId + "/events",
-                readNotification
+                ChatWebSocketNotificationFactory.createMessageReadNotification(chatRoomId, userId, messageId)
             );
         } catch (Exception e) {
             log.error("Failed to send message read notification to room: {}", chatRoomId, e);
         }
-    }
-
-    private Map<String, Object> createMessageNotification(ChatMessageResponse message) {
-        Map<String, Object> notification = new HashMap<>();
-        notification.put("type", "NEW_MESSAGE");
-        notification.put("message", message);
-        notification.put("timestamp", System.currentTimeMillis());
-        return notification;
     }
 }

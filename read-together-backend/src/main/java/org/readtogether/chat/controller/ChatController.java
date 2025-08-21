@@ -3,17 +3,29 @@ package org.readtogether.chat.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.readtogether.chat.model.request.ChatMessageSendRequest;
 import org.readtogether.chat.model.request.ChatRoomCreateRequest;
 import org.readtogether.chat.model.response.ChatMessageResponse;
 import org.readtogether.chat.model.response.ChatRoomResponse;
+import org.readtogether.chat.service.ChatFileService;
 import org.readtogether.chat.service.ChatService;
 import org.readtogether.chat.service.ChatWebSocketService;
 import org.readtogether.common.model.CustomResponse;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.UUID;
 
 @Slf4j
@@ -24,6 +36,7 @@ public class ChatController {
 
     private final ChatService chatService;
     private final ChatWebSocketService chatWebSocketService;
+    private final ChatFileService chatFileService;
 
     @GetMapping("/rooms")
     public CustomResponse<Page<ChatRoomResponse>> getUserChatRooms(
@@ -91,6 +104,49 @@ public class ChatController {
         ChatRoomResponse chatRoom = chatService.getOrCreateDirectChat(userId, otherUserId);
         
         return CustomResponse.successOf(chatRoom);
+    }
+
+    @PostMapping("/rooms/{roomId}/messages")
+    public CustomResponse<ChatMessageResponse> sendMessageWithFile(
+            @PathVariable UUID roomId,
+            @RequestPart("message") @Valid ChatMessageSendRequest request,
+            @RequestPart(value = "file", required = false) MultipartFile file,
+            Authentication authentication) throws IOException {
+        
+        log.info("Sending message with file to room: {}", roomId);
+        
+        UUID userId = getUserIdFromAuth(authentication);
+        request.setChatRoomId(roomId);
+        request.setAttachment(file);
+        
+        ChatMessageResponse message = chatFileService.sendMessageWithFile(request, userId);
+        
+        return CustomResponse.successOf(message);
+    }
+
+    @GetMapping("/files/{fileName}")
+    public ResponseEntity<Resource> downloadFile(@PathVariable String fileName) {
+        log.info("Downloading file: {}", fileName);
+        
+        try {
+            String filePath = chatFileService.getFileUrl(fileName);
+            Path path = Paths.get(filePath);
+            Resource resource = new UrlResource(path.toUri());
+            
+            if (resource.exists() && resource.isReadable()) {
+                String contentType = "application/octet-stream";
+                
+                return ResponseEntity.ok()
+                    .contentType(MediaType.parseMediaType(contentType))
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
+                    .body(resource);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (MalformedURLException e) {
+            log.error("Error downloading file: {}", fileName, e);
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     private UUID getUserIdFromAuth(Authentication authentication) {

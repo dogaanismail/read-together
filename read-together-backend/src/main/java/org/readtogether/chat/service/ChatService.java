@@ -125,6 +125,35 @@ public class ChatService {
     }
 
     @Transactional
+    public ChatMessageResponse sendMessageWithAttachment(
+            ChatMessageSendRequest request,
+            UUID senderId,
+            String attachmentUrl,
+            String attachmentName,
+            Long attachmentSize,
+            String attachmentType) {
+        
+        log.debug("Sending REST message with attachment to room: {} from user: {}", request.getChatRoomId(), senderId);
+        
+        // Verify user is participant
+        if (!chatRoomRepository.isUserParticipant(request.getChatRoomId(), senderId)) {
+            throw new AccessDeniedException("User is not a participant in this chat room");
+        }
+
+        // Create and save message
+        ChatMessageEntity message = ChatMessageEntityFactory.createFromRestRequest(
+            request, senderId, attachmentUrl, attachmentName, attachmentSize, attachmentType
+        );
+        message = chatMessageRepository.save(message);
+
+        // Update unread counts
+        chatParticipantRepository.incrementUnreadCount(request.getChatRoomId(), senderId);
+
+        log.info("Sent message with attachment: {} to room: {}", message.getId(), request.getChatRoomId());
+        return mapToChatMessageResponse(message);
+    }
+
+    @Transactional
     public void markMessagesAsRead(UUID chatRoomId, UUID userId) {
         log.debug("Marking messages as read for room: {} by user: {}", chatRoomId, userId);
         
