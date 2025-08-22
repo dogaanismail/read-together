@@ -17,6 +17,4 @@ public interface FeedLikeRepository extends JpaRepository<FeedLikeEntity, UUID> 
     boolean existsByFeedItemIdAndUserId(UUID feedItemId, UUID userId);
 
     Optional<FeedLikeEntity> findByFeedItemIdAndUserId(UUID feedItemId, UUID userId);
-
-    long countByFeedItemId(UUID feedItemId);
 }

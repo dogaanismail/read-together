@@ -15,8 +15,10 @@ public interface FeedCommentRepository extends JpaRepository<FeedCommentEntity, 
 
     Page<FeedCommentEntity> findByParentCommentIdAndIsDeletedFalseOrderByCreatedAtAsc(UUID parentCommentId, Pageable pageable);
 
-    long countByFeedItemIdAndIsDeletedFalse(UUID feedItemId);
-
-    @Query("SELECT fc FROM feedComment fc WHERE fc.feedItemId = :feedItemId AND fc.parentCommentId IS NULL AND fc.isDeleted = false ORDER BY fc.createdAt ASC")
+    @Query("SELECT fc FROM feedComment fc " +
+           "WHERE fc.feedItemId = :feedItemId " +
+           "AND fc.parentCommentId IS NULL " +
+           "AND fc.isDeleted = false " +
+           "ORDER BY fc.createdAt ASC")
     Page<FeedCommentEntity> findTopLevelCommentsByFeedItemId(@Param("feedItemId") UUID feedItemId, Pageable pageable);
 }

@@ -44,17 +44,17 @@ public class FeedLikeService {
 
         sendLikeNotificationIfSession(feedItemId, userId);
 
-        log.info("User {} liked feed item {}", userId, feedItemId);
         return true;
     }
 
     @Transactional
-    public boolean unlikeFeedItem(UUID feedItemId, UUID userId) {
+    public boolean unlikeFeedItem(
+            UUID feedItemId, 
+            UUID userId) {
 
         Optional<FeedLikeEntity> likeOpt = feedLikeRepository.findByFeedItemIdAndUserId(feedItemId, userId);
         
         if (likeOpt.isEmpty()) {
-            log.debug("User {} has not liked feed item {}", userId, feedItemId);
             return false;
         }
 
@@ -62,12 +62,13 @@ public class FeedLikeService {
 
         feedRepository.decrementLikeCount(feedItemId);
 
-        log.info("User {} unliked feed item {}", userId, feedItemId);
         return true;
     }
 
     @Transactional(readOnly = true)
-    public boolean isLikedByUser(UUID feedItemId, UUID userId) {
+    public boolean isLikedByUser(
+            UUID feedItemId, 
+            UUID userId) {
 
         return feedLikeRepository.existsByFeedItemIdAndUserId(feedItemId, userId);
     }

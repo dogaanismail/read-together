@@ -88,7 +88,9 @@ public class FeedController {
     }
 
     @PostMapping("/{id}/like")
-    public ResponseEntity<Void> likeFeedItem(@PathVariable UUID id, Authentication authentication) {
+    public ResponseEntity<Void> likeFeedItem(
+            @PathVariable UUID id, 
+            Authentication authentication) {
 
         try {
             UUID userId = SecurityUtils.getCurrentUserId(authentication);
@@ -106,7 +108,9 @@ public class FeedController {
     }
 
     @DeleteMapping("/{id}/like")
-    public ResponseEntity<Void> unlikeFeedItem(@PathVariable UUID id, Authentication authentication) {
+    public ResponseEntity<Void> unlikeFeedItem(
+            @PathVariable UUID id, 
+            Authentication authentication) {
 
         try {
             UUID userId = SecurityUtils.getCurrentUserId(authentication);
