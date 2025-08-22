@@ -1,4 +1,4 @@
-package org.readtogether.session.model;
+package org.readtogether.session.model.request;
 
 import jakarta.validation.constraints.Size;
 import lombok.Data;

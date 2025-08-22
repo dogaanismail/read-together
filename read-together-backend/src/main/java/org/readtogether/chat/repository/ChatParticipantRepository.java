@@ -9,30 +9,12 @@ import org.springframework.stereotype.Repository;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Repository
 public interface ChatParticipantRepository extends JpaRepository<ChatParticipantEntity, UUID> {
 
     List<ChatParticipantEntity> findByChatRoomIdAndIsActiveTrue(UUID chatRoomId);
-
-    Optional<ChatParticipantEntity> findByChatRoomIdAndUserIdAndIsActiveTrue(
-        UUID chatRoomId,
-        UUID userId
-    );
-
-    @Query("""
-        SELECT cp FROM chat_participants cp
-        WHERE cp.userId = :userId
-        AND cp.isActive = true
-        AND cp.chatRoomId IN (
-            SELECT cr.id FROM chat_rooms cr
-            WHERE cr.isActive = true
-        )
-        ORDER BY cp.lastReadAt DESC
-        """)
-    List<ChatParticipantEntity> findUserActiveParticipations(@Param("userId") UUID userId);
 
     @Modifying
     @Query("""
@@ -57,5 +39,4 @@ public interface ChatParticipantRepository extends JpaRepository<ChatParticipant
         @Param("senderId") UUID senderId
     );
 
-    long countByChatRoomIdAndIsActiveTrue(UUID chatRoomId);
 }

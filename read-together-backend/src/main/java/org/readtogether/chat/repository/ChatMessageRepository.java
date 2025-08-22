@@ -29,29 +29,11 @@ public interface ChatMessageRepository extends JpaRepository<ChatMessageEntity, 
     @Query("""
         SELECT cm FROM chat_messages cm
         WHERE cm.chatRoomId = :chatRoomId
-        AND cm.sentAt < :beforeTimestamp
-        AND cm.isDeleted = false
-        ORDER BY cm.sentAt DESC
-        """)
-    Page<ChatMessageEntity> findByChatRoomIdBeforeTimestamp(
-        @Param("chatRoomId") UUID chatRoomId,
-        @Param("beforeTimestamp") Instant beforeTimestamp,
-        Pageable pageable
-    );
-
-    @Query("""
-        SELECT cm FROM chat_messages cm
-        WHERE cm.chatRoomId = :chatRoomId
         AND cm.isDeleted = false
         ORDER BY cm.sentAt DESC
         LIMIT 1
         """)
     Optional<ChatMessageEntity> findLastMessageByChatRoomId(@Param("chatRoomId") UUID chatRoomId);
-
-    long countByChatRoomIdAndSentAtAfterAndIsDeletedFalse(
-        UUID chatRoomId,
-        Instant afterTimestamp
-    );
 
     @Query("""
         SELECT COUNT(cm) FROM chat_messages cm
