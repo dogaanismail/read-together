@@ -9,15 +9,20 @@ import org.readtogether.common.model.auth.User;
 import org.readtogether.common.model.auth.dto.request.LoginRequest;
 import org.readtogether.common.model.auth.dto.request.RegisterRequest;
 import org.readtogether.common.model.auth.dto.request.TokenInvalidateRequest;
+import org.readtogether.common.model.auth.dto.request.ForgotPasswordRequest;
+import org.readtogether.common.model.auth.dto.request.UpdateProfileRequest;
 import org.readtogether.common.model.auth.dto.response.TokenResponse;
+import org.readtogether.common.model.auth.dto.response.ProfilePictureResponse;
 import org.readtogether.user.model.user.mapper.TokenToTokenResponseMapper;
 import org.readtogether.user.service.LogoutService;
 import org.readtogether.user.service.RegisterService;
 import org.readtogether.user.service.UserLoginService;
 import org.readtogether.user.service.UserService;
+import org.readtogether.notification.service.NotificationProviderService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.UUID;
 
@@ -31,6 +36,7 @@ public class UserController {
     private final UserService userService;
     private final LogoutService logoutService;
     private final RegisterService registerService;
+    private final NotificationProviderService notificationProviderService;
     private final TokenToTokenResponseMapper tokenToTokenResponseMapper = TokenToTokenResponseMapper
             .initialize();
 
@@ -65,6 +71,23 @@ public class UserController {
         return CustomResponse.SUCCESS;
     }
 
+    @PostMapping("/forgot-password")
+    public CustomResponse<Void> forgotPassword(
+            @RequestBody @Valid ForgotPasswordRequest forgotPasswordRequest) {
+
+        log.info("Received a request to send forgot password email");
+        
+        try {
+            // Use notification service to send forgot password email
+            notificationProviderService.sendForgotPasswordEmail(forgotPasswordRequest.getEmail());
+            log.info("Forgot password email sent successfully");
+            return CustomResponse.SUCCESS;
+        } catch (Exception e) {
+            log.error("Failed to send forgot password email", e);
+            return CustomResponse.SUCCESS; // Don't reveal if email exists for security
+        }
+    }
+
     @GetMapping("/user")
     public CustomResponse<User> getUser(
             @RequestParam(name = "userId") UUID userId) {
@@ -81,6 +104,41 @@ public class UserController {
         log.info("Received a request to get current user");
         User user = userService.getCurrentUser();
         return CustomResponse.successOf(user);
+    }
+
+    @PutMapping("/profile")
+    @PreAuthorize("hasAuthority('USER')")
+    public CustomResponse<User> updateProfile(
+            @RequestBody @Valid UpdateProfileRequest updateProfileRequest) {
+
+        log.info("Received a request to update user profile");
+        User updatedUser = userService.updateProfile(updateProfileRequest);
+        return CustomResponse.successOf(updatedUser);
+    }
+
+    @PostMapping("/profile/picture")
+    @PreAuthorize("hasAuthority('USER')")
+    public CustomResponse<ProfilePictureResponse> uploadProfilePicture(
+            @RequestParam("profilePicture") MultipartFile file) {
+
+        log.info("Received a request to upload profile picture");
+        
+        // Validate file
+        if (file.isEmpty()) {
+            throw new IllegalArgumentException("File cannot be empty");
+        }
+        
+        if (file.getSize() > 5 * 1024 * 1024) { // 5MB limit
+            throw new IllegalArgumentException("File size cannot exceed 5MB");
+        }
+        
+        if (!file.getContentType().startsWith("image/")) {
+            throw new IllegalArgumentException("File must be an image");
+        }
+        
+        String profilePictureUrl = userService.uploadProfilePicture(file);
+        ProfilePictureResponse response = new ProfilePictureResponse(profilePictureUrl);
+        return CustomResponse.successOf(response);
     }
 
 }

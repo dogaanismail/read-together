@@ -14,7 +14,7 @@ import { ArrowLeft, Camera, Save, X } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { toast } from "sonner";
+import { useToast } from "@/hooks/use-toast";
 import Navigation from "@/components/Navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { api } from "@/lib/api";
@@ -34,6 +34,7 @@ const EditProfile = () => {
   const { user, loading, updateUser, refreshUser } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [isUploadingPicture, setIsUploadingPicture] = useState(false);
+  const { toast } = useToast();
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileSchema),
@@ -112,14 +113,21 @@ const EditProfile = () => {
       if (result.isSuccess) {
         // Update the user in context
         updateUser(result.response);
-        toast.success("Profile updated successfully!");
+        toast({
+          title: "Success",
+          description: "Profile updated successfully!",
+        });
         navigate("/profile");
       } else {
         throw new Error("Failed to update profile");
       }
     } catch (error) {
       console.error("Profile update error:", error);
-      toast.error("Failed to update profile. Please try again.");
+      toast({
+        title: "Error",
+        description: "Failed to update profile. Please try again.",
+        variant: "destructive",
+      });
     } finally {
       setIsLoading(false);
     }
@@ -131,13 +139,21 @@ const EditProfile = () => {
 
     // Validate file size (max 5MB)
     if (file.size > 5 * 1024 * 1024) {
-      toast.error("File size must be less than 5MB");
+      toast({
+        title: "Error",
+        description: "File size must be less than 5MB",
+        variant: "destructive",
+      });
       return;
     }
 
     // Validate file type
     if (!file.type.startsWith('image/')) {
-      toast.error("Please select an image file");
+      toast({
+        title: "Error",
+        description: "Please select an image file",
+        variant: "destructive",
+      });
       return;
     }
 
@@ -154,13 +170,20 @@ const EditProfile = () => {
         // Update user in context
         updateUser({ profilePictureUrl });
         
-        toast.success("Profile picture updated successfully!");
+        toast({
+          title: "Success",
+          description: "Profile picture updated successfully!",
+        });
       } else {
         throw new Error("Failed to upload profile picture");
       }
     } catch (error) {
       console.error("Profile picture upload error:", error);
-      toast.error("Failed to upload profile picture. Please try again.");
+      toast({
+        title: "Error",
+        description: "Failed to upload profile picture. Please try again.",
+        variant: "destructive",
+      });
     } finally {
       setIsUploadingPicture(false);
     }

@@ -2,6 +2,7 @@ package org.readtogether.user.service;
 
 import lombok.RequiredArgsConstructor;
 import org.readtogether.common.model.auth.User;
+import org.readtogether.common.model.auth.dto.request.UpdateProfileRequest;
 import org.readtogether.user.entity.UserEntity;
 import org.readtogether.user.exception.UserNotFoundException;
 import org.readtogether.user.model.user.mapper.UserEntityToUserMapper;
@@ -10,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -58,6 +60,49 @@ public class UserService {
                 .map(Jwt.class::cast)
                 .map(jwt -> jwt.getClaim(USER_ID.getValue()))
                 .map(Object::toString);
+    }
+
+    public User updateProfile(UpdateProfileRequest updateRequest) {
+        Optional<String> currentUserId = getCurrentIdFromJwt();
+        
+        if (currentUserId.isEmpty()) {
+            throw new IllegalStateException("User not authenticated");
+        }
+        
+        UUID userId = UUID.fromString(currentUserId.get());
+        UserEntity userEntity = findUserEntityById(userId);
+        
+        // Update fields if provided
+        if (updateRequest.getFirstName() != null) {
+            userEntity.setFirstName(updateRequest.getFirstName());
+        }
+        if (updateRequest.getLastName() != null) {
+            userEntity.setLastName(updateRequest.getLastName());
+        }
+        if (updateRequest.getUsername() != null) {
+            userEntity.setUsername(updateRequest.getUsername());
+        }
+        if (updateRequest.getBio() != null) {
+            userEntity.setBio(updateRequest.getBio());
+        }
+        if (updateRequest.getProfilePictureUrl() != null) {
+            userEntity.setProfilePictureUrl(updateRequest.getProfilePictureUrl());
+        }
+        
+        userEntity = userRepository.save(userEntity);
+        return userEntityToUserMapper.map(userEntity);
+    }
+
+    public String uploadProfilePicture(MultipartFile file) {
+        // For now, return a mock URL
+        // In a real implementation, this would upload to AWS S3 or similar service
+        String fileName = "profile_" + System.currentTimeMillis() + "_" + file.getOriginalFilename();
+        String profilePictureUrl = "https://storage.readtogether.app/profiles/" + fileName;
+        
+        // TODO: Implement actual file upload to cloud storage
+        // For now, just return the mock URL
+        
+        return profilePictureUrl;
     }
 
 }

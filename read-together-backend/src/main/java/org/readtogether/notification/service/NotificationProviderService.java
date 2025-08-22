@@ -105,4 +105,41 @@ public class NotificationProviderService {
 
         return preferenceType == NotificationPreferenceType.UPLOAD_STATUS;
     }
+
+    /**
+     * Send forgot password email to the specified email address
+     * This method doesn't require user ID since we're sending to any email
+     */
+    public void sendForgotPasswordEmail(String email) {
+        String title = "Reset Your Password - Read Together";
+        String message = "We received a request to reset your password. If you didn't make this request, please ignore this email.";
+        String resetLink = "https://readtogether.app/reset-password"; // This would be a proper reset link with token
+        
+        String emailContent = String.format(
+            "Hello,\n\n%s\n\nClick the link below to reset your password:\n%s\n\n" +
+            "This link will expire in 24 hours for security reasons.\n\n" +
+            "Best regards,\nThe Read Together Team",
+            message, resetLink
+        );
+
+        emailProviders.stream()
+                .filter(NotificationProvider::isEnabled)
+                .findFirst()
+                .ifPresentOrElse(
+                        provider -> {
+                            try {
+                                // Use the existing sendEmail method
+                                provider.sendEmail(email, title, emailContent, emailContent);
+                                log.info("Sent forgot password email to: {}", email);
+                            } catch (Exception e) {
+                                log.error("Failed to send forgot password email to {}", email, e);
+                                throw new RuntimeException("Failed to send forgot password email", e);
+                            }
+                        },
+                        () -> {
+                            log.warn("No email provider available for forgot password email");
+                            throw new RuntimeException("Email service unavailable");
+                        }
+                );
+    }
 }
