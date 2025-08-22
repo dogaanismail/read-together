@@ -32,7 +32,7 @@ import { usePagination } from '@/hooks/usePagination';
 import { useAuth } from '@/contexts/AuthContext';
 
 const Profile = () => {
-  const { user, loading } = useAuth();
+  const { user: authUser } = useAuth();
   const [activeTab, setActiveTab] = useState('sessions');
   const [isRecordingModalOpen, setIsRecordingModalOpen] = useState(false);
   const [currentPlayingSession, setCurrentPlayingSession] = useState<any>(null);
@@ -45,43 +45,11 @@ const Profile = () => {
   });
   const [searchTerm, setSearchTerm] = useState('');
 
-  // Handle loading state
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 dark:bg-gradient-to-br dark:from-gray-900 dark:via-gray-800 dark:to-indigo-900">
-        <Navigation />
-        <div className="max-w-6xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-center h-64">
-            <div className="text-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-              <p className="mt-4 text-gray-600 dark:text-gray-400">Loading profile...</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (!user) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50 dark:bg-gradient-to-br dark:from-gray-900 dark:via-gray-800 dark:to-indigo-900">
-        <Navigation />
-        <div className="max-w-6xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-center h-64">
-            <div className="text-center">
-              <p className="text-gray-600 dark:text-gray-400">Please log in to view your profile.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // User data combining real user info with mock data for missing fields
-  const displayUser = {
-    name: user.name || "User",
-    username: user.username || `@${user.email?.split('@')[0] || 'user'}`,
-    bio: user.bio || "Welcome to Read Together!",
+  // Mock user data (updated with real user data when available)
+  const user = {
+    name: authUser?.name || "John Doe",
+    username: authUser?.username || `@${authUser?.email?.split('@')[0] || 'johndoe'}`,
+    bio: authUser?.bio || "Passionate reader who loves sharing stories. Been practicing speech through reading for 2 years.",
     joinDate: "March 2023",
     stats: {
       sessions: 45,
