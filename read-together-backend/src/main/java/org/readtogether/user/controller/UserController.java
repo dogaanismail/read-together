@@ -131,7 +131,8 @@ public class UserController {
             throw new IllegalArgumentException("File size cannot exceed 5MB");
         }
         
-        if (!file.getContentType().startsWith("image/")) {
+        String contentType = file.getContentType();
+        if (contentType == null || !contentType.startsWith("image/")) {
             throw new IllegalArgumentException("File must be an image");
         }
         

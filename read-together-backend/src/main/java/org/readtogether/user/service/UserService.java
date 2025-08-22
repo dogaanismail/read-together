@@ -79,8 +79,8 @@ public class UserService {
             userEntity.setProfilePictureUrl(updateRequest.getProfilePictureUrl());
         }
 
-        userEntity = userRepository.save(userEntity);
-        return userEntityToUserMapper.map(userEntity);
+        UserEntity savedUserEntity = userRepository.save(userEntity);
+        return userEntityToUserMapper.map(savedUserEntity);
     }
 
     public String uploadProfilePicture(MultipartFile file) {
