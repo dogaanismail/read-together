@@ -16,7 +16,6 @@ import static org.readtogether.session.common.enums.ProcessingStatus.*;
 public class SessionEntityFixtures {
 
     public static final UUID DEFAULT_SESSION_ID = UUID.fromString("550e8400-e29b-41d4-a716-446655440000");
-    public static final UUID SECONDARY_SESSION_ID = UUID.fromString("550e8400-e29b-41d4-a716-446655440001");
     public static final UUID DEFAULT_USER_ID = UUID.fromString("550e8400-e29b-41d4-a716-446655440000");
     public static final UUID SECONDARY_USER_ID = UUID.fromString("550e8400-e29b-41d4-a716-446655440001");
     public static final UUID DEFAULT_READING_ROOM_ID = UUID.fromString("550e8400-e29b-41d4-a716-446655440002");
@@ -31,19 +30,6 @@ public class SessionEntityFixtures {
                 AUDIO,
                 COMPLETED,
                 true
-        );
-    }
-
-    public static SessionEntity createSecondarySessionEntity() {
-
-        return createSessionEntity(
-                SECONDARY_SESSION_ID,
-                SECONDARY_USER_ID,
-                "Secondary Session Title",
-                "Secondary session description",
-                VIDEO,
-                PENDING,
-                false
         );
     }
 
@@ -93,41 +79,6 @@ public class SessionEntityFixtures {
         );
     }
 
-    public static SessionEntity createProcessingSessionEntity() {
-
-        return createSessionEntity(
-                UUID.randomUUID(),
-                DEFAULT_USER_ID,
-                "Processing Session",
-                "A session that is currently processing",
-                VIDEO,
-                PROCESSING,
-                true
-        );
-    }
-
-    public static SessionEntity createFailedSessionEntity() {
-
-        return SessionEntity.builder()
-                .id(UUID.randomUUID())
-                .userId(DEFAULT_USER_ID)
-                .title("Failed Session")
-                .description("A session that failed processing")
-                .mediaUrl("https://example.com/media/failed")
-                .mediaType(AUDIO)
-                .durationSeconds(0)
-                .fileSizeBytes(512000L)
-                .mimeType("audio/mpeg")
-                .processingStatus(FAILED)
-                .processingError("File format not supported")
-                .isPublic(false)
-                .tags("failed,test")
-                .language("en")
-                .createdAt(Instant.now())
-                .updatedAt(Instant.now())
-                .build();
-    }
-
     public static SessionEntity createPublicVideoSessionEntity() {
 
         return createSessionEntity(
@@ -138,19 +89,6 @@ public class SessionEntityFixtures {
                 VIDEO,
                 COMPLETED,
                 true
-        );
-    }
-
-    public static SessionEntity createPrivateAudioSessionEntity() {
-
-        return createSessionEntity(
-                UUID.randomUUID(),
-                DEFAULT_USER_ID,
-                "Private Audio Session",
-                "A private audio session for testing",
-                AUDIO,
-                COMPLETED,
-                false
         );
     }
 }

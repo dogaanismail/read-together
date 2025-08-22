@@ -46,22 +46,6 @@ public class SessionRequestFixtures {
         return request;
     }
 
-    public static SessionCreateRequest createPrivateAudioCreateRequest() {
-
-        SessionCreateRequest request = new SessionCreateRequest();
-        request.setTitle("Private Audio Session");
-        request.setDescription("A private audio session for personal practice");
-        request.setMediaType(AUDIO);
-        request.setPublic(false);
-        request.setReadingRoomId(DEFAULT_READING_ROOM_ID);
-        request.setTags("private,audio,personal");
-        request.setBookTitle("Personal Book");
-        request.setLanguage("en");
-        request.setLive(false);
-        request.setAuthorName("Personal Author");
-        return request;
-    }
-
     public static SessionCreateRequest createCreateSessionRequest(
             String title,
             String description,
@@ -99,19 +83,6 @@ public class SessionRequestFixtures {
         return request;
     }
 
-    public static SessionCreateRequest createLiveSessionRequest() {
-
-        SessionCreateRequest request = new SessionCreateRequest();
-        request.setTitle("Live Reading Session");
-        request.setDescription("A live reading session");
-        request.setMediaType(VIDEO);
-        request.setPublic(true);
-        request.setLive(true);
-        request.setTags("live,video,public");
-        request.setLanguage("en");
-        return request;
-    }
-
     public static SessionUpdateRequest createDefaultUpdateSessionRequest() {
 
         SessionUpdateRequest request = new SessionUpdateRequest();
@@ -122,25 +93,4 @@ public class SessionRequestFixtures {
         return request;
     }
 
-    public static SessionUpdateRequest createUpdateSessionRequest(
-            String title,
-            String description,
-            Boolean isPublic,
-            String tags) {
-
-        SessionUpdateRequest request = new SessionUpdateRequest();
-        request.setTitle(title);
-        request.setDescription(description);
-        request.setIsPublic(isPublic);
-        request.setTags(tags);
-        return request;
-    }
-
-    public static SessionUpdateRequest createPartialUpdateRequest() {
-
-        SessionUpdateRequest request = new SessionUpdateRequest();
-        request.setTitle("Partially Updated Title");
-        // Only setting title, other fields remain null to test partial updates
-        return request;
-    }
 }

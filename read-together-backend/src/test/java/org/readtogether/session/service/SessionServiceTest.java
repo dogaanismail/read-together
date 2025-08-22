@@ -39,7 +39,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 import static org.readtogether.session.common.enums.MediaType.AUDIO;
-import static org.readtogether.session.common.enums.MediaType.VIDEO;
 import static org.readtogether.session.common.enums.ProcessingStatus.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -111,6 +110,7 @@ class SessionServiceTest {
 
         ArgumentCaptor<SessionEntity> sessionCaptor = ArgumentCaptor.forClass(SessionEntity.class);
         verify(sessionRepository).save(sessionCaptor.capture());
+
         SessionEntity savedSession = sessionCaptor.getValue();
         assertThat(savedSession.getUserId()).isEqualTo(userId);
         assertThat(savedSession.getTitle()).isEqualTo(defaultCreateRequest.getTitle());
@@ -189,7 +189,7 @@ class SessionServiceTest {
 
         // Then
         assertThat(result.getContent()).hasSize(1);
-        assertThat(result.getContent().get(0).getId()).isEqualTo(defaultSession.getId());
+        assertThat(result.getContent().getFirst().getId()).isEqualTo(defaultSession.getId());
         verify(sessionRepository).findByUserIdOrderByCreatedAtDesc(userId, pageable);
     }
 
@@ -212,7 +212,7 @@ class SessionServiceTest {
 
         // Then
         assertThat(result.getContent()).hasSize(1);
-        assertThat(result.getContent().get(0).isPublic()).isTrue();
+        assertThat(result.getContent().getFirst().isPublic()).isTrue();
         verify(sessionRepository).findByIsPublicTrueAndProcessingStatusOrderByCreatedAtDesc(COMPLETED, pageable);
     }
 

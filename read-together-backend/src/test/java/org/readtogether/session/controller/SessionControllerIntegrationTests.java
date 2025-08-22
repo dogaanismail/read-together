@@ -16,10 +16,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import java.util.List;
 import java.util.UUID;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -57,7 +55,7 @@ class SessionControllerIntegrationTests extends BaseIntegrationTest {
         // Given
         String accessToken = registerAndLoginUser("session.lister@test.local", "Password1!");
         UUID userId = getUserIdFromToken(accessToken);
-        
+
         // Create sessions for this user
         createSessionForUser(userId);
         createSessionForUser(userId);
@@ -138,7 +136,10 @@ class SessionControllerIntegrationTests extends BaseIntegrationTest {
                 .andExpect(status().isNotFound());
     }
 
-    private String registerAndLoginUser(String email, String password) throws Exception {
+    private String registerAndLoginUser(
+            String email,
+            String password) throws Exception {
+
         // Register user
         RegisterRequest register = RequestFixtures.createRegisterRequest(
                 email,
@@ -162,7 +163,10 @@ class SessionControllerIntegrationTests extends BaseIntegrationTest {
                 .andReturn();
 
         JsonNode loginNode = objectMapper.readTree(loginResult.getResponse().getContentAsString());
-        return loginNode.path("response").path("accessToken").asText();
+        return loginNode
+                .path("response")
+                .path("accessToken")
+                .asText();
     }
 
     private UUID getUserIdFromToken(String accessToken) throws Exception {
@@ -186,17 +190,17 @@ class SessionControllerIntegrationTests extends BaseIntegrationTest {
         return sessionRepository.save(session);
     }
 
-    private SessionEntity createPublicSessionInDatabase() {
+    private void createPublicSessionInDatabase() {
         SessionEntity session = SessionEntityFixtures.createPublicVideoSessionEntity();
         session.setMediaUrl("https://example.com/test-public-session.mp4");
         // Set audit fields to avoid @PrePersist issues
         session.setCreatedBy("test@example.com");
         session.setUpdatedBy("test@example.com");
         session.setVersion((short) 0);
-        return sessionRepository.save(session);
+        sessionRepository.save(session);
     }
 
-    private SessionEntity createSessionForUser(UUID userId) {
+    private void createSessionForUser(UUID userId) {
         SessionEntity session = SessionEntityFixtures.createDefaultSessionEntity();
         session.setUserId(userId);
         session.setMediaUrl("https://example.com/user-session-" + UUID.randomUUID() + ".mp3");
@@ -204,6 +208,6 @@ class SessionControllerIntegrationTests extends BaseIntegrationTest {
         session.setCreatedBy("test@example.com");
         session.setUpdatedBy("test@example.com");
         session.setVersion((short) 0);
-        return sessionRepository.save(session);
+        sessionRepository.save(session);
     }
 }
