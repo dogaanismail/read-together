@@ -1,4 +1,4 @@
-package org.readtogether.session.model;
+package org.readtogether.session.model.response;
 
 import lombok.Data;
 import org.readtogether.session.entity.SessionEntity;

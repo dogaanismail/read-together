@@ -22,9 +22,6 @@ public interface FeedRepository extends JpaRepository<FeedItemEntity, UUID> {
 
     Page<FeedItemEntity> findByUserIdOrderByCreatedAtDesc(UUID userId, Pageable pageable);
 
-    Page<FeedItemEntity> findByCreatedAtAfterAndIsPublicTrueOrderByCreatedAtDesc(
-        Instant date, Pageable pageable);
-
     @Query("SELECT f FROM feedItem f WHERE f.isPublic = true AND " +
            "f.createdAt > :since AND (f.likeCount + f.commentCount + f.viewCount) > :minEngagement " +
            "ORDER BY (f.likeCount + f.commentCount + f.viewCount) DESC")

@@ -3,9 +3,9 @@ package org.readtogether.session.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.readtogether.session.model.SessionCreateRequest;
-import org.readtogether.session.model.SessionResponse;
-import org.readtogether.session.model.SessionUpdateRequest;
+import org.readtogether.session.model.request.SessionCreateRequest;
+import org.readtogether.session.model.response.SessionResponse;
+import org.readtogether.session.model.request.SessionUpdateRequest;
 import org.readtogether.session.service.SessionService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -31,11 +31,11 @@ public class SessionController {
             Authentication authentication) {
 
         return sessionService.createSessionAsync(request, file, authentication)
-            .thenApply(ResponseEntity::ok)
-            .exceptionally(ex -> {
-                log.error("Failed to create session", ex);
-                return ResponseEntity.badRequest().build();
-            });
+                .thenApply(ResponseEntity::ok)
+                .exceptionally(ex -> {
+                    log.error("Failed to create session", ex);
+                    return ResponseEntity.badRequest().build();
+                });
     }
 
     @PostMapping("/sync")
@@ -87,8 +87,8 @@ public class SessionController {
     public ResponseEntity<SessionResponse> getSession(@PathVariable UUID id) {
 
         return sessionService.getSessionById(id)
-            .map(ResponseEntity::ok)
-            .orElse(ResponseEntity.notFound().build());
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/my/{id}")
@@ -97,8 +97,8 @@ public class SessionController {
             Authentication authentication) {
 
         return sessionService.getUserSession(id, authentication)
-            .map(ResponseEntity::ok)
-            .orElse(ResponseEntity.notFound().build());
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PutMapping("/{id}")
@@ -128,24 +128,4 @@ public class SessionController {
         }
     }
 
-    @PostMapping("/{id}/view")
-    public ResponseEntity<Void> incrementViewCount(@PathVariable UUID id) {
-
-        sessionService.incrementViewCount(id);
-        return ResponseEntity.ok().build();
-    }
-
-    @PostMapping("/{id}/like")
-    public ResponseEntity<Void> likeSession(@PathVariable UUID id) {
-
-        sessionService.likeSession(id);
-        return ResponseEntity.ok().build();
-    }
-
-    @DeleteMapping("/{id}/like")
-    public ResponseEntity<Void> unlikeSession(@PathVariable UUID id) {
-
-        sessionService.unlikeSession(id);
-        return ResponseEntity.ok().build();
-    }
 }

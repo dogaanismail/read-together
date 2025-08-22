@@ -1,4 +1,4 @@
-package org.readtogether.session.model;
+package org.readtogether.session.model.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
