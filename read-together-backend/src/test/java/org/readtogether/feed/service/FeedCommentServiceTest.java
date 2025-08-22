@@ -57,7 +57,7 @@ class FeedCommentServiceTest {
     }
 
     @Test
-    void createComment_Success() {
+    void shouldCreateComment() {
         // Given
         FeedCommentEntity savedComment = FeedCommentEntity.builder()
                 .id(UUID.randomUUID())
@@ -83,7 +83,7 @@ class FeedCommentServiceTest {
     }
 
     @Test
-    void createComment_WithSessionNotification() {
+    void shouldCreateCommentWithSessionNotification() {
         // Given
         FeedCommentEntity savedComment = FeedCommentEntity.builder()
                 .id(UUID.randomUUID())
@@ -118,7 +118,7 @@ class FeedCommentServiceTest {
     }
 
     @Test
-    void createComment_NoNotificationForOwnContent() {
+    void shouldNotSendNotificationForOwnContent() {
         // Given
         FeedCommentEntity savedComment = FeedCommentEntity.builder()
                 .id(UUID.randomUUID())
@@ -153,7 +153,7 @@ class FeedCommentServiceTest {
     }
 
     @Test
-    void deleteComment_Success() {
+    void shouldDeleteComment() {
         // Given
         UUID commentId = UUID.randomUUID();
         FeedCommentEntity comment = FeedCommentEntity.builder()
@@ -178,7 +178,7 @@ class FeedCommentServiceTest {
     }
 
     @Test
-    void deleteComment_NotOwner() {
+    void shouldNotDeleteCommentWhenNotOwner() {
         // Given
         UUID commentId = UUID.randomUUID();
         FeedCommentEntity comment = FeedCommentEntity.builder()
@@ -202,7 +202,7 @@ class FeedCommentServiceTest {
     }
 
     @Test
-    void deleteComment_NotFound() {
+    void shouldNotDeleteCommentWhenNotFound() {
         // Given
         UUID commentId = UUID.randomUUID();
         when(feedCommentRepository.findById(commentId)).thenReturn(Optional.empty());

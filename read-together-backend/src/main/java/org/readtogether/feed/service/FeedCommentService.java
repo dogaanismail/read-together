@@ -32,8 +32,11 @@ public class FeedCommentService {
     private final NotificationService notificationService;
 
     @Transactional
-    public FeedCommentResponse createComment(UUID feedItemId, UUID userId, CreateCommentRequest request) {
-        // Create comment
+    public FeedCommentResponse createComment(
+            UUID feedItemId,
+            UUID userId, 
+            CreateCommentRequest request) {
+
         FeedCommentEntity comment = FeedCommentEntityFactory.createFeedComment(
                 feedItemId, 
                 userId, 
@@ -43,10 +46,8 @@ public class FeedCommentService {
         
         FeedCommentEntity savedComment = feedCommentRepository.save(comment);
 
-        // Update comment count in feed item
         feedRepository.incrementCommentCount(feedItemId);
 
-        // Send notification if this is a session comment
         sendCommentNotificationIfSession(feedItemId, userId, request.getContent());
 
         log.info("User {} commented on feed item {}", userId, feedItemId);
@@ -55,24 +56,28 @@ public class FeedCommentService {
     }
 
     @Transactional(readOnly = true)
-    public Page<FeedCommentResponse> getComments(UUID feedItemId, Pageable pageable) {
+    public Page<FeedCommentResponse> getComments(
+            UUID feedItemId, 
+            Pageable pageable) {
+
         return feedCommentRepository.findTopLevelCommentsByFeedItemId(feedItemId, pageable)
                 .map(FeedCommentResponseFactory::createFromEntity);
     }
 
     @Transactional(readOnly = true)
-    public Page<FeedCommentResponse> getReplies(UUID parentCommentId, Pageable pageable) {
+    public Page<FeedCommentResponse> getReplies(
+            UUID parentCommentId, 
+            Pageable pageable) {
+
         return feedCommentRepository.findByParentCommentIdAndIsDeletedFalseOrderByCreatedAtAsc(parentCommentId, pageable)
                 .map(FeedCommentResponseFactory::createFromEntity);
     }
 
-    @Transactional(readOnly = true)
-    public long getCommentCount(UUID feedItemId) {
-        return feedCommentRepository.countByFeedItemIdAndIsDeletedFalse(feedItemId);
-    }
-
     @Transactional
-    public boolean deleteComment(UUID commentId, UUID userId) {
+    public boolean deleteComment(
+            UUID commentId, 
+            UUID userId) {
+
         Optional<FeedCommentEntity> commentOpt = feedCommentRepository.findById(commentId);
         
         if (commentOpt.isEmpty()) {
@@ -82,24 +87,25 @@ public class FeedCommentService {
 
         FeedCommentEntity comment = commentOpt.get();
         
-        // Check if user owns the comment
         if (!comment.getUserId().equals(userId)) {
             log.debug("User {} does not own comment {}", userId, commentId);
             return false;
         }
 
-        // Soft delete
         comment.setDeleted(true);
         feedCommentRepository.save(comment);
 
-        // Update comment count in feed item
         feedRepository.decrementCommentCount(comment.getFeedItemId());
 
         log.info("User {} deleted comment {}", userId, commentId);
         return true;
     }
 
-    private void sendCommentNotificationIfSession(UUID feedItemId, UUID commenterUserId, String commentContent) {
+    private void sendCommentNotificationIfSession(
+            UUID feedItemId, 
+            UUID commenterUserId, 
+            String commentContent) {
+
         Optional<FeedItemEntity> feedItemOpt = feedRepository.findById(feedItemId);
         if (feedItemOpt.isEmpty()) {
             return;
@@ -110,7 +116,6 @@ public class FeedCommentService {
             Optional<SessionEntity> sessionOpt = sessionRepository.findById(feedItem.getReferenceId());
             if (sessionOpt.isPresent()) {
                 SessionEntity session = sessionOpt.get();
-                // Don't notify if user comments on their own content
                 if (!session.getUserId().equals(commenterUserId)) {
                     notificationService.notifySessionCommented(session.getUserId(), commenterUserId, session, commentContent);
                 }

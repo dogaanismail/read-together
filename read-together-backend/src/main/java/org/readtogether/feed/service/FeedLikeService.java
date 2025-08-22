@@ -28,21 +28,20 @@ public class FeedLikeService {
     private final NotificationService notificationService;
 
     @Transactional
-    public boolean likeFeedItem(UUID feedItemId, UUID userId) {
-        // Check if already liked
+    public boolean likeFeedItem(
+            UUID feedItemId, 
+            UUID userId) {
+
         if (feedLikeRepository.existsByFeedItemIdAndUserId(feedItemId, userId)) {
             log.debug("User {} has already liked feed item {}", userId, feedItemId);
             return false;
         }
 
-        // Create like
         FeedLikeEntity like = FeedLikeEntityFactory.createFeedLike(feedItemId, userId);
         feedLikeRepository.save(like);
 
-        // Update like count in feed item
         feedRepository.incrementLikeCount(feedItemId);
 
-        // Send notification if this is a session
         sendLikeNotificationIfSession(feedItemId, userId);
 
         log.info("User {} liked feed item {}", userId, feedItemId);
@@ -51,6 +50,7 @@ public class FeedLikeService {
 
     @Transactional
     public boolean unlikeFeedItem(UUID feedItemId, UUID userId) {
+
         Optional<FeedLikeEntity> likeOpt = feedLikeRepository.findByFeedItemIdAndUserId(feedItemId, userId);
         
         if (likeOpt.isEmpty()) {
@@ -58,10 +58,8 @@ public class FeedLikeService {
             return false;
         }
 
-        // Remove like
         feedLikeRepository.delete(likeOpt.get());
 
-        // Update like count in feed item
         feedRepository.decrementLikeCount(feedItemId);
 
         log.info("User {} unliked feed item {}", userId, feedItemId);
@@ -70,15 +68,14 @@ public class FeedLikeService {
 
     @Transactional(readOnly = true)
     public boolean isLikedByUser(UUID feedItemId, UUID userId) {
+
         return feedLikeRepository.existsByFeedItemIdAndUserId(feedItemId, userId);
     }
 
-    @Transactional(readOnly = true)
-    public long getLikeCount(UUID feedItemId) {
-        return feedLikeRepository.countByFeedItemId(feedItemId);
-    }
+    private void sendLikeNotificationIfSession(
+            UUID feedItemId, 
+            UUID likerUserId) {
 
-    private void sendLikeNotificationIfSession(UUID feedItemId, UUID likerUserId) {
         Optional<FeedItemEntity> feedItemOpt = feedRepository.findById(feedItemId);
         if (feedItemOpt.isEmpty()) {
             return;
@@ -89,7 +86,6 @@ public class FeedLikeService {
             Optional<SessionEntity> sessionOpt = sessionRepository.findById(feedItem.getReferenceId());
             if (sessionOpt.isPresent()) {
                 SessionEntity session = sessionOpt.get();
-                // Don't notify if user likes their own content
                 if (!session.getUserId().equals(likerUserId)) {
                     notificationService.notifySessionLiked(session.getUserId(), likerUserId, session);
                 }

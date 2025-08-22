@@ -8,7 +8,12 @@ import java.util.UUID;
 @UtilityClass
 public class FeedCommentEntityFactory {
 
-    public static FeedCommentEntity createFeedComment(UUID feedItemId, UUID userId, String content, UUID parentCommentId) {
+    public static FeedCommentEntity createFeedComment(
+            UUID feedItemId, 
+            UUID userId, 
+            String content, 
+            UUID parentCommentId) {
+
         return FeedCommentEntity.builder()
                 .feedItemId(feedItemId)
                 .userId(userId)
@@ -18,7 +23,11 @@ public class FeedCommentEntityFactory {
                 .build();
     }
 
-    public static FeedCommentEntity createFeedComment(UUID feedItemId, UUID userId, String content) {
+    public static FeedCommentEntity createFeedComment(
+            UUID feedItemId, 
+            UUID userId, 
+            String content) {
+
         return createFeedComment(feedItemId, userId, content, null);
     }
 }

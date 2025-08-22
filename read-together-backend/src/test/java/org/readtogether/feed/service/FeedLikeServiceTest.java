@@ -51,7 +51,7 @@ class FeedLikeServiceTest {
     }
 
     @Test
-    void likeFeedItem_Success() {
+    void shouldLikeFeedItem() {
         // Given
         when(feedLikeRepository.existsByFeedItemIdAndUserId(feedItemId, userId)).thenReturn(false);
         when(feedLikeRepository.save(any(FeedLikeEntity.class))).thenReturn(new FeedLikeEntity());
@@ -66,7 +66,7 @@ class FeedLikeServiceTest {
     }
 
     @Test
-    void likeFeedItem_AlreadyLiked() {
+    void shouldNotLikeFeedItemWhenAlreadyLiked() {
         // Given
         when(feedLikeRepository.existsByFeedItemIdAndUserId(feedItemId, userId)).thenReturn(true);
 
@@ -80,7 +80,7 @@ class FeedLikeServiceTest {
     }
 
     @Test
-    void unlikeFeedItem_Success() {
+    void shouldUnlikeFeedItem() {
         // Given
         FeedLikeEntity like = new FeedLikeEntity();
         when(feedLikeRepository.findByFeedItemIdAndUserId(feedItemId, userId)).thenReturn(Optional.of(like));
@@ -95,7 +95,7 @@ class FeedLikeServiceTest {
     }
 
     @Test
-    void unlikeFeedItem_NotLiked() {
+    void shouldNotUnlikeFeedItemWhenNotLiked() {
         // Given
         when(feedLikeRepository.findByFeedItemIdAndUserId(feedItemId, userId)).thenReturn(Optional.empty());
 
@@ -109,7 +109,7 @@ class FeedLikeServiceTest {
     }
 
     @Test
-    void likeFeedItem_WithSessionNotification() {
+    void shouldLikeFeedItemWithSessionNotification() {
         // Given
         when(feedLikeRepository.existsByFeedItemIdAndUserId(feedItemId, userId)).thenReturn(false);
         when(feedLikeRepository.save(any(FeedLikeEntity.class))).thenReturn(new FeedLikeEntity());
@@ -137,7 +137,7 @@ class FeedLikeServiceTest {
     }
 
     @Test
-    void likeFeedItem_NoNotificationForOwnContent() {
+    void shouldNotSendNotificationForOwnContent() {
         // Given
         when(feedLikeRepository.existsByFeedItemIdAndUserId(feedItemId, userId)).thenReturn(false);
         when(feedLikeRepository.save(any(FeedLikeEntity.class))).thenReturn(new FeedLikeEntity());

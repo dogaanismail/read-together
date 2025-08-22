@@ -3,7 +3,7 @@ package org.readtogether.feed.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.readtogether.common.utils.AuthenticationUtils;
+import org.readtogether.common.utils.SecurityUtils;
 import org.readtogether.feed.entity.FeedItemEntity;
 import org.readtogether.feed.model.CreateCommentRequest;
 import org.readtogether.feed.model.FeedCommentResponse;
@@ -89,14 +89,15 @@ public class FeedController {
 
     @PostMapping("/{id}/like")
     public ResponseEntity<Void> likeFeedItem(@PathVariable UUID id, Authentication authentication) {
+
         try {
-            UUID userId = AuthenticationUtils.extractUserIdFromAuth(authentication);
+            UUID userId = SecurityUtils.getCurrentUserId(authentication);
             boolean success = feedService.likeFeedItem(id, userId);
             
             if (success) {
                 return ResponseEntity.ok().build();
             } else {
-                return ResponseEntity.badRequest().build(); // Already liked
+                return ResponseEntity.badRequest().build();
             }
         } catch (Exception e) {
             log.error("Error liking feed item {}", id, e);
@@ -106,14 +107,15 @@ public class FeedController {
 
     @DeleteMapping("/{id}/like")
     public ResponseEntity<Void> unlikeFeedItem(@PathVariable UUID id, Authentication authentication) {
+
         try {
-            UUID userId = AuthenticationUtils.extractUserIdFromAuth(authentication);
+            UUID userId = SecurityUtils.getCurrentUserId(authentication);
             boolean success = feedService.unlikeFeedItem(id, userId);
             
             if (success) {
                 return ResponseEntity.ok().build();
             } else {
-                return ResponseEntity.badRequest().build(); // Not liked
+                return ResponseEntity.badRequest().build();
             }
         } catch (Exception e) {
             log.error("Error unliking feed item {}", id, e);
@@ -142,9 +144,9 @@ public class FeedController {
             @PathVariable UUID id,
             @Valid @RequestBody CreateCommentRequest request,
             Authentication authentication) {
-        
+
         try {
-            UUID userId = AuthenticationUtils.extractUserIdFromAuth(authentication);
+            UUID userId = SecurityUtils.getCurrentUserId(authentication);
             FeedCommentResponse comment = feedCommentService.createComment(id, userId, request);
             return ResponseEntity.ok(comment);
         } catch (Exception e) {
@@ -173,9 +175,9 @@ public class FeedController {
     public ResponseEntity<Void> deleteComment(
             @PathVariable UUID commentId, 
             Authentication authentication) {
-        
+
         try {
-            UUID userId = AuthenticationUtils.extractUserIdFromAuth(authentication);
+            UUID userId = SecurityUtils.getCurrentUserId(authentication);
             boolean success = feedCommentService.deleteComment(commentId, userId);
             
             if (success) {

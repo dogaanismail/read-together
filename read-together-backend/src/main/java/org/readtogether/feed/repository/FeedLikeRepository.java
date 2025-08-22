@@ -19,9 +19,4 @@ public interface FeedLikeRepository extends JpaRepository<FeedLikeEntity, UUID> 
     Optional<FeedLikeEntity> findByFeedItemIdAndUserId(UUID feedItemId, UUID userId);
 
     long countByFeedItemId(UUID feedItemId);
-
-    Page<FeedLikeEntity> findByFeedItemIdOrderByCreatedAtDesc(UUID feedItemId, Pageable pageable);
-
-    @Query("SELECT COUNT(fl) FROM feedLike fl WHERE fl.feedItemId = :feedItemId")
-    long countLikesByFeedItemId(@Param("feedItemId") UUID feedItemId);
 }
