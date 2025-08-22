@@ -33,6 +33,18 @@ public class SessionEntityFixtures {
         );
     }
 
+    public static SessionEntity createDefaultSessionEntityForPersistence() {
+
+        return createSessionEntityForPersistence(
+                DEFAULT_USER_ID,
+                "Default Session Title",
+                "Default session description",
+                AUDIO,
+                COMPLETED,
+                true
+        );
+    }
+
     public static SessionEntity createSessionEntity(
             UUID id,
             UUID userId,
@@ -76,6 +88,62 @@ public class SessionEntityFixtures {
                 AUDIO,
                 PENDING,
                 false
+        );
+    }
+
+    public static SessionEntity createSessionEntityForPersistence(
+            UUID userId,
+            String title,
+            String description,
+            MediaType mediaType,
+            ProcessingStatus status,
+            boolean isPublic) {
+
+        return SessionEntity.builder()
+                // Don't set ID - let database generate it
+                .userId(userId)
+                .title(title)
+                .description(description)
+                .mediaUrl("https://example.com/media/" + UUID.randomUUID())
+                .mediaType(mediaType)
+                .durationSeconds(120)
+                .fileSizeBytes(1024000L)
+                .mimeType(mediaType == AUDIO ? "audio/mpeg" : "video/mp4")
+                .processingStatus(status)
+                .isPublic(isPublic)
+                .readingRoomId(DEFAULT_READING_ROOM_ID)
+                .transcript("Sample transcript text")
+                .tags("reading,practice,speech")
+                .thumbnailUrl("https://example.com/thumbnails/" + UUID.randomUUID() + ".jpg")
+                .bookTitle("Sample Book Title")
+                .language("en")
+                .authorName("Sample Author")
+                .createdAt(Instant.now())
+                .updatedAt(Instant.now())
+                .build();
+    }
+
+    public static SessionEntity createPendingSessionEntityForPersistence() {
+
+        return createSessionEntityForPersistence(
+                DEFAULT_USER_ID,
+                "Pending Session",
+                "A session that is pending processing",
+                AUDIO,
+                PENDING,
+                false
+        );
+    }
+
+    public static SessionEntity createPublicVideoSessionEntityForPersistence() {
+
+        return createSessionEntityForPersistence(
+                SECONDARY_USER_ID,
+                "Public Video Session",
+                "A public video session for testing",
+                VIDEO,
+                COMPLETED,
+                true
         );
     }
 
