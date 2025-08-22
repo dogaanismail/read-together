@@ -2,7 +2,7 @@ package org.readtogether.infrastructure.config;
 
 import lombok.Getter;
 import org.readtogether.security.utils.KeyConverter;
-import org.readtogether.user.model.user.enums.ConfigurationParameter;
+import org.readtogether.user.common.enums.ConfigurationParameter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

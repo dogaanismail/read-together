@@ -2,7 +2,7 @@ package org.readtogether.notification.factory;
 
 import lombok.experimental.UtilityClass;
 import org.readtogether.notification.entity.NotificationEntity;
-import org.readtogether.notification.entity.enums.NotificationType;
+import org.readtogether.notification.common.enums.NotificationType;
 import org.readtogether.notification.model.NotificationResponse;
 
 import java.time.LocalDateTime;

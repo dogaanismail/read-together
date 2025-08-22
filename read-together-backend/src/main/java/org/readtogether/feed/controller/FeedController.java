@@ -4,7 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.readtogether.common.utils.SecurityUtils;
-import org.readtogether.feed.entity.enums.FeedItemType;
+import org.readtogether.feed.common.enums.FeedItemType;
 import org.readtogether.feed.model.CreateCommentRequest;
 import org.readtogether.feed.model.FeedCommentResponse;
 import org.readtogether.feed.model.FeedItemResponse;

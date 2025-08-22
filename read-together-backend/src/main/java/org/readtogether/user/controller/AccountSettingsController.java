@@ -2,8 +2,8 @@ package org.readtogether.user.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.readtogether.common.utils.SecurityUtils;
-import org.readtogether.user.model.AccountSettingsResponse;
-import org.readtogether.user.model.AccountSettingsUpdateRequest;
+import org.readtogether.user.model.response.AccountSettingsResponse;
+import org.readtogether.user.model.request.AccountSettingsUpdateRequest;
 import org.readtogether.user.service.AccountSettingsService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;

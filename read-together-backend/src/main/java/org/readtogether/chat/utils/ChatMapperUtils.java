@@ -2,15 +2,16 @@ package org.readtogether.chat.utils;
 
 import lombok.experimental.UtilityClass;
 import org.readtogether.chat.entity.ChatMessageEntity;
-import org.readtogether.chat.entity.enums.ChatRoomType;
-import org.readtogether.chat.entity.enums.ParticipantRole;
+import org.readtogether.chat.common.enums.ChatRoomType;
+import org.readtogether.chat.common.enums.ParticipantRole;
 import org.readtogether.chat.model.response.ChatMessageResponse;
 import org.readtogether.user.entity.UserEntity;
 
-import static org.readtogether.chat.entity.enums.ChatRoomType.DIRECT;
-import static org.readtogether.chat.entity.enums.ChatRoomType.GROUP;
-import static org.readtogether.chat.entity.enums.ParticipantRole.*;
-
+import static org.readtogether.chat.common.enums.ChatRoomType.DIRECT;
+import static org.readtogether.chat.common.enums.ChatRoomType.GROUP;
+import static org.readtogether.chat.common.enums.ParticipantRole.ADMIN;
+import static org.readtogether.chat.common.enums.ParticipantRole.MODERATOR;
+import static org.readtogether.chat.common.enums.ParticipantRole.MEMBER;
 
 @UtilityClass
 public class ChatMapperUtils {

@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
-import org.readtogether.session.entity.SessionEntity;
+import org.readtogether.session.common.enums.MediaType;
 
 import java.util.UUID;
 
@@ -19,7 +19,7 @@ public class SessionCreateRequest {
     private String description;
 
     @NotNull(message = "Media type is required")
-    private SessionEntity.MediaType mediaType;
+    private MediaType mediaType;
 
     private boolean isPublic = false;
 

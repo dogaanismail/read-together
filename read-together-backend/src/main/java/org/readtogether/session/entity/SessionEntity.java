@@ -4,10 +4,12 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.readtogether.common.entity.BaseEntity;
+import org.readtogether.session.common.enums.MediaType;
+import org.readtogether.session.common.enums.ProcessingStatus;
 
 import java.util.UUID;
 
-import static org.readtogether.session.entity.SessionEntity.ProcessingStatus.PENDING;
+import static org.readtogether.session.common.enums.ProcessingStatus.PENDING;
 
 @Getter
 @Setter
@@ -86,14 +88,4 @@ public class SessionEntity extends BaseEntity {
     @Column(name = "author_name", length = 100)
     private String authorName;
 
-    public enum MediaType {
-        AUDIO, VIDEO
-    }
-
-    public enum ProcessingStatus {
-        PENDING,
-        PROCESSING,
-        COMPLETED,
-        FAILED
-    }
 }

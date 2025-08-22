@@ -12,5 +12,4 @@ public interface ReadingPreferencesRepository extends JpaRepository<ReadingPrefe
 
     Optional<ReadingPreferencesEntity> findByUserId(UUID userId);
 
-    boolean existsByUserId(UUID userId);
 }

@@ -1,7 +1,7 @@
 package org.readtogether.feed.repository;
 
 import org.readtogether.feed.entity.FeedItemEntity;
-import org.readtogether.feed.entity.enums.FeedItemType;
+import org.readtogether.feed.common.enums.FeedItemType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

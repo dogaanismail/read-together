@@ -4,7 +4,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
-import org.readtogether.chat.entity.enums.ChatRoomType;
+import org.readtogether.chat.common.enums.ChatRoomType;
 
 import java.util.List;
 import java.util.UUID;

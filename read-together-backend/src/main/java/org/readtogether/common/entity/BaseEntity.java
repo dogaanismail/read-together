@@ -6,14 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.jwt.Jwt;
+import org.readtogether.common.utils.SecurityUtils;
 
 import java.time.Instant;
-import java.util.Optional;
-
-import static org.readtogether.common.enums.TokenClaims.USER_EMAIL;
 
 @Getter
 @Setter
@@ -63,46 +58,24 @@ public class BaseEntity {
     @PrePersist
     public void prePersist() {
 
-        this.createdBy = Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication())
-                .map(Authentication::getPrincipal)
-                .filter(user -> !"anonymousUser".equals(user))
-                .map(Jwt.class::cast)
-                .map(jwt -> jwt.getClaim(USER_EMAIL.getValue()).toString())
-                .orElse("anonymousUser");
+        this.createdBy = SecurityUtils.getCurrentUserEmail();
         this.createdAt = Instant.now();
 
         this.updatedAt = Instant.now();
-        this.updatedBy = Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication())
-                .map(Authentication::getPrincipal)
-                .filter(user -> !"anonymousUser".equals(user))
-                .map(Jwt.class::cast)
-                .map(jwt -> jwt.getClaim(USER_EMAIL.getValue()).toString())
-                .orElse("anonymousUser");
+        this.updatedBy = SecurityUtils.getCurrentUserEmail();
     }
 
     @PreUpdate
     public void preUpdate() {
 
-        this.updatedBy = Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication())
-                .map(Authentication::getPrincipal)
-                .filter(user -> !"anonymousUser".equals(user))
-                .map(Jwt.class::cast)
-                .map(jwt -> jwt.getClaim(USER_EMAIL.getValue()).toString())
-                .orElse("anonymousUser");
-
+        this.updatedBy = SecurityUtils.getCurrentUserEmail();
         this.updatedAt = Instant.now();
     }
 
     @PreRemove
     public void preRemove() {
 
-        this.deletedBy = Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication())
-                .map(Authentication::getPrincipal)
-                .filter(user -> !"anonymousUser".equals(user))
-                .map(Jwt.class::cast)
-                .map(jwt -> jwt.getClaim(USER_EMAIL.getValue()).toString())
-                .orElse("anonymousUser");
-
+        this.deletedBy = SecurityUtils.getCurrentUserEmail();
         this.deletedAt = Instant.now();
     }
 

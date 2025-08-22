@@ -4,11 +4,12 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.readtogether.common.entity.BaseEntity;
-import com.fasterxml.jackson.annotation.JsonCreator;
+import org.readtogether.user.common.enums.ProfileVisibility;
 
 import java.util.UUID;
 
-import static org.readtogether.user.entity.PrivacySettingsEntity.ProfileVisibility.PUBLIC;
+import static org.readtogether.user.common.enums.ProfileVisibility.PUBLIC;
+
 
 @Getter
 @Setter
@@ -52,14 +53,4 @@ public class PrivacySettingsEntity extends BaseEntity {
     @Builder.Default
     private boolean searchable = true;
 
-    public enum ProfileVisibility {
-        PUBLIC,
-        FOLLOWERS,
-        PRIVATE;
-
-        @JsonCreator
-        public static ProfileVisibility fromString(String value) {
-            return value == null ? PUBLIC : ProfileVisibility.valueOf(value.trim().toUpperCase());
-        }
-    }
 }

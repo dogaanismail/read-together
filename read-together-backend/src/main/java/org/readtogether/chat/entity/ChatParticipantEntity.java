@@ -3,13 +3,13 @@ package org.readtogether.chat.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import org.readtogether.chat.entity.enums.ParticipantRole;
+import org.readtogether.chat.common.enums.ParticipantRole;
 import org.readtogether.common.entity.BaseEntity;
 
 import java.time.Instant;
 import java.util.UUID;
 
-import static org.readtogether.chat.entity.enums.ParticipantRole.MEMBER;
+import static org.readtogether.chat.common.enums.ParticipantRole.MEMBER;
 
 @Getter
 @Setter

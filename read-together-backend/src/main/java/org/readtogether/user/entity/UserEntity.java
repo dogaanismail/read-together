@@ -4,16 +4,16 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.readtogether.common.entity.BaseEntity;
-import org.readtogether.common.enums.TokenClaims;
-import org.readtogether.common.model.auth.enums.UserStatus;
-import org.readtogether.common.model.auth.enums.UserType;
+import org.readtogether.security.common.enums.TokenClaims;
+import org.readtogether.user.common.enums.UserStatus;
+import org.readtogether.user.common.enums.UserType;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import static org.readtogether.common.model.auth.enums.UserStatus.ACTIVE;
+import static org.readtogether.user.common.enums.UserStatus.ACTIVE;
 
 @Getter
 @Setter

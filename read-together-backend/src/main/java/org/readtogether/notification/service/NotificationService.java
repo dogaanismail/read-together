@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.readtogether.notification.entity.NotificationEntity;
-import org.readtogether.notification.entity.enums.NotificationPreferenceType;
+import org.readtogether.notification.common.enums.NotificationPreferenceType;
 import org.readtogether.notification.factory.NotificationEntityFactory;
 import org.readtogether.notification.repository.NotificationRepository;
 import org.readtogether.notification.utils.NotificationMetadataUtils;

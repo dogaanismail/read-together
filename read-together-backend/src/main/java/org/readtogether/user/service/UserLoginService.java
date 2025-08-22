@@ -1,8 +1,8 @@
 package org.readtogether.user.service;
 
 import lombok.RequiredArgsConstructor;
-import org.readtogether.common.model.Token;
-import org.readtogether.common.model.auth.dto.request.LoginRequest;
+import org.readtogether.security.model.Token;
+import org.readtogether.user.model.request.LoginRequest;
 import org.readtogether.security.service.TokenService;
 import org.readtogether.user.entity.UserEntity;
 import org.readtogether.user.exception.PasswordNotValidException;

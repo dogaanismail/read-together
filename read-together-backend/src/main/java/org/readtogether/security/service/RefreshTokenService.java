@@ -1,8 +1,8 @@
 package org.readtogether.security.service;
 
 import lombok.RequiredArgsConstructor;
-import org.readtogether.common.model.Token;
-import org.readtogether.common.model.auth.dto.request.TokenRefreshRequest;
+import org.readtogether.security.model.Token;
+import org.readtogether.security.model.request.TokenRefreshRequest;
 import org.readtogether.user.entity.UserEntity;
 import org.readtogether.user.exception.UserNotFoundException;
 import org.readtogether.user.exception.UserStatusNotValidException;
@@ -11,8 +11,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
-import static org.readtogether.common.enums.TokenClaims.USER_ID;
-import static org.readtogether.common.model.auth.enums.UserStatus.ACTIVE;
+import static org.readtogether.security.common.enums.TokenClaims.USER_ID;
+import static org.readtogether.user.common.enums.UserStatus.ACTIVE;
 
 @Service
 @RequiredArgsConstructor

@@ -5,14 +5,18 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.readtogether.common.entity.BaseEntity;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import org.readtogether.user.common.enums.FontSize;
+import org.readtogether.user.common.enums.ReadingSpeed;
+import org.readtogether.user.common.enums.Theme;
+import org.readtogether.user.common.enums.VideoQuality;
 
 import java.util.UUID;
 
-import static org.readtogether.user.entity.ReadingPreferencesEntity.FontSize.MEDIUM;
+import static org.readtogether.user.common.enums.FontSize.MEDIUM;
+import static org.readtogether.user.common.enums.ReadingSpeed.NORMAL;
+import static org.readtogether.user.common.enums.Theme.LIGHT;
+import static org.readtogether.user.common.enums.VideoQuality.HIGH;
 import static org.readtogether.user.entity.ReadingPreferencesEntity.Language.ENGLISH;
-import static org.readtogether.user.entity.ReadingPreferencesEntity.ReadingSpeed.NORMAL;
-import static org.readtogether.user.entity.ReadingPreferencesEntity.Theme.LIGHT;
-import static org.readtogether.user.entity.ReadingPreferencesEntity.VideoQuality.HIGH;
 
 @Getter
 @Setter
@@ -77,52 +81,4 @@ public class ReadingPreferencesEntity extends BaseEntity {
         }
     }
 
-    public enum ReadingSpeed {
-        SLOW,      // 0.75x
-        NORMAL,    // 1x
-        FAST,      // 1.25x
-        FASTER;     // 1.5x
-
-        @JsonCreator
-        public static ReadingSpeed fromString(String value) {
-            return value == null ? NORMAL : ReadingSpeed.valueOf(value.trim().toUpperCase());
-        }
-    }
-
-    public enum VideoQuality {
-        LOW,       // 480p
-        MEDIUM,    // 720p
-        HIGH,      // 1080p
-        AUTO;
-
-        @JsonCreator
-        public static VideoQuality fromString(String value) {
-            return value == null ? HIGH : VideoQuality.valueOf(value.trim().toUpperCase());
-        }
-    }
-
-    public enum FontSize {
-        SMALL,
-        MEDIUM,
-        LARGE,
-        EXTRA_LARGE;
-
-        @JsonCreator
-        public static FontSize fromString(String value) {
-            if (value == null) return MEDIUM;
-            String v = value.trim().toUpperCase().replace('-', '_');
-            return FontSize.valueOf(v);
-        }
-    }
-
-    public enum Theme {
-        LIGHT,
-        DARK,
-        SYSTEM;
-
-        @JsonCreator
-        public static Theme fromString(String value) {
-            return value == null ? LIGHT : Theme.valueOf(value.trim().toUpperCase());
-        }
-    }
 }

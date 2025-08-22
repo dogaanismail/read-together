@@ -6,7 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.readtogether.common.model.Token;
+import org.readtogether.security.model.Token;
 import org.readtogether.security.service.TokenService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.lang.NonNull;

@@ -2,13 +2,13 @@ package org.readtogether.chat.factory;
 
 import lombok.experimental.UtilityClass;
 import org.readtogether.chat.entity.ChatParticipantEntity;
-import org.readtogether.chat.entity.enums.ParticipantRole;
+import org.readtogether.chat.common.enums.ParticipantRole;
 
 import java.time.Instant;
 import java.util.UUID;
 
-import static org.readtogether.chat.entity.enums.ParticipantRole.ADMIN;
-import static org.readtogether.chat.entity.enums.ParticipantRole.MEMBER;
+import static org.readtogether.chat.common.enums.ParticipantRole.ADMIN;
+import static org.readtogether.chat.common.enums.ParticipantRole.MEMBER;
 
 @UtilityClass
 public class ChatParticipantEntityFactory {

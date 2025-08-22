@@ -3,7 +3,7 @@ package org.readtogether.feed.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.readtogether.feed.entity.FeedItemEntity;
-import org.readtogether.feed.entity.enums.FeedItemType;
+import org.readtogether.feed.common.enums.FeedItemType;
 import org.readtogether.feed.factory.FeedItemEntityFactory;
 import org.readtogether.feed.factory.FeedItemResponseFactory;
 import org.readtogether.feed.model.FeedItemResponse;

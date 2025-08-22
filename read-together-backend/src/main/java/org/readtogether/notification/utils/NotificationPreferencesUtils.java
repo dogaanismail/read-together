@@ -2,7 +2,7 @@ package org.readtogether.notification.utils;
 
 import lombok.experimental.UtilityClass;
 import org.readtogether.notification.entity.NotificationPreferenceEntity;
-import org.readtogether.notification.entity.enums.NotificationPreferenceType;
+import org.readtogether.notification.common.enums.NotificationPreferenceType;
 
 @UtilityClass
 public class NotificationPreferencesUtils {

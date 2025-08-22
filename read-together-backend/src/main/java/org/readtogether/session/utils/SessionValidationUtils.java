@@ -1,10 +1,13 @@
 package org.readtogether.session.utils;
 
 import lombok.experimental.UtilityClass;
-import org.readtogether.session.entity.SessionEntity;
+import org.readtogether.session.common.enums.MediaType;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+
+import static org.readtogether.session.common.enums.MediaType.AUDIO;
+import static org.readtogether.session.common.enums.MediaType.VIDEO;
 
 @UtilityClass
 public class SessionValidationUtils {
@@ -19,15 +22,15 @@ public class SessionValidationUtils {
 
     public static void validateFileType(
             MultipartFile file,
-            SessionEntity.MediaType mediaType) {
+            MediaType mediaType) {
 
         String contentType = file.getContentType();
 
-        if (mediaType == SessionEntity.MediaType.AUDIO && !ALLOWED_AUDIO_TYPES.contains(contentType)) {
+        if (mediaType == AUDIO && !ALLOWED_AUDIO_TYPES.contains(contentType)) {
             throw new IllegalArgumentException("Invalid audio file type: " + contentType);
         }
 
-        if (mediaType == SessionEntity.MediaType.VIDEO && !ALLOWED_VIDEO_TYPES.contains(contentType)) {
+        if (mediaType == VIDEO && !ALLOWED_VIDEO_TYPES.contains(contentType)) {
             throw new IllegalArgumentException("Invalid video file type: " + contentType);
         }
     }

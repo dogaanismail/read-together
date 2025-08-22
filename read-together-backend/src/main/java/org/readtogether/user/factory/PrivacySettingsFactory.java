@@ -2,7 +2,7 @@ package org.readtogether.user.factory;
 
 import lombok.experimental.UtilityClass;
 import org.readtogether.user.entity.PrivacySettingsEntity;
-import org.readtogether.user.model.PrivacySettingsUpdateRequest;
+import org.readtogether.user.model.request.PrivacySettingsUpdateRequest;
 
 import java.util.UUID;
 

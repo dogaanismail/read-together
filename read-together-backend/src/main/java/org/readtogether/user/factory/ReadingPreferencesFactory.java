@@ -2,9 +2,14 @@ package org.readtogether.user.factory;
 
 import lombok.experimental.UtilityClass;
 import org.readtogether.user.entity.ReadingPreferencesEntity;
-import org.readtogether.user.model.ReadingPreferencesUpdateRequest;
+import org.readtogether.user.model.request.ReadingPreferencesUpdateRequest;
 
 import java.util.UUID;
+
+import static org.readtogether.user.common.enums.FontSize.MEDIUM;
+import static org.readtogether.user.common.enums.ReadingSpeed.NORMAL;
+import static org.readtogether.user.common.enums.Theme.LIGHT;
+import static org.readtogether.user.common.enums.VideoQuality.HIGH;
 
 @UtilityClass
 public class ReadingPreferencesFactory {
@@ -39,12 +44,12 @@ public class ReadingPreferencesFactory {
         return ReadingPreferencesEntity.builder()
                 .userId(userId)
                 .defaultLanguage(dto.getDefaultLanguage() != null ? dto.getDefaultLanguage() : ReadingPreferencesEntity.Language.ENGLISH)
-                .readingSpeed(dto.getReadingSpeed() != null ? dto.getReadingSpeed() : ReadingPreferencesEntity.ReadingSpeed.NORMAL)
+                .readingSpeed(dto.getReadingSpeed() != null ? dto.getReadingSpeed() : NORMAL)
                 .subtitlesEnabled(dto.getSubtitlesEnabled() != null ? dto.getSubtitlesEnabled() : true)
                 .autoplay(dto.getAutoplay() != null ? dto.getAutoplay() : false)
-                .videoQuality(dto.getVideoQuality() != null ? dto.getVideoQuality() : ReadingPreferencesEntity.VideoQuality.HIGH)
-                .fontSize(dto.getFontSize() != null ? dto.getFontSize() : ReadingPreferencesEntity.FontSize.MEDIUM)
-                .theme(dto.getTheme() != null ? dto.getTheme() : ReadingPreferencesEntity.Theme.LIGHT)
+                .videoQuality(dto.getVideoQuality() != null ? dto.getVideoQuality() : HIGH)
+                .fontSize(dto.getFontSize() != null ? dto.getFontSize() : MEDIUM)
+                .theme(dto.getTheme() != null ? dto.getTheme() : LIGHT)
                 .build();
     }
 }

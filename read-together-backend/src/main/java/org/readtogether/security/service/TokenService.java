@@ -4,9 +4,9 @@ import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.DateUtils;
-import org.readtogether.common.enums.TokenClaims;
-import org.readtogether.common.model.Token;
-import org.readtogether.common.model.auth.enums.UserType;
+import org.readtogether.security.common.enums.TokenClaims;
+import org.readtogether.security.model.Token;
+import org.readtogether.user.common.enums.UserType;
 import org.readtogether.infrastructure.config.TokenConfigurationParameter;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,9 +19,9 @@ import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.util.*;
 
-import static org.readtogether.common.enums.TokenClaims.USER_ID;
-import static org.readtogether.common.enums.TokenClaims.USER_TYPE;
-import static org.readtogether.common.enums.TokenType.BEARER;
+import static org.readtogether.security.common.enums.TokenClaims.USER_ID;
+import static org.readtogether.security.common.enums.TokenClaims.USER_TYPE;
+import static org.readtogether.security.common.enums.TokenType.BEARER;
 
 @Service
 @RequiredArgsConstructor

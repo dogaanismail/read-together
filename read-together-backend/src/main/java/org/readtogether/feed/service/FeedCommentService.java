@@ -21,7 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.readtogether.feed.entity.enums.FeedItemType.SESSION;
+import static org.readtogether.feed.common.enums.FeedItemType.SESSION;
 
 @Slf4j
 @Service

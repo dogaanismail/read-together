@@ -1,5 +1,7 @@
 package org.readtogether.session.repository;
 
+import org.readtogether.session.common.enums.MediaType;
+import org.readtogether.session.common.enums.ProcessingStatus;
 import org.readtogether.session.entity.SessionEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,19 +19,19 @@ public interface SessionRepository extends JpaRepository<SessionEntity, UUID> {
     Page<SessionEntity> findByUserIdOrderByCreatedAtDesc(UUID userId, Pageable pageable);
 
     Page<SessionEntity> findByIsPublicTrueAndProcessingStatusOrderByCreatedAtDesc(
-        SessionEntity.ProcessingStatus status, Pageable pageable);
+            ProcessingStatus status, Pageable pageable);
 
     Page<SessionEntity> findByMediaTypeAndIsPublicTrueAndProcessingStatusOrderByCreatedAtDesc(
-        SessionEntity.MediaType mediaType, SessionEntity.ProcessingStatus status, Pageable pageable);
+            MediaType mediaType, ProcessingStatus status, Pageable pageable);
 
     @Query("SELECT s FROM sessions s WHERE " +
-           "(LOWER(s.title) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
-           "LOWER(s.description) LIKE LOWER(CONCAT('%', :query, '%'))) AND " +
-           "s.isPublic = true AND s.processingStatus = :status " +
-           "ORDER BY s.createdAt DESC")
+            "(LOWER(s.title) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
+            "LOWER(s.description) LIKE LOWER(CONCAT('%', :query, '%'))) AND " +
+            "s.isPublic = true AND s.processingStatus = :status " +
+            "ORDER BY s.createdAt DESC")
     Page<SessionEntity> searchPublicSessions(@Param("query") String query,
-                                           @Param("status") SessionEntity.ProcessingStatus status,
-                                           Pageable pageable);
+                                             @Param("status") ProcessingStatus status,
+                                             Pageable pageable);
 
     Optional<SessionEntity> findByIdAndUserId(UUID id, UUID userId);
 }

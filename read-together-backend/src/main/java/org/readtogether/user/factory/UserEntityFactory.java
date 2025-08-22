@@ -2,12 +2,12 @@ package org.readtogether.user.factory;
 
 import lombok.experimental.UtilityClass;
 
-import org.readtogether.common.model.auth.dto.request.RegisterRequest;
-import org.readtogether.common.model.auth.enums.UserType;
+import org.readtogether.user.model.request.RegisterRequest;
+import org.readtogether.user.common.enums.UserType;
 import org.readtogether.user.entity.UserEntity;
 
-import static org.readtogether.common.model.auth.enums.UserType.ADMIN;
-import static org.readtogether.common.model.auth.enums.UserType.USER;
+import static org.readtogether.user.common.enums.UserType.ADMIN;
+import static org.readtogether.user.common.enums.UserType.USER;
 
 @UtilityClass
 public class UserEntityFactory {

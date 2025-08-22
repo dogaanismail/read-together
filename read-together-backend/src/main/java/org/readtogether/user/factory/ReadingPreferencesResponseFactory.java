@@ -2,7 +2,7 @@ package org.readtogether.user.factory;
 
 import lombok.experimental.UtilityClass;
 import org.readtogether.user.entity.ReadingPreferencesEntity;
-import org.readtogether.user.model.ReadingPreferencesResponse;
+import org.readtogether.user.model.response.ReadingPreferencesResponse;
 
 @UtilityClass
 public class ReadingPreferencesResponseFactory {

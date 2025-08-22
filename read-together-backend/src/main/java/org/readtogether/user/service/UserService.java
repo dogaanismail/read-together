@@ -1,10 +1,10 @@
 package org.readtogether.user.service;
 
 import lombok.RequiredArgsConstructor;
-import org.readtogether.common.model.auth.User;
+import org.readtogether.user.model.User;
 import org.readtogether.user.entity.UserEntity;
 import org.readtogether.user.exception.UserNotFoundException;
-import org.readtogether.user.model.user.mapper.UserEntityToUserMapper;
+import org.readtogether.user.mapper.UserEntityToUserMapper;
 import org.readtogether.user.repository.UserRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.readtogether.common.enums.TokenClaims.USER_ID;
+import static org.readtogether.security.common.enums.TokenClaims.USER_ID;
 
 @Service
 @RequiredArgsConstructor

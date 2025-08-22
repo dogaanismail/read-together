@@ -1,7 +1,8 @@
 package org.readtogether.session.model.response;
 
 import lombok.Data;
-import org.readtogether.session.entity.SessionEntity;
+import org.readtogether.session.common.enums.MediaType;
+import org.readtogether.session.common.enums.ProcessingStatus;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -16,11 +17,11 @@ public class SessionResponse {
     private String title;
     private String description;
     private String mediaUrl;
-    private SessionEntity.MediaType mediaType;
+    private MediaType mediaType;
     private Integer durationSeconds;
     private Long fileSizeBytes;
     private String mimeType;
-    private SessionEntity.ProcessingStatus processingStatus;
+    private ProcessingStatus processingStatus;
     private String processingError;
     private boolean isPublic;
     private long viewCount;

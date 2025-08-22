@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.readtogether.common.entity.BaseEntity;
-import org.readtogether.notification.entity.enums.NotificationType;
+import org.readtogether.notification.common.enums.NotificationType;
 
 import java.time.LocalDateTime;
 import java.util.UUID;

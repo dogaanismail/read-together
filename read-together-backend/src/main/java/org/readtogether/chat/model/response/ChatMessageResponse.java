@@ -1,7 +1,7 @@
 package org.readtogether.chat.model.response;
 
 import lombok.*;
-import org.readtogether.common.enums.MessageType;
+import org.readtogether.chat.common.enums.MessageType;
 
 import java.time.Instant;
 import java.util.UUID;

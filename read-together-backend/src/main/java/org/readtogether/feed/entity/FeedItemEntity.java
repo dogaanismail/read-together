@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.readtogether.common.entity.BaseEntity;
-import org.readtogether.feed.entity.enums.FeedItemType;
+import org.readtogether.feed.common.enums.FeedItemType;
 
 import java.util.UUID;
 

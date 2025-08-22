@@ -6,12 +6,12 @@ import org.readtogether.session.entity.SessionEntity;
 
 import java.util.UUID;
 
-import static org.readtogether.notification.entity.enums.NotificationType.SESSION_UPLOAD_PROGRESS;
-import static org.readtogether.notification.entity.enums.NotificationType.SESSION_UPLOAD_STARTED;
-import static org.readtogether.notification.entity.enums.NotificationType.SESSION_UPLOAD_COMPLETED;
-import static org.readtogether.notification.entity.enums.NotificationType.SESSION_UPLOAD_FAILED;
-import static org.readtogether.notification.entity.enums.NotificationType.SESSION_PROCESSING_STARTED;
-import static org.readtogether.notification.entity.enums.NotificationType.GENERAL_INFO;
+import static org.readtogether.notification.common.enums.NotificationType.SESSION_UPLOAD_PROGRESS;
+import static org.readtogether.notification.common.enums.NotificationType.SESSION_UPLOAD_STARTED;
+import static org.readtogether.notification.common.enums.NotificationType.SESSION_UPLOAD_COMPLETED;
+import static org.readtogether.notification.common.enums.NotificationType.SESSION_UPLOAD_FAILED;
+import static org.readtogether.notification.common.enums.NotificationType.SESSION_PROCESSING_STARTED;
+import static org.readtogether.notification.common.enums.NotificationType.GENERAL_INFO;
 
 @UtilityClass
 public class NotificationEntityFactory {

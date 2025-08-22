@@ -22,7 +22,7 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
-import static org.readtogether.feed.entity.enums.FeedItemType.SESSION;
+import static org.readtogether.feed.common.enums.FeedItemType.SESSION;
 
 @ExtendWith(MockitoExtension.class)
 class FeedCommentServiceTest {

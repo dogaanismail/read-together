@@ -1,7 +1,7 @@
 package org.readtogether.feed.model;
 
 import lombok.Data;
-import org.readtogether.feed.entity.enums.FeedItemType;
+import org.readtogether.feed.common.enums.FeedItemType;
 
 import java.time.Instant;
 import java.util.UUID;

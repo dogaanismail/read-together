@@ -3,7 +3,7 @@ package org.readtogether.chat.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import org.readtogether.chat.entity.enums.ChatRoomType;
+import org.readtogether.chat.common.enums.ChatRoomType;
 import org.readtogether.common.entity.BaseEntity;
 
 import java.util.UUID;

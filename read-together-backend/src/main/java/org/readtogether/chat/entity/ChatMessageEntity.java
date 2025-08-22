@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.readtogether.common.entity.BaseEntity;
-import org.readtogether.common.enums.MessageType;
+import org.readtogether.chat.common.enums.MessageType;
 
 import java.time.Instant;
 import java.util.UUID;

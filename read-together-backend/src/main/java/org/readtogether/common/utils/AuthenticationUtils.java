@@ -5,7 +5,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 
 import java.util.UUID;
 
-import static org.readtogether.common.enums.TokenClaims.USER_ID;
+import static org.readtogether.security.common.enums.TokenClaims.USER_ID;
 
 public final class AuthenticationUtils {
 

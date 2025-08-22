@@ -8,7 +8,7 @@ import org.readtogether.chat.model.request.ChatMessageWebSocketRequest;
 import java.time.Instant;
 import java.util.UUID;
 
-import static org.readtogether.common.enums.MessageType.SYSTEM;
+import static org.readtogether.chat.common.enums.MessageType.SYSTEM;
 
 @UtilityClass
 public class ChatMessageEntityFactory {

@@ -2,7 +2,7 @@ package org.readtogether.chat.model.request;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.readtogether.common.enums.MessageType;
+import org.readtogether.chat.common.enums.MessageType;
 
 import java.util.UUID;
 

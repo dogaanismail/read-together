@@ -7,6 +7,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.UUID;
 
+import static org.readtogether.session.common.enums.ProcessingStatus.PENDING;
+
 @UtilityClass
 public class SessionEntityFactory {
 
@@ -43,7 +45,7 @@ public class SessionEntityFactory {
                 .isPublic(request.isPublic())
                 .readingRoomId(request.getReadingRoomId())
                 .tags(request.getTags())
-                .processingStatus(SessionEntity.ProcessingStatus.PENDING)
+                .processingStatus(PENDING)
                 .build();
     }
 }

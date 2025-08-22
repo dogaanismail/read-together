@@ -10,7 +10,7 @@ import org.readtogether.chat.model.response.ChatRoomResponse;
 import org.readtogether.chat.service.ChatFileService;
 import org.readtogether.chat.service.ChatService;
 import org.readtogether.chat.utils.ChatFileStorageUtils;
-import org.readtogether.common.model.CustomResponse;
+import org.readtogether.common.model.response.CustomResponse;
 import org.readtogether.common.utils.SecurityUtils;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;

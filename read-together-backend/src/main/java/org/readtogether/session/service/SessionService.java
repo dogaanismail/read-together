@@ -7,6 +7,8 @@ import org.readtogether.common.utils.StoragePathUtils;
 import org.readtogether.feed.service.FeedService;
 import org.readtogether.infrastructure.storage.service.StorageService;
 import org.readtogether.notification.service.NotificationService;
+import org.readtogether.session.common.enums.MediaType;
+import org.readtogether.session.common.enums.ProcessingStatus;
 import org.readtogether.session.entity.SessionEntity;
 import org.readtogether.session.factory.SessionEntityFactory;
 import org.readtogether.session.factory.SessionResponseFactory;
@@ -29,7 +31,9 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
-import static org.readtogether.session.entity.SessionEntity.ProcessingStatus.*;
+import static org.readtogether.session.common.enums.ProcessingStatus.PROCESSING;
+import static org.readtogether.session.common.enums.ProcessingStatus.COMPLETED;
+import static org.readtogether.session.common.enums.ProcessingStatus.FAILED;
 
 @Slf4j
 @Service
@@ -135,7 +139,7 @@ public class SessionService {
         if (search != null && !search.trim().isEmpty()) {
             return searchSessions(search.trim(), pageable);
         } else if (mediaType != null) {
-            SessionEntity.MediaType type = SessionEntity.MediaType.valueOf(mediaType.toUpperCase());
+            MediaType type = MediaType.valueOf(mediaType.toUpperCase());
             return getSessionsByMediaType(type, pageable);
         } else {
             return getPublicSessions(page, size);
@@ -144,7 +148,7 @@ public class SessionService {
 
     @Transactional(readOnly = true)
     public Page<SessionResponse> getSessionsByMediaType(
-            SessionEntity.MediaType mediaType,
+            MediaType mediaType,
             Pageable pageable) {
 
         return sessionRepository.findByMediaTypeAndIsPublicTrueAndProcessingStatusOrderByCreatedAtDesc(
@@ -271,7 +275,7 @@ public class SessionService {
 
     private void updateProcessingStatus(
             UUID sessionId,
-            SessionEntity.ProcessingStatus status) {
+            ProcessingStatus status) {
 
         sessionRepository.findById(sessionId).ifPresent(session -> {
             session.setProcessingStatus(status);

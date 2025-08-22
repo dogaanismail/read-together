@@ -1,11 +1,11 @@
 package org.readtogether.user.service;
 
 import lombok.RequiredArgsConstructor;
-import org.readtogether.common.model.auth.dto.request.RegisterRequest;
+import org.readtogether.user.model.request.RegisterRequest;
 import org.readtogether.user.entity.UserEntity;
 import org.readtogether.user.exception.UserAlreadyExistException;
 import org.readtogether.user.factory.UserEntityFactory;
-import org.readtogether.user.model.user.mapper.UserEntityToUserMapper;
+import org.readtogether.user.mapper.UserEntityToUserMapper;
 import org.readtogether.user.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

@@ -12,5 +12,4 @@ public interface PrivacySettingsRepository extends JpaRepository<PrivacySettings
 
     Optional<PrivacySettingsEntity> findByUserId(UUID userId);
 
-    boolean existsByUserId(UUID userId);
 }

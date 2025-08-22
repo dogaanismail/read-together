@@ -9,10 +9,10 @@ import org.readtogether.user.entity.PrivacySettingsEntity;
 import org.readtogether.user.entity.ReadingPreferencesEntity;
 import org.readtogether.user.factory.PrivacySettingsResponseFactory;
 import org.readtogether.user.factory.ReadingPreferencesResponseFactory;
-import org.readtogether.user.model.AccountSettingsResponse;
-import org.readtogether.user.model.AccountSettingsUpdateRequest;
-import org.readtogether.user.model.PrivacySettingsResponse;
-import org.readtogether.user.model.ReadingPreferencesResponse;
+import org.readtogether.user.model.response.AccountSettingsResponse;
+import org.readtogether.user.model.request.AccountSettingsUpdateRequest;
+import org.readtogether.user.model.response.PrivacySettingsResponse;
+import org.readtogether.user.model.response.ReadingPreferencesResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.readtogether.user.entity.PrivacySettingsEntity;
 import org.readtogether.user.factory.PrivacySettingsFactory;
-import org.readtogether.user.model.PrivacySettingsUpdateRequest;
+import org.readtogether.user.model.request.PrivacySettingsUpdateRequest;
 import org.readtogether.user.repository.PrivacySettingsRepository;
 import org.readtogether.user.utils.PrivacySettingsUtils;
 import org.springframework.stereotype.Service;

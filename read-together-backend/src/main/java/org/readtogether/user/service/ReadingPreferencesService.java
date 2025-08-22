@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.readtogether.user.entity.ReadingPreferencesEntity;
 import org.readtogether.user.factory.ReadingPreferencesFactory;
-import org.readtogether.user.model.ReadingPreferencesUpdateRequest;
+import org.readtogether.user.model.request.ReadingPreferencesUpdateRequest;
 import org.readtogether.user.repository.ReadingPreferencesRepository;
 import org.readtogether.user.utils.ReadingPreferencesUtils;
 import org.springframework.stereotype.Service;

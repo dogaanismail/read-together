@@ -1,6 +1,8 @@
 package org.readtogether.user.utils;
 
 import lombok.experimental.UtilityClass;
+import org.readtogether.user.common.enums.ReadingSpeed;
+import org.readtogether.user.common.enums.VideoQuality;
 import org.readtogether.user.entity.ReadingPreferencesEntity;
 
 @UtilityClass
@@ -19,7 +21,7 @@ public class ReadingPreferencesUtils {
         existing.setTheme(updates.getTheme());
     }
 
-    public static double getSpeedMultiplier(ReadingPreferencesEntity.ReadingSpeed speed) {
+    public static double getSpeedMultiplier(ReadingSpeed speed) {
 
         return switch (speed) {
             case SLOW -> 0.75;
@@ -29,7 +31,7 @@ public class ReadingPreferencesUtils {
         };
     }
 
-    public static String getVideoQualityResolution(ReadingPreferencesEntity.VideoQuality quality) {
+    public static String getVideoQualityResolution(VideoQuality quality) {
 
         return switch (quality) {
             case LOW -> "480p";

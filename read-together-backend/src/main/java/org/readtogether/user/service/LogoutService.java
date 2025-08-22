@@ -1,7 +1,7 @@
 package org.readtogether.user.service;
 
 import lombok.RequiredArgsConstructor;
-import org.readtogether.common.model.auth.dto.request.TokenInvalidateRequest;
+import org.readtogether.security.model.request.TokenInvalidateRequest;
 import org.readtogether.security.service.InvalidTokenService;
 import org.readtogether.security.service.TokenService;
 import org.springframework.stereotype.Service;
