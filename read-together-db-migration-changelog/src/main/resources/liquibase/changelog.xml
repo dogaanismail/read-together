@@ -40,4 +40,9 @@
         <sqlFile path="changelog/add_feed_domain_tables.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
+    <changeSet id="2025-08-22-10-06" author="Ismail Dogan">
+        <comment>Add feed domain tables</comment>
+        <sqlFile path="changelog/add_library_domain_tables.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
 </databaseChangeLog>
