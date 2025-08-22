@@ -52,26 +52,16 @@ public class UserService {
                 .orElseThrow(() -> new UserNotFoundException("User not found by id: " + userId));
     }
 
-    private Optional<String> getCurrentIdFromJwt() {
-
-        return Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication())
-                .map(Authentication::getPrincipal)
-                .filter(principal -> !"anonymousUser".equals(principal))
-                .map(Jwt.class::cast)
-                .map(jwt -> jwt.getClaim(USER_ID.getValue()))
-                .map(Object::toString);
-    }
-
     public User updateProfile(UpdateProfileRequest updateRequest) {
         Optional<String> currentUserId = getCurrentIdFromJwt();
-        
+
         if (currentUserId.isEmpty()) {
             throw new IllegalStateException("User not authenticated");
         }
-        
+
         UUID userId = UUID.fromString(currentUserId.get());
         UserEntity userEntity = findUserEntityById(userId);
-        
+
         // Update fields if provided
         if (updateRequest.getFirstName() != null) {
             userEntity.setFirstName(updateRequest.getFirstName());
@@ -88,7 +78,7 @@ public class UserService {
         if (updateRequest.getProfilePictureUrl() != null) {
             userEntity.setProfilePictureUrl(updateRequest.getProfilePictureUrl());
         }
-        
+
         userEntity = userRepository.save(userEntity);
         return userEntityToUserMapper.map(userEntity);
     }
@@ -97,12 +87,21 @@ public class UserService {
         // For now, return a mock URL
         // In a real implementation, this would upload to AWS S3 or similar service
         String fileName = "profile_" + System.currentTimeMillis() + "_" + file.getOriginalFilename();
-        String profilePictureUrl = "https://storage.readtogether.app/profiles/" + fileName;
-        
+
         // TODO: Implement actual file upload to cloud storage
-        // For now, just return the mock URL
-        
-        return profilePictureUrl;
+
+        return "https://storage.readtogether.app/profiles/" + fileName;
+    }
+
+
+    private Optional<String> getCurrentIdFromJwt() {
+
+        return Optional.ofNullable(SecurityContextHolder.getContext().getAuthentication())
+                .map(Authentication::getPrincipal)
+                .filter(principal -> !"anonymousUser".equals(principal))
+                .map(Jwt.class::cast)
+                .map(jwt -> jwt.getClaim(USER_ID.getValue()))
+                .map(Object::toString);
     }
 
 }

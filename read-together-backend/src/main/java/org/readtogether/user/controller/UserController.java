@@ -78,13 +78,12 @@ public class UserController {
         log.info("Received a request to send forgot password email");
         
         try {
-            // Use notification service to send forgot password email
             notificationProviderService.sendForgotPasswordEmail(forgotPasswordRequest.getEmail());
             log.info("Forgot password email sent successfully");
             return CustomResponse.SUCCESS;
         } catch (Exception e) {
             log.error("Failed to send forgot password email", e);
-            return CustomResponse.SUCCESS; // Don't reveal if email exists for security
+            return CustomResponse.SUCCESS;
         }
     }
 

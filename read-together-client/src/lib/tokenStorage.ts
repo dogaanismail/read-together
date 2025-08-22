@@ -1,5 +1,4 @@
 // Secure Token Storage Implementation
-// Access tokens in memory, refresh tokens in HttpOnly cookies
 
 interface TokenStorage {
   accessToken: string | null;
@@ -24,7 +23,6 @@ class SecureTokenStorage {
       const now = Date.now();
       const buffer = 5 * 60 * 1000; // 5 minutes
       if (now >= (this.storage.accessTokenExpiresAt - buffer)) {
-        // Token is expired or about to expire
         this.clearAccessToken();
         return null;
       }
@@ -41,36 +39,24 @@ class SecureTokenStorage {
     return !!this.getAccessToken();
   }
 
-  // Refresh Token Management (HttpOnly cookies)
-  // Note: HttpOnly cookies are managed by the browser and server
-  // We can only check if they exist through API calls
-
   setRefreshToken(token: string, expiresAt: number): void {
-    // Set refresh token as HttpOnly cookie
-    // This should ideally be done by the server, but for client-side handling:
     const expires = new Date(expiresAt);
     document.cookie = `refreshToken=${token}; expires=${expires.toUTCString()}; path=/; HttpOnly; Secure; SameSite=Strict`;
   }
 
   clearRefreshToken(): void {
-    // Clear refresh token cookie
     document.cookie = 'refreshToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; HttpOnly; Secure; SameSite=Strict';
   }
 
-  // Check if refresh token exists (best effort - HttpOnly cookies can't be read by JS)
   hasRefreshToken(): boolean {
-    // Since we can't read HttpOnly cookies, we'll make an assumption
-    // This would typically be validated through an API call
     return document.cookie.includes('refreshToken');
   }
 
-  // Clear all tokens
   clearAll(): void {
     this.clearAccessToken();
     this.clearRefreshToken();
   }
 
-  // Get token expiration info
   getAccessTokenExpiration(): number | null {
     return this.storage.accessTokenExpiresAt;
   }

@@ -132,7 +132,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setUser(null);
     } catch (error) {
       console.error('Logout failed:', error);
-      // Clear user state even if logout request fails
+      // Clear user state even if the logout request fails
       setUser(null);
     } finally {
       setLoading(false);
