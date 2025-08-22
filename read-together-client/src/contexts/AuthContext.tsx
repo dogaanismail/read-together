@@ -10,6 +10,7 @@ interface AuthContextType {
   logout: () => Promise<void>;
   isAuthenticated: boolean;
   refreshUser: () => Promise<void>;
+  updateUser: (userData: Partial<User>) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -58,6 +59,27 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     };
 
     initAuth();
+
+    // Set up automatic token refresh check
+    const tokenCheckInterval = setInterval(async () => {
+      if (authService.isAuthenticated()) {
+        try {
+          // Try to get a valid token (this will trigger refresh if needed)
+          const token = await authService.getValidAccessToken();
+          if (!token) {
+            // Token refresh failed, user needs to re-authenticate
+            setUser(null);
+          }
+        } catch (error) {
+          console.error('Token validation failed:', error);
+          setUser(null);
+        }
+      }
+    }, 5 * 60 * 1000); // Check every 5 minutes
+
+    return () => {
+      clearInterval(tokenCheckInterval);
+    };
   }, []);
 
   const login = async (email: string, password: string) => {
@@ -110,8 +132,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       setUser(null);
     } catch (error) {
       console.error('Logout failed:', error);
+      // Clear user state even if logout request fails
+      setUser(null);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const updateUser = (userData: Partial<User>) => {
+    if (user) {
+      setUser({ ...user, ...userData });
     }
   };
 
@@ -123,6 +153,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     logout,
     isAuthenticated: !!user,
     refreshUser,
+    updateUser,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

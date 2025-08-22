@@ -28,6 +28,14 @@ export interface RegisterRequest {
   role: string;
 }
 
+export interface UserUpdateRequest {
+  firstName?: string;
+  lastName?: string;
+  username?: string;
+  bio?: string;
+  profilePictureUrl?: string;
+}
+
 export interface TokenResponse {
   accessToken: string;
   refreshToken: string;

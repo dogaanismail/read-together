@@ -1,6 +1,6 @@
 // User Domain API Service
 import { BaseApiClient } from '../client';
-import { User, LoginRequest, RegisterRequest, TokenResponse, ApiResponse } from '../models';
+import { User, LoginRequest, RegisterRequest, TokenResponse, ApiResponse, UserUpdateRequest } from '../models';
 
 export class UserApiService extends BaseApiClient {
   constructor() {
@@ -16,12 +16,14 @@ export class UserApiService extends BaseApiClient {
     return this.post<ApiResponse<void>>('register', userData);
   }
 
-  async logout(refreshToken: string): Promise<ApiResponse<void>> {
-    return this.post<ApiResponse<void>>('logout', { refreshToken });
+  async logout(refreshTokenRequest: { refreshToken: string }): Promise<ApiResponse<void>> {
+    return this.post<ApiResponse<void>>('logout', refreshTokenRequest);
   }
 
   async forgotPassword(email: string): Promise<ApiResponse<void>> {
-    return this.post<ApiResponse<void>>('forgot-password', { email });
+    // Use notification service for forgot password
+    const notificationClient = new BaseApiClient('notifications');
+    return notificationClient.post<ApiResponse<void>>('forgot-password', { email });
   }
 
   // User profile methods
@@ -33,8 +35,8 @@ export class UserApiService extends BaseApiClient {
     return this.get<ApiResponse<User>>('user', { userId });
   }
 
-  async updateProfile(userId: string, updates: Partial<User>): Promise<ApiResponse<User>> {
-    return this.put<ApiResponse<User>>(`profile/${userId}`, updates);
+  async updateProfile(updates: UserUpdateRequest): Promise<ApiResponse<User>> {
+    return this.put<ApiResponse<User>>('profile', updates);
   }
 
   async uploadProfilePicture(file: File): Promise<ApiResponse<{ profilePictureUrl: string }>> {
@@ -46,6 +48,11 @@ export class UserApiService extends BaseApiClient {
   // User statistics
   async getUserStatistics(userId: string): Promise<ApiResponse<any>> {
     return this.get<ApiResponse<any>>(`${userId}/statistics`);
+  }
+
+  // Token refresh
+  async refreshToken(): Promise<ApiResponse<TokenResponse>> {
+    return this.post<ApiResponse<TokenResponse>>('refresh-token', {});
   }
 }
 

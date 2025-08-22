@@ -6,6 +6,7 @@ import { Input } from '../components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
 import { Label } from '../components/ui/label';
 import { useToast } from '../hooks/use-toast';
+import { authService } from '../lib/auth';
 import { FEATURE_FLAGS } from '../lib/featureFlags';
 
 const ForgotPasswordPage = () => {
@@ -40,36 +41,15 @@ const ForgotPasswordPage = () => {
     setIsLoading(true);
 
     try {
-      // If auth is bypassed, simulate success
-      if (FEATURE_FLAGS.BYPASS_AUTH) {
-        // Simulate API delay
-        await new Promise(resolve => setTimeout(resolve, 2000));
-        setIsEmailSent(true);
-        toast({
-          title: "Success",
-          description: "Password reset instructions sent to your email.",
-        });
-      } else {
-        // TODO: Implement actual forgot password API call
-        const response = await fetch('http://localhost:8080/api/v1/auth/forgot-password', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ email }),
-        });
-
-        if (response.ok) {
-          setIsEmailSent(true);
-          toast({
-            title: "Success",
-            description: "Password reset instructions sent to your email.",
-          });
-        } else {
-          throw new Error('Failed to send reset email');
-        }
-      }
+      // Use the integrated auth service
+      await authService.forgotPassword(email);
+      setIsEmailSent(true);
+      toast({
+        title: "Success",
+        description: "Password reset instructions sent to your email.",
+      });
     } catch (error) {
+      console.error('Forgot password error:', error);
       toast({
         title: "Error",
         description: "Failed to send password reset email. Please try again.",
