@@ -146,6 +146,35 @@ public class NotificationService {
     }
 
     @Transactional
+    public void notifySessionCommented(
+            UUID sessionOwnerId,
+            UUID commenterUserId,
+            SessionEntity session,
+            String commentContent) {
+
+        if (!preferencesService.shouldSendPushNotification(sessionOwnerId, NotificationPreferenceType.SESSION_COMMENTS)) {
+            log.debug("User {} has disabled session comment notifications", sessionOwnerId);
+            return;
+        }
+
+        String metadata = NotificationMetadataUtils.createCommentMetadata(objectMapper, session, commenterUserId, commentContent);
+        NotificationEntity notification = NotificationEntityFactory.createSessionCommentedNotification(sessionOwnerId, session, metadata);
+
+        notificationRepository.save(notification);
+
+        // Send multi-channel notification
+        providerService.sendMultiChannelNotification(
+                sessionOwnerId,
+                NotificationPreferenceType.SESSION_COMMENTS,
+                notification.getTitle(),
+                notification.getMessage(),
+                metadata
+        );
+
+        log.info("Notified user {} about session comment from user {}", sessionOwnerId, commenterUserId);
+    }
+
+    @Transactional
     public void notifyNewFollower(
             UUID followedUserId,
             UUID followerUserId,

@@ -23,6 +23,7 @@ import java.util.UUID;
 public class FeedService {
 
     private final FeedRepository feedRepository;
+    private final FeedLikeService feedLikeService;
 
     @Transactional(readOnly = true)
     public Page<FeedItemResponse> getFeed(Pageable pageable) {
@@ -112,16 +113,39 @@ public class FeedService {
         feedRepository.incrementViewCount(feedItemId);
     }
 
+    /**
+     * @deprecated Use FeedLikeService.likeFeedItem instead
+     */
+    @Deprecated
     @Transactional
     public void likeFeedItem(UUID feedItemId) {
 
         feedRepository.incrementLikeCount(feedItemId);
     }
 
+    /**
+     * @deprecated Use FeedLikeService.unlikeFeedItem instead  
+     */
+    @Deprecated
     @Transactional
     public void unlikeFeedItem(UUID feedItemId) {
 
         feedRepository.decrementLikeCount(feedItemId);
+    }
+
+    @Transactional
+    public boolean likeFeedItem(UUID feedItemId, UUID userId) {
+        return feedLikeService.likeFeedItem(feedItemId, userId);
+    }
+
+    @Transactional  
+    public boolean unlikeFeedItem(UUID feedItemId, UUID userId) {
+        return feedLikeService.unlikeFeedItem(feedItemId, userId);
+    }
+
+    @Transactional(readOnly = true)
+    public boolean isLikedByUser(UUID feedItemId, UUID userId) {
+        return feedLikeService.isLikedByUser(feedItemId, userId);
     }
 
     @Transactional

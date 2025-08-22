@@ -117,6 +117,23 @@ public class NotificationEntityFactory {
                 .build();
     }
 
+    public static NotificationEntity createSessionCommentedNotification(
+            UUID sessionOwnerId,
+            SessionEntity session,
+            String metadata) {
+
+        String message = String.format("Someone commented on your session '%s'!", session.getTitle());
+
+        return NotificationEntity.builder()
+                .userId(sessionOwnerId)
+                .sessionId(session.getId())
+                .type(NotificationEntity.NotificationType.GENERAL_INFO)
+                .title("New Comment")
+                .message(message)
+                .metadata(metadata)
+                .build();
+    }
+
     public static NotificationEntity createNewFollowerNotification(
             UUID followedUserId,
             String followerUsername,

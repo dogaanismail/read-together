@@ -40,4 +40,12 @@ public interface FeedRepository extends JpaRepository<FeedItemEntity, UUID> {
     @Modifying
     @Query("UPDATE feedItem f SET f.likeCount = f.likeCount - 1 WHERE f.id = :id AND f.likeCount > 0")
     void decrementLikeCount(@Param("id") UUID id);
+
+    @Modifying
+    @Query("UPDATE feedItem f SET f.commentCount = f.commentCount + 1 WHERE f.id = :id")
+    void incrementCommentCount(@Param("id") UUID id);
+
+    @Modifying
+    @Query("UPDATE feedItem f SET f.commentCount = f.commentCount - 1 WHERE f.id = :id AND f.commentCount > 0")
+    void decrementCommentCount(@Param("id") UUID id);
 }

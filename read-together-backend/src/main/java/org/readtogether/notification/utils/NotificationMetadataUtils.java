@@ -90,6 +90,29 @@ public class NotificationMetadataUtils {
         }
     }
 
+    public static String createCommentMetadata(
+            ObjectMapper objectMapper,
+            SessionEntity session,
+            UUID commenterUserId,
+            String commentPreview) {
+
+        try {
+            Map<String, Object> metadata = new HashMap<>();
+            metadata.put("sessionId", session.getId().toString());
+            metadata.put("sessionTitle", session.getTitle());
+            metadata.put("commenterUserId", commenterUserId.toString());
+            metadata.put("commentPreview", commentPreview != null && commentPreview.length() > 50 
+                ? commentPreview.substring(0, 50) + "..." 
+                : commentPreview);
+            metadata.put("timestamp", System.currentTimeMillis());
+
+            return objectMapper.writeValueAsString(metadata);
+        } catch (Exception e) {
+            log.warn("Failed to serialize comment metadata", e);
+            return "{}";
+        }
+    }
+
     public static String createFollowerMetadata(
             ObjectMapper objectMapper,
             UUID followerUserId,
