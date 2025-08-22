@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.readtogether.notification.entity.NotificationPreferenceEntity;
 import org.readtogether.notification.factory.NotificationPreferencesResponseFactory;
+import org.readtogether.notification.model.NotificationPreferencesResponse;
 import org.readtogether.notification.service.NotificationPreferencesService;
 import org.readtogether.user.entity.PrivacySettingsEntity;
 import org.readtogether.user.entity.ReadingPreferencesEntity;
@@ -36,7 +37,7 @@ public class AccountSettingsService {
 
         PrivacySettingsResponse privacyDto = PrivacySettingsResponseFactory.createFromEntity(privacySettings);
         ReadingPreferencesResponse readingDto = ReadingPreferencesResponseFactory.createFromEntity(readingPreferences);
-        org.readtogether.notification.model.NotificationPreferencesResponse notifDto = NotificationPreferencesResponseFactory.createFromEntity(notificationPreferences);
+        NotificationPreferencesResponse notifDto = NotificationPreferencesResponseFactory.createFromEntity(notificationPreferences);
 
         return new AccountSettingsResponse(privacyDto, readingDto, notifDto);
     }
