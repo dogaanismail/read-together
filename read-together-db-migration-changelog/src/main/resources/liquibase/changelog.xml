@@ -5,4 +5,39 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                             http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
 
+    <changeSet id="2025-01-22-10-00" author="Ismail Dogan">
+        <comment>Add security domain tables</comment>
+        <sqlFile path="changelog/add_security_domain_tables.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="2025-01-22-10-01" author="Ismail Dogan">
+        <comment>Add user domain tables</comment>
+        <sqlFile path="changelog/add_user_domain_tables.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="2025-01-22-10-02" author="Ismail Dogan">
+        <comment>Add notification domain tables</comment>
+        <sqlFile path="changelog/add_notification_domain_tables.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="2025-01-22-10-03" author="Ismail Dogan">
+        <comment>Add chat domain tables</comment>
+        <sqlFile path="changelog/add_chat_domain_tables.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="2025-01-22-10-04" author="Ismail Dogan">
+        <comment>Add session domain tables</comment>
+        <sqlFile path="changelog/add_session_domain_tables.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="2025-01-22-10-05" author="Ismail Dogan">
+        <comment>Add reading room domain tables</comment>
+        <sqlFile path="changelog/add_readingroom_domain_tables.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="2025-01-22-10-06" author="Ismail Dogan">
+        <comment>Add feed domain tables</comment>
+        <sqlFile path="changelog/add_feed_domain_tables.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
 </databaseChangeLog>
