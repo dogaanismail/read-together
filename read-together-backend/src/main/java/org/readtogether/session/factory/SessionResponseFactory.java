@@ -4,7 +4,7 @@ import lombok.experimental.UtilityClass;
 import org.readtogether.common.utils.FileUtils;
 import org.readtogether.common.utils.TimeUtils;
 import org.readtogether.session.entity.SessionEntity;
-import org.readtogether.session.model.SessionResponse;
+import org.readtogether.session.model.response.SessionResponse;
 
 @UtilityClass
 public class SessionResponseFactory {
@@ -24,8 +24,6 @@ public class SessionResponseFactory {
         response.setProcessingStatus(session.getProcessingStatus());
         response.setProcessingError(session.getProcessingError());
         response.setPublic(session.isPublic());
-        response.setViewCount(session.getViewCount());
-        response.setLikeCount(session.getLikeCount());
         response.setReadingRoomId(session.getReadingRoomId());
         response.setTranscript(session.getTranscript());
         response.setCreatedAt(session.getCreatedAt());

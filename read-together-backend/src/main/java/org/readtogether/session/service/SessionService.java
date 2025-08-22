@@ -10,9 +10,9 @@ import org.readtogether.notification.service.NotificationService;
 import org.readtogether.session.entity.SessionEntity;
 import org.readtogether.session.factory.SessionEntityFactory;
 import org.readtogether.session.factory.SessionResponseFactory;
-import org.readtogether.session.model.SessionCreateRequest;
-import org.readtogether.session.model.SessionResponse;
-import org.readtogether.session.model.SessionUpdateRequest;
+import org.readtogether.session.model.request.SessionCreateRequest;
+import org.readtogether.session.model.response.SessionResponse;
+import org.readtogether.session.model.request.SessionUpdateRequest;
 import org.readtogether.session.repository.SessionRepository;
 import org.readtogether.session.utils.SessionValidationUtils;
 import org.readtogether.session.utils.SessionUpdateUtils;
@@ -28,6 +28,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+
+import static org.readtogether.session.entity.SessionEntity.ProcessingStatus.*;
 
 @Slf4j
 @Service
@@ -51,7 +53,6 @@ public class SessionService {
         SessionEntity session = SessionEntityFactory.createPendingSession(userId, request, file);
         session = sessionRepository.save(session);
 
-        // Notify user that upload has started
         notificationService.notifySessionUploadStarted(userId, session);
 
         final UUID sessionId = session.getId();
@@ -59,7 +60,7 @@ public class SessionService {
                 .thenApply(mediaUrl -> {
                     SessionEntity updatedSession = updateSessionAfterUpload(sessionId, mediaUrl);
 
-                    if (updatedSession.getProcessingStatus() == SessionEntity.ProcessingStatus.COMPLETED) {
+                    if (updatedSession.getProcessingStatus() == COMPLETED) {
                         // Notify user that upload is complete
                         notificationService.notifySessionUploadCompleted(userId, updatedSession);
                         createFeedItemForSession(updatedSession);
@@ -90,7 +91,7 @@ public class SessionService {
 
         String mediaUrl = uploadFile(file);
         session.setMediaUrl(mediaUrl);
-        session.setProcessingStatus(SessionEntity.ProcessingStatus.COMPLETED);
+        session.setProcessingStatus(COMPLETED);
 
         session = sessionRepository.save(session);
 
@@ -118,7 +119,7 @@ public class SessionService {
 
         Pageable pageable = PageRequest.of(page, size);
         return sessionRepository.findByIsPublicTrueAndProcessingStatusOrderByCreatedAtDesc(
-                SessionEntity.ProcessingStatus.COMPLETED, pageable
+                COMPLETED, pageable
         ).map(SessionResponseFactory::createFromEntity);
     }
 
@@ -147,7 +148,7 @@ public class SessionService {
             Pageable pageable) {
 
         return sessionRepository.findByMediaTypeAndIsPublicTrueAndProcessingStatusOrderByCreatedAtDesc(
-                mediaType, SessionEntity.ProcessingStatus.COMPLETED, pageable
+                mediaType, COMPLETED, pageable
         ).map(SessionResponseFactory::createFromEntity);
     }
 
@@ -157,7 +158,7 @@ public class SessionService {
             Pageable pageable) {
 
         return sessionRepository.searchPublicSessions(
-                query, SessionEntity.ProcessingStatus.COMPLETED, pageable
+                query, COMPLETED, pageable
         ).map(SessionResponseFactory::createFromEntity);
     }
 
@@ -205,21 +206,6 @@ public class SessionService {
         sessionRepository.delete(session);
     }
 
-    @Transactional
-    public void incrementViewCount(UUID sessionId) {
-        sessionRepository.incrementViewCount(sessionId);
-    }
-
-    @Transactional
-    public void likeSession(UUID sessionId) {
-        sessionRepository.incrementLikeCount(sessionId);
-    }
-
-    @Transactional
-    public void unlikeSession(UUID sessionId) {
-        sessionRepository.decrementLikeCount(sessionId);
-    }
-
     @Async
     public CompletableFuture<String> processFileUploadAsync(
             UUID sessionId,
@@ -227,9 +213,8 @@ public class SessionService {
             UUID userId) {
 
         try {
-            updateProcessingStatus(sessionId, SessionEntity.ProcessingStatus.PROCESSING);
+            updateProcessingStatus(sessionId, PROCESSING);
 
-            // Notify user that processing has started
             SessionEntity session = sessionRepository.findById(sessionId)
                     .orElseThrow(() -> new RuntimeException("Session not found"));
             notificationService.notifySessionProcessingStarted(userId, session);
@@ -265,7 +250,7 @@ public class SessionService {
                 .orElseThrow(() -> new RuntimeException("Session not found"));
 
         session.setMediaUrl(mediaUrl);
-        session.setProcessingStatus(SessionEntity.ProcessingStatus.COMPLETED);
+        session.setProcessingStatus(COMPLETED);
         session.setProcessingError(null);
 
         return sessionRepository.save(session);
@@ -277,7 +262,7 @@ public class SessionService {
 
         return sessionRepository.findById(sessionId)
                 .map(session -> {
-                    session.setProcessingStatus(SessionEntity.ProcessingStatus.FAILED);
+                    session.setProcessingStatus(FAILED);
                     session.setProcessingError(error);
                     return sessionRepository.save(session);
                 })

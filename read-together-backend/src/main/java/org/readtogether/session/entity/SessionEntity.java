@@ -61,18 +61,6 @@ public class SessionEntity extends BaseEntity {
     @Builder.Default
     private boolean isPublic = false;
 
-    @Column(name = "view_count")
-    @Builder.Default
-    private long viewCount = 0L;
-
-    @Column(name = "like_count")
-    @Builder.Default
-    private long likeCount = 0L;
-
-    @Column(name = "comment_count")
-    @Builder.Default
-    private long commentCount = 0L;
-
     @Column(name = "reading_room_id")
     private UUID readingRoomId;
 

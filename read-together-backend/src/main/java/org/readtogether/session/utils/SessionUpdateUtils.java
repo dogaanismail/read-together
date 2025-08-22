@@ -2,7 +2,7 @@ package org.readtogether.session.utils;
 
 import lombok.experimental.UtilityClass;
 import org.readtogether.session.entity.SessionEntity;
-import org.readtogether.session.model.SessionUpdateRequest;
+import org.readtogether.session.model.request.SessionUpdateRequest;
 
 @UtilityClass
 public class SessionUpdateUtils {

@@ -2,7 +2,7 @@ package org.readtogether.session.factory;
 
 import lombok.experimental.UtilityClass;
 import org.readtogether.session.entity.SessionEntity;
-import org.readtogether.session.model.SessionCreateRequest;
+import org.readtogether.session.model.request.SessionCreateRequest;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.UUID;
