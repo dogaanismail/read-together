@@ -53,7 +53,7 @@ class UserLoginServiceTests {
 
         Token expectedToken = TokenFixtures.createToken();
 
-        when(userRepository.findUserEntityByEmail(loginRequest.getEmail()))
+        when(userRepository.findByEmail(loginRequest.getEmail()))
                 .thenReturn(Optional.of(userEntity));
         when(passwordEncoder.matches(loginRequest.getPassword(), userEntity.getPassword()))
                 .thenReturn(true);
@@ -69,7 +69,7 @@ class UserLoginServiceTests {
         assertThat(result.getAccessTokenExpiresAt()).isEqualTo(123456789L);
         assertThat(result.getRefreshToken()).isEqualTo("refresh-token");
 
-        verify(userRepository).findUserEntityByEmail(loginRequest.getEmail());
+        verify(userRepository).findByEmail(loginRequest.getEmail());
         verify(passwordEncoder).matches(loginRequest.getPassword(), userEntity.getPassword());
         verify(tokenService).generateToken(eq(userEntity.getClaims()));
         verifyNoMoreInteractions(userRepository, passwordEncoder, tokenService);
@@ -81,7 +81,7 @@ class UserLoginServiceTests {
         // Given
         LoginRequest loginRequest = RequestFixtures.createLoginRequest();
 
-        when(userRepository.findUserEntityByEmail(loginRequest.getEmail()))
+        when(userRepository.findByEmail(loginRequest.getEmail()))
                 .thenReturn(Optional.empty());
 
         // When & Then
@@ -89,7 +89,7 @@ class UserLoginServiceTests {
                 .isInstanceOf(UserNotFoundException.class)
                 .hasMessage("Can't find with given email: " + loginRequest.getEmail());
 
-        verify(userRepository).findUserEntityByEmail(loginRequest.getEmail());
+        verify(userRepository).findByEmail(loginRequest.getEmail());
         verifyNoMoreInteractions(userRepository);
         verifyNoInteractions(passwordEncoder, tokenService);
     }
@@ -103,7 +103,7 @@ class UserLoginServiceTests {
 
         LoginRequest loginRequest = RequestFixtures.createLoginRequest();
 
-        when(userRepository.findUserEntityByEmail(loginRequest.getEmail()))
+        when(userRepository.findByEmail(loginRequest.getEmail()))
                 .thenReturn(Optional.of(userEntity));
         when(passwordEncoder.matches(loginRequest.getPassword(), userEntity.getPassword()))
                 .thenReturn(false);
@@ -112,7 +112,7 @@ class UserLoginServiceTests {
         assertThatThrownBy(() -> userLoginService.login(loginRequest))
                 .isInstanceOf(PasswordNotValidException.class);
 
-        verify(userRepository).findUserEntityByEmail(loginRequest.getEmail());
+        verify(userRepository).findByEmail(loginRequest.getEmail());
         verify(passwordEncoder).matches(loginRequest.getPassword(), userEntity.getPassword());
         verifyNoInteractions(tokenService);
     }

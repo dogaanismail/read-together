@@ -35,7 +35,7 @@ public class RegisterService {
     private void isEmailExist(
             String email) {
 
-        if (userRepository.existsUserEntityByEmail(email)) {
+        if (userRepository.existsByEmail(email)) {
             throw new UserAlreadyExistException("The email is already used for another user : " + email);
         }
 

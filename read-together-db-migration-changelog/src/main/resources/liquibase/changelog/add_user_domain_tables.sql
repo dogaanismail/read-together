@@ -1,5 +1,5 @@
--- Create user table
-CREATE TABLE IF NOT EXISTS "user" (
+-- Create users table
+CREATE TABLE IF NOT EXISTS users (
     id UUID NOT NULL PRIMARY KEY,
     email VARCHAR(255) NOT NULL UNIQUE,
     first_name VARCHAR(255) NOT NULL,
@@ -8,6 +8,13 @@ CREATE TABLE IF NOT EXISTS "user" (
     user_type VARCHAR(50) NOT NULL,
     user_status VARCHAR(50) NOT NULL DEFAULT 'ACTIVE',
     username VARCHAR(50) UNIQUE,
+    profile_picture_url VARCHAR(500),
+    bio TEXT,
+    reading_streak INTEGER NOT NULL DEFAULT 0,
+    total_sessions BIGINT NOT NULL DEFAULT 0,
+    total_reading_time_seconds BIGINT NOT NULL DEFAULT 0,
+    longest_streak INTEGER NOT NULL DEFAULT 0,
+    total_active_days BIGINT NOT NULL DEFAULT 0,
     last_activity_date TIMESTAMP,
     created_at TIMESTAMPTZ NOT NULL,
     created_by VARCHAR(255) NOT NULL DEFAULT 'anonymousUser',

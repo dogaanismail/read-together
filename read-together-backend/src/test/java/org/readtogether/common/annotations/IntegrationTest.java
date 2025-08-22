@@ -2,6 +2,7 @@ package org.readtogether.common.annotations;
 
 import org.readtogether.ReadTogetherApplication;
 import org.readtogether.common.initializers.WireMockInitializer;
+import org.readtogether.common.initializers.PostgresTestContainerInitializer;
 import org.junit.jupiter.api.Tag;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,7 +16,8 @@ import org.springframework.test.context.ContextConfiguration;
         classes = {ReadTogetherApplication.class}
 )
 @ContextConfiguration(initializers = {
-        WireMockInitializer.class
+        WireMockInitializer.class,
+        PostgresTestContainerInitializer.class
 })
 @ActiveProfiles({"local", "test"})
 @AutoConfigureMockMvc

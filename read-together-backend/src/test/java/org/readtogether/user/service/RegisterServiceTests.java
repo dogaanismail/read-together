@@ -61,7 +61,7 @@ class RegisterServiceTests {
                 "user"
         );
 
-        when(userRepository.existsUserEntityByEmail(request.getEmail())).thenReturn(false);
+        when(userRepository.existsByEmail(request.getEmail())).thenReturn(false);
         when(passwordEncoder.encode(request.getPassword())).thenReturn("encoded-pass");
 
         when(userRepository.save(any(UserEntity.class))).thenAnswer(inv -> inv.getArgument(0));
@@ -70,7 +70,7 @@ class RegisterServiceTests {
         registerService.registerUser(request);
 
         // Then
-        verify(userRepository).existsUserEntityByEmail(request.getEmail());
+        verify(userRepository).existsByEmail(request.getEmail());
         verify(passwordEncoder).encode("plain-pass");
 
         ArgumentCaptor<UserEntity> entityCaptor = ArgumentCaptor.forClass(UserEntity.class);
@@ -99,7 +99,7 @@ class RegisterServiceTests {
                 "ADMIN"
         );
 
-        when(userRepository.existsUserEntityByEmail(request.getEmail())).thenReturn(false);
+        when(userRepository.existsByEmail(request.getEmail())).thenReturn(false);
         when(passwordEncoder.encode(request.getPassword())).thenReturn("encoded-admin");
         when(userRepository.save(any(UserEntity.class))).thenAnswer(inv -> inv.getArgument(0));
 
@@ -127,15 +127,15 @@ class RegisterServiceTests {
                 "sample",
                 "user"
         );
-        
-        when(userRepository.existsUserEntityByEmail(request.getEmail())).thenReturn(true);
+
+        when(userRepository.existsByEmail(request.getEmail())).thenReturn(true);
 
         // When & Then
         assertThatThrownBy(() -> registerService.registerUser(request))
                 .isInstanceOf(UserAlreadyExistException.class)
                 .hasMessage("The email is already used for another user : " + request.getEmail());
 
-        verify(userRepository).existsUserEntityByEmail(request.getEmail());
+        verify(userRepository).existsByEmail(request.getEmail());
         verifyNoMoreInteractions(userRepository);
         verifyNoInteractions(passwordEncoder, mapper);
     }

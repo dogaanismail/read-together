@@ -25,7 +25,7 @@ public class UserLoginService {
             LoginRequest loginRequest) {
 
         Optional<UserEntity> optionalUserEntity = userRepository
-                .findUserEntityByEmail(loginRequest.getEmail());
+                .findByEmail(loginRequest.getEmail());
 
         if (optionalUserEntity.isEmpty()) {
 

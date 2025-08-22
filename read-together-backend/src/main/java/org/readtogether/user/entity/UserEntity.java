@@ -21,8 +21,8 @@ import static org.readtogether.user.common.enums.UserStatus.ACTIVE;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "user")
-@Table(name = "user")
+@Entity(name = "users")
+@Table(name = "users")
 public class UserEntity extends BaseEntity {
 
     @Id

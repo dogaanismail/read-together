@@ -66,6 +66,14 @@ public class RequestFixtures {
                 .build();
     }
 
+    public static LoginRequest createLoginRequest(String email, String password) {
+
+        return LoginRequest.builder()
+                .email(email)
+                .password(password)
+                .build();
+    }
+
     public static TokenInvalidateRequest createTokenInvalidateRequest(
             String accessToken,
             String refreshToken) {

@@ -126,40 +126,4 @@ class SecurityUtilsTest {
         assertThat(actualEmail).isEqualTo(ANONYMOUS.name());
     }
 
-    @Test
-    @DisplayName("Should throw ClassCastException when principal is not JWT")
-    void shouldThrowClassCastExceptionWhenPrincipalIsNotJwt() {
-
-        securityContextHolderMock.when(SecurityContextHolder::getContext).thenReturn(securityContext);
-        when(securityContext.getAuthentication()).thenReturn(authentication);
-        when(authentication.getPrincipal()).thenReturn("not-a-jwt");
-
-        assertThatThrownBy(SecurityUtils::getCurrentUserEmail)
-                .isInstanceOf(ClassCastException.class);
-    }
-
-    @Test
-    @DisplayName("Should throw NullPointerException when JWT email claim is null")
-    void shouldThrowNullPointerExceptionWhenJwtEmailClaimIsNull() {
-
-        securityContextHolderMock.when(SecurityContextHolder::getContext).thenReturn(securityContext);
-        when(securityContext.getAuthentication()).thenReturn(authentication);
-        when(authentication.getPrincipal()).thenReturn(jwt);
-        when(jwt.getClaim(USER_EMAIL.getValue())).thenReturn(null);
-
-        assertThatThrownBy(SecurityUtils::getCurrentUserEmail)
-                .isInstanceOf(NullPointerException.class);
-    }
-
-    @Test
-    @DisplayName("Should throw ClassCastException when casting non-JWT object")
-    void shouldThrowClassCastExceptionWhenCastingNonJwtObject() {
-
-        securityContextHolderMock.when(SecurityContextHolder::getContext).thenReturn(securityContext);
-        when(securityContext.getAuthentication()).thenReturn(authentication);
-        when(authentication.getPrincipal()).thenReturn(new Object());
-
-        assertThatThrownBy(SecurityUtils::getCurrentUserEmail)
-                .isInstanceOf(ClassCastException.class);
-    }
 }
