@@ -22,7 +22,8 @@ public class ReadingPreferencesController {
     private final ReadingPreferencesService readingPreferencesService;
 
     @GetMapping
-    public ResponseEntity<ReadingPreferencesResponse> getReadingPreferences(Authentication authentication) {
+    public ResponseEntity<ReadingPreferencesResponse> getReadingPreferences(
+            Authentication authentication) {
 
         UUID userId = SecurityUtils.getCurrentUserId(authentication);
         ReadingPreferencesEntity preferences = readingPreferencesService.getUserReadingPreferences(userId);
@@ -40,7 +41,8 @@ public class ReadingPreferencesController {
     }
 
     @GetMapping("/playback-settings")
-    public ResponseEntity<Map<String, Object>> getPlaybackSettings(Authentication authentication) {
+    public ResponseEntity<Map<String, Object>> getPlaybackSettings(
+            Authentication authentication) {
 
         UUID userId = SecurityUtils.getCurrentUserId(authentication);
 

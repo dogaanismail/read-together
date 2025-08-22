@@ -8,6 +8,7 @@ import org.readtogether.user.model.response.PrivacySettingsResponse;
 import org.readtogether.user.model.request.PrivacySettingsUpdateRequest;
 import org.readtogether.user.service.PrivacySettingsService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +22,9 @@ public class PrivacySettingsController {
     private final PrivacySettingsService privacySettingsService;
 
     @GetMapping
-    public ResponseEntity<PrivacySettingsResponse> getPrivacySettings(Authentication authentication) {
+    @PreAuthorize("hasAuthority('USER')")
+    public ResponseEntity<PrivacySettingsResponse> getPrivacySettings(
+            Authentication authentication) {
 
         UUID userId = SecurityUtils.getCurrentUserId(authentication);
         PrivacySettingsEntity settings = privacySettingsService.getUserPrivacySettings(userId);
@@ -29,6 +32,7 @@ public class PrivacySettingsController {
     }
 
     @PutMapping
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<PrivacySettingsResponse> updatePrivacySettings(
             @RequestBody PrivacySettingsUpdateRequest request,
             Authentication authentication) {
@@ -39,6 +43,7 @@ public class PrivacySettingsController {
     }
 
     @GetMapping("/can-access-profile")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<Boolean> canAccessProfile(
             @RequestParam UUID targetUserId,
             @RequestParam(defaultValue = "false") boolean isFollowing,
@@ -50,6 +55,7 @@ public class PrivacySettingsController {
     }
 
     @GetMapping("/can-send-message")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<Boolean> canSendMessage(
             @RequestParam UUID targetUserId,
             @RequestParam(defaultValue = "false") boolean isFollowing,

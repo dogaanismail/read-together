@@ -26,4 +26,5 @@ public abstract class BaseIntegrationTest extends IntegrationTest {
         wireMockRule.resetAll();
         wireMockRule.stop();
     }
+
 }

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.readtogether.common.BaseIntegrationTest;
+import org.readtogether.security.model.request.TokenInvalidateRequest;
 import org.readtogether.security.repository.InvalidTokenRepository;
 import org.readtogether.security.service.TokenService;
 import org.readtogether.user.entity.UserEntity;
@@ -133,7 +134,7 @@ class UserControllerIntegrationTests extends BaseIntegrationTest {
                         .content(objectMapper.writeValueAsString(register)))
                 .andExpect(status().isOk());
 
-        var login = RequestFixtures.createLoginRequest(email, password);
+        LoginRequest login = RequestFixtures.createLoginRequest(email, password);
 
         MvcResult loginResult = mockMvc.perform(post("/api/v1/users/login")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -175,7 +176,7 @@ class UserControllerIntegrationTests extends BaseIntegrationTest {
                         .content(objectMapper.writeValueAsString(register)))
                 .andExpect(status().isOk());
 
-        var login = RequestFixtures.createLoginRequest(email, password);
+        LoginRequest login = RequestFixtures.createLoginRequest(email, password);
 
         MvcResult loginResult = mockMvc.perform(post("/api/v1/users/login")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -187,7 +188,7 @@ class UserControllerIntegrationTests extends BaseIntegrationTest {
         String accessToken = loginNode.path("response").path("accessToken").asText();
         String refreshToken = loginNode.path("response").path("refreshToken").asText();
 
-        var logoutRequest = RequestFixtures.createTokenInvalidateRequest(accessToken, refreshToken);
+        TokenInvalidateRequest logoutRequest = RequestFixtures.createTokenInvalidateRequest(accessToken, refreshToken);
 
         // When / Then
         mockMvc.perform(post("/api/v1/users/logout")
@@ -206,6 +207,7 @@ class UserControllerIntegrationTests extends BaseIntegrationTest {
     @Test
     @DisplayName("GET /current-user without auth should return 401 with CustomError")
     void shouldReturn401ForCurrentUserWithoutAuth() throws Exception {
+
         mockMvc.perform(get("/api/v1/users/current-user"))
                 .andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("$.httpStatus").value("UNAUTHORIZED"))

@@ -265,137 +265,94 @@ app.jwt.secret=${JWT_SECRET:default-secret}
 - **Pattern**: Use `@DataJpaTest` for repository layer
 - **Focus**: Verify query correctness and database interactions
 
-# Backend Coding Standards
+## Backend Coding Standards
 
 ## Testing Standards
 
-### Unit Testing Structure
+### Integration Testing Standards
 
-#### Test Organization
-- **Fixtures Directory**: `src/test/java/org/readtogether/{domain}/fixtures/`
-- **Factory Tests**: `src/test/java/org/readtogether/{domain}/factory/`
-- **Service Tests**: `src/test/java/org/readtogether/{domain}/service/`
+These rules define how we write controller/service integration tests that boot the Spring context, hit real HTTP mappings, use real security, apply Liquibase migrations, and talk to a PostgreSQL Testcontainer.
 
-#### Fixture Naming Conventions
-Follow the pattern: `{create}.{generic-name}.{entity-name}`
+- Class location
+  - src/test/java/org/readtogether/{domain}/controller/
+  - One test class per controller: {ControllerName}IntegrationTests
 
-**Examples:**
-```java
-// Entity Fixtures
-createDefaultUserEntity()
-createSecondaryUserEntity() 
-createAdminUserEntity()
+- Class annotations and base
+  - Extend BaseIntegrationTest (inherits @Tag("integration"), @SpringBootTest, @AutoConfigureMockMvc, @ActiveProfiles("local","test"), WireMock initializer, and Postgres Testcontainer initializer).
+  - Do NOT mock Spring beans in integration tests.
 
-// Request Fixtures
-createDefaultRegisterRequest()
-createPrivacyUpdateRequestWithNulls()
-createPartialReadingPreferencesRequest()
+- Naming conventions
+  - Class: {ControllerName}IntegrationTests (plural) — e.g., UserControllerIntegrationTests
+  - Method: start with should... — e.g., shouldRegisterUser, shouldReturn401WhenNotAuthenticated
+  - Use @DisplayName to document the endpoint and behavior succinctly
 
-// Response Fixtures
-createDefaultPrivacySettingsResponse()
-createFastReaderResponse()
-```
+- Fixtures usage (mandatory)
+  - Never build request DTOs inline in tests; use fixture helpers:
+    - org.readtogether.user.fixtures.RequestFixtures for RegisterRequest, LoginRequest, TokenInvalidateRequest
+    - org.readtogether.user.fixtures.PrivacySettingsRequestFixtures for PrivacySettingsUpdateRequest
+    - org.readtogether.user.fixtures.ReadingPreferencesRequestFixtures for ReadingPreferencesUpdateRequest
+    - org.readtogether.notification.fixtures.NotificationPreferencesRequestFixtures for NotificationPreferencesUpdateRequest
+    - org.readtogether.user.fixtures.AccountSettingsRequestFixtures for AccountSettingsUpdateRequest
+  - Keep fixture methods descriptive: createDefault..., createFollowersTightRequest(), createFastLargeDarkSpanish(), createAll(...)
 
-#### Fixture Class Structure
-```java
-@UtilityClass
-public class UserEntityFixtures {
+- Security & authentication
+  - Exercise real security; don’t bypass the filter chain or set the SecurityContext manually.
+  - Obtain a JWT via POST /api/v1/users/login with RequestFixtures.createLoginRequest
+  - Send Authorization: Bearer <accessToken> for protected endpoints
+  - Always include one negative test per class asserting 401 for missing/invalid auth when applicable
 
-    public static final UUID DEFAULT_USER_ID = UUID.fromString("550e8400-e29b-41d4-a716-446655440000");
-    public static final UUID SECONDARY_USER_ID = UUID.fromString("550e8400-e29b-41d4-a716-446655440001");
+- Database & migrations
+  - Tests run against PostgreSQL Testcontainers via PostgresTestContainerInitializer; Liquibase applies changelog automatically.
+  - Never use hbm2ddl auto; schema derives from migrations.
+  - Prefer verifying persistence via repositories when it adds value (e.g., invalidated tokens saved), otherwise assert API contracts.
 
-    public static UserEntity createDefaultUserEntity() {
+- External services
+  - WireMockInitializer is enabled; BaseIntegrationTest manages a WireMockRule on port 8080 where needed.
+  - Stub only what the test needs; defaults (e.g., /actuator/health) are provided.
 
-        return createUserEntity(DEFAULT_USER_ID,
-                "test@example.com",
-                "John",
-                "Doe",
-                UserType.USER
-        );
-    }
+- Structure & readability
+  - Use Given / When / Then sections as line comments inside test methods to document flow.
+  - Keep helper methods local to the test class where practical (e.g., loginAndGetAccessToken).
+  - Use ObjectMapper to serialize request fixtures; avoid hand-written JSON strings.
+  - Use unique, readable test emails to prevent constraint collisions (e.g., feature.scope+case@test.local).
 
-    public static UserEntity createUserEntity(
-            UUID id,
-            String email,
-            String firstName,
-            String lastName,
-            UserType userType) {
+- Assertions
+  - Assert the public JSON contract only (field names that clients depend on), not internal fields.
+  - For CustomResponse wrappers, minimally assert isSuccess and response subset for happy paths.
+  - For CustomError on 401, assert httpStatus=UNAUTHORIZED, header="AUTH ERROR", isSuccess=false.
+  - For list/map endpoints (e.g., playback-settings), assert key fields that capture business logic (e.g., speedMultiplier, videoQuality, languageCode).
 
-        return UserEntity.builder()
-                .id(id)
-                .email(email)
-                .firstName(firstName)
-                .lastName(lastName)
-                .userType(userType)
-                .createdAt(Instant.now())
-                .updatedAt(Instant.now())
-                .build();
-    }
-}
-```
+- Examples (patterns to follow)
+  - UserControllerIntegrationTests
+    - shouldRegisterUser, shouldReturnCurrentUserAfterLogin, shouldReturnUserByIdWhenAuthorized, shouldInvalidateTokensOnLogout, shouldReturn401ForCurrentUserWithoutAuth
+  - PrivacySettingsControllerIntegrationTests
+    - shouldReturnDefaultPrivacySettings, shouldUpdatePrivacySettings, shouldEvaluateProfileAccessForFollowersVisibility, shouldDenyAccessForPrivateNoMessages, shouldHandleOwnerAccessAndMessaging
+  - ReadingPreferencesControllerIntegrationTests
+    - shouldReturnDefaultReadingPreferences, shouldUpdateReadingPreferences, shouldReturnPlaybackSettingsFromPreferences, shouldReturn401WhenNotAuthenticated
+  - AccountSettingsControllerIntegrationTests
+    - shouldReturnDefaultAccountSettings, shouldUpdateAllAccountSettings, shouldUpdateNotificationsOnly, shouldReturn401WhenNotAuthenticated
 
-#### Factory Test Standards
-- **Use fixtures instead of inline object construction**
-- **Only keep Given/When/Then comments**
-- **Reference fixtures from other fixture classes when needed**
+- Performance & stability
+  - Keep each test focused and fast; avoid unnecessary database queries or sleeps.
+  - Reuse helper methods for login and token extraction to reduce duplication.
 
-**Good Example:**
-```java
-@Test
-@DisplayName("Should create user entity from register request with USER role")
-void shouldCreateUserEntityFromRegisterRequestWithUserRole() {
-    // Given
-    RegisterRequest request = RequestFixtures.createDefaultRegisterRequest();
+- Do & Don’t
+  - Do: use fixtures, method names starting with should..., assert minimal but meaningful fields.
+  - Do: verify side effects through repositories where it adds clarity (e.g., invalid tokens persisted).
+  - Don’t: inline DTO construction, bypass security, or assert volatile timestamps.
 
-    // When
-    UserEntity result = UserEntityFactory.getUserEntityByRegisterRequest(request);
+### Unit and Service Testing Reminders
 
-    // Then
-    assertThat(result).isNotNull();
-    assertThat(result.getEmail()).isEqualTo("newuser@example.com");
-    assertThat(result.getUserType()).isEqualTo(UserType.USER);
-}
-```
+- Services: mock dependencies, assert domain behavior, use fixtures for input data.
+- Repositories: prefer @DataJpaTest; use migrations-backed schema where practical.
+- Mappers/Factories/Utils: keep tests pure and fast; no Spring context required.
 
-**Avoid:**
-```java
-// Don't create objects inline in tests
-RegisterRequest request = RegisterRequest.builder()
-    .email("test@example.com")
-    .firstName("Test")
-    .lastName("User")
-    .role("user")
-    .build();
-```
+### Test Data Fixtures Structure
 
-#### Service Test Standards
-- **Use Mockito for dependencies**
-- **Test happy paths, edge cases, and exceptions**
-- **Use fixtures for test data**
-- **Verify mock interactions**
-
-#### Test Method Formatting
-- **Empty line after method signature**
-- **Use `var` for obvious types in Given section**
-- **Group assertions logically**
-
-```java
-public static UserEntity createDefaultUserEntity() {
-
-    return createUserEntity(DEFAULT_USER_ID,
-            "test@example.com", 
-            "John",
-            "Doe",
-            UserType.USER
-    );
-}
-```
-
-### Key Principles
-1. **DRY (Don't Repeat Yourself)**: Use fixtures to eliminate duplication
-2. **Maintainability**: Centralize test data in fixture classes
-3. **Readability**: Clear naming conventions and minimal comments
-4. **Consistency**: Follow established patterns across all domains
+- Directory: src/test/java/org/readtogether/{domain}/fixtures/
+- Fixture class naming: {Entity|Request|Response|Domain}Fixtures
+- Method naming: create{Variant}{EntityName}(), create{Variant}Request() (e.g., createDefaultRegisterRequest)
+- Cross-domain references allowed (e.g., AccountSettings request composes Privacy/Reading/Notification request fixtures)
 
 ---
 
