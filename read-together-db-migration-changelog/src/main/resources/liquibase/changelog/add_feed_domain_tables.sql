@@ -22,3 +22,44 @@ CREATE TABLE IF NOT EXISTS feed_items (
     deleted_reason VARCHAR(255),
     version SMALLINT NOT NULL DEFAULT 0
 );
+
+-- Create feed_likes table
+CREATE TABLE IF NOT EXISTS feed_likes (
+    id UUID NOT NULL PRIMARY KEY,
+    feed_item_id UUID NOT NULL,
+    user_id UUID NOT NULL,
+    created_at TIMESTAMPTZ NOT NULL,
+    created_by VARCHAR(255) NOT NULL DEFAULT 'anonymousUser',
+    updated_at TIMESTAMPTZ NOT NULL,
+    updated_by VARCHAR(255) NOT NULL,
+    deleted_at TIMESTAMPTZ,
+    deleted_by VARCHAR(255),
+    deleted_reason VARCHAR(255),
+    version SMALLINT NOT NULL DEFAULT 0,
+    CONSTRAINT uk_feed_likes_feed_item_user UNIQUE (feed_item_id, user_id)
+);
+
+-- Create indexes for feed_likes table
+CREATE INDEX IF NOT EXISTS idx_feed_likes_feed_item_id ON feed_likes (feed_item_id);
+
+-- Create feed_comments table
+CREATE TABLE IF NOT EXISTS feed_comments (
+    id UUID NOT NULL PRIMARY KEY,
+    feed_item_id UUID NOT NULL,
+    user_id UUID NOT NULL,
+    content TEXT NOT NULL,
+    parent_comment_id UUID,
+    is_deleted BOOLEAN NOT NULL DEFAULT FALSE,
+    created_at TIMESTAMPTZ NOT NULL,
+    created_by VARCHAR(255) NOT NULL DEFAULT 'anonymousUser',
+    updated_at TIMESTAMPTZ NOT NULL,
+    updated_by VARCHAR(255) NOT NULL,
+    deleted_at TIMESTAMPTZ,
+    deleted_by VARCHAR(255),
+    deleted_reason VARCHAR(255),
+    version SMALLINT NOT NULL DEFAULT 0
+);
+
+-- Create indexes for feed_comments table
+CREATE INDEX IF NOT EXISTS idx_feed_comments_feed_item_created ON feed_comments (feed_item_id, created_at);
+CREATE INDEX IF NOT EXISTS idx_feed_comments_parent ON feed_comments (parent_comment_id);
