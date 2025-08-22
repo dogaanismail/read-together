@@ -3,7 +3,6 @@ package org.readtogether.feed.factory;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.readtogether.feed.entity.FeedItemEntity;
-import org.readtogether.feed.common.enums.FeedItemType;
 import org.readtogether.session.entity.SessionEntity;
 import org.readtogether.session.common.enums.MediaType;
 import org.readtogether.session.common.enums.ProcessingStatus;

@@ -13,7 +13,6 @@ import org.readtogether.feed.repository.FeedRepository;
 import org.readtogether.user.fixtures.RequestFixtures;
 import org.readtogether.user.model.request.LoginRequest;
 import org.readtogether.user.model.request.RegisterRequest;
-import org.readtogether.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -35,9 +34,6 @@ class FeedControllerIntegrationTests extends BaseIntegrationTest {
     @Autowired
     private FeedRepository feedRepository;
 
-    @Autowired
-    private UserRepository userRepository;
-
     @Test
     @DisplayName("GET /api/v1/feed should return default feed for authenticated user")
     void shouldReturnDefaultFeedForAuthenticatedUser() throws Exception {
@@ -49,8 +45,10 @@ class FeedControllerIntegrationTests extends BaseIntegrationTest {
         // Create some feed items with unique IDs
         FeedItemEntity feedItem1 = FeedEntityFixtures.createDefaultFeedItemEntity();
         feedItem1.setId(null); // Let database generate ID
+
         FeedItemEntity feedItem2 = FeedEntityFixtures.createSessionFeedItemEntity();
         feedItem2.setId(null); // Let database generate ID
+
         feedRepository.save(feedItem1);
         feedRepository.save(feedItem2);
 
@@ -91,8 +89,10 @@ class FeedControllerIntegrationTests extends BaseIntegrationTest {
 
         FeedItemEntity sessionItem = FeedEntityFixtures.createSessionFeedItemEntity();
         sessionItem.setId(null);
+
         FeedItemEntity achievementItem = FeedEntityFixtures.createAchievementFeedItemEntity();
         achievementItem.setId(null);
+
         feedRepository.save(sessionItem);
         feedRepository.save(achievementItem);
 
@@ -112,7 +112,11 @@ class FeedControllerIntegrationTests extends BaseIntegrationTest {
         String password = "Password1!";
         String token = registerAndLogin(email, password);
 
-        FeedItemEntity trendingItem = FeedEntityFixtures.createFeedItemEntityWithCounts(100L, 50L, 20L);
+        FeedItemEntity trendingItem = FeedEntityFixtures.createFeedItemEntityWithCounts(
+                100L,
+                50L,
+                20L
+        );
         trendingItem.setId(null);
         feedRepository.save(trendingItem);
 
@@ -133,6 +137,7 @@ class FeedControllerIntegrationTests extends BaseIntegrationTest {
         String token = registerAndLogin(email, password);
 
         UUID targetUserId = FeedEntityFixtures.DEFAULT_USER_ID;
+
         FeedItemEntity userFeedItem = FeedEntityFixtures.createDefaultFeedItemEntity();
         userFeedItem.setId(null);
         feedRepository.save(userFeedItem);
@@ -304,7 +309,10 @@ class FeedControllerIntegrationTests extends BaseIntegrationTest {
                 .andExpect(status().isUnauthorized());
     }
 
-    private String registerAndLogin(String email, String password) throws Exception {
+    private String registerAndLogin(
+            String email,
+            String password) throws Exception {
+
         // Register user
         RegisterRequest register = RequestFixtures.createRegisterRequest(
                 email,
@@ -319,11 +327,13 @@ class FeedControllerIntegrationTests extends BaseIntegrationTest {
                         .content(objectMapper.writeValueAsString(register)))
                 .andExpect(status().isOk());
 
-        // Login and get access token
         return loginAndGetAccessToken(email, password);
     }
 
-    private String loginAndGetAccessToken(String email, String password) throws Exception {
+    private String loginAndGetAccessToken(
+            String email,
+            String password) throws Exception {
+
         LoginRequest login = RequestFixtures.createLoginRequest(email, password);
 
         MvcResult loginResult = mockMvc.perform(post("/api/v1/users/login")

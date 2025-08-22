@@ -17,6 +17,7 @@ public class FeedEntityFixtures {
     public static final UUID DEFAULT_REFERENCE_ID = UUID.fromString("550e8400-e29b-41d4-a716-446655440020");
 
     public static FeedItemEntity createDefaultFeedItemEntity() {
+
         return createFeedItemEntity(
                 DEFAULT_FEED_ITEM_ID,
                 DEFAULT_USER_ID,
@@ -28,6 +29,7 @@ public class FeedEntityFixtures {
     }
 
     public static FeedItemEntity createSessionFeedItemEntity() {
+
         return createFeedItemEntity(
                 SECONDARY_FEED_ITEM_ID,
                 SECONDARY_USER_ID,
@@ -39,6 +41,7 @@ public class FeedEntityFixtures {
     }
 
     public static FeedItemEntity createAchievementFeedItemEntity() {
+
         return createFeedItemEntity(
                 UUID.randomUUID(),
                 DEFAULT_USER_ID,
@@ -46,17 +49,6 @@ public class FeedEntityFixtures {
                 UUID.randomUUID(),
                 "Achievement Unlocked: First Session",
                 "Completed first reading session"
-        );
-    }
-
-    public static FeedItemEntity createMilestoneFeedItemEntity() {
-        return createFeedItemEntity(
-                UUID.randomUUID(),
-                DEFAULT_USER_ID,
-                FeedItemType.MILESTONE,
-                UUID.randomUUID(),
-                "Milestone Reached: 10 Sessions",
-                "Completed 10 reading sessions"
         );
     }
 
@@ -88,6 +80,7 @@ public class FeedEntityFixtures {
     }
 
     public static FeedItemEntity createPrivateFeedItemEntity() {
+
         FeedItemEntity baseItem = createFeedItemEntity(
                 UUID.randomUUID(),
                 DEFAULT_USER_ID,
@@ -96,6 +89,7 @@ public class FeedEntityFixtures {
                 "Private Reading Session",
                 "A private practice session"
         );
+
         return FeedItemEntity.builder()
                 .id(baseItem.getId())
                 .userId(baseItem.getUserId())

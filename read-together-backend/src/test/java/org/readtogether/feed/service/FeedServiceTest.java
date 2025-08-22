@@ -96,7 +96,7 @@ class FeedServiceTest {
     void shouldReturnFeedByTypeWithCorrectFiltering() {
         // Given
         FeedItemEntity sessionFeedItem = FeedEntityFixtures.createSessionFeedItemEntity();
-        Page<FeedItemEntity> feedPage = new PageImpl<>(Arrays.asList(sessionFeedItem));
+        Page<FeedItemEntity> feedPage = new PageImpl<>(Collections.singletonList(sessionFeedItem));
 
         when(feedRepository.findByItemTypeAndIsPublicTrueOrderByCreatedAtDesc(
                 FeedItemType.SESSION, pageable))
@@ -108,7 +108,7 @@ class FeedServiceTest {
         // Then
         assertThat(result).isNotNull();
         assertThat(result.getContent()).hasSize(1);
-        assertThat(result.getContent().get(0).getItemType()).isEqualTo(FeedItemType.SESSION);
+        assertThat(result.getContent().getFirst().getItemType()).isEqualTo(FeedItemType.SESSION);
         verify(feedRepository).findByItemTypeAndIsPublicTrueOrderByCreatedAtDesc(
                 FeedItemType.SESSION, pageable);
     }
@@ -138,7 +138,7 @@ class FeedServiceTest {
     void shouldReturnTrendingFeedWithViewAndLikeBasedOrdering() {
         // Given
         FeedItemEntity trendingItem = FeedEntityFixtures.createFeedItemEntityWithCounts(100L, 50L, 20L);
-        Page<FeedItemEntity> trendingPage = new PageImpl<>(Arrays.asList(trendingItem));
+        Page<FeedItemEntity> trendingPage = new PageImpl<>(Collections.singletonList(trendingItem));
 
         when(feedRepository.findTrendingItems(any(Instant.class), any(Long.class), eq(pageable)))
                 .thenReturn(trendingPage);
