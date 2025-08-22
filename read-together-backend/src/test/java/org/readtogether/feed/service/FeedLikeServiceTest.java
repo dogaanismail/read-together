@@ -20,6 +20,7 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+import static org.readtogether.feed.entity.enums.FeedItemType.SESSION;
 
 @ExtendWith(MockitoExtension.class)
 class FeedLikeServiceTest {
@@ -116,7 +117,7 @@ class FeedLikeServiceTest {
 
         FeedItemEntity feedItem = FeedItemEntity.builder()
                 .id(feedItemId)
-                .itemType(FeedItemEntity.FeedItemType.SESSION)
+                .itemType(SESSION)
                 .referenceId(UUID.randomUUID())
                 .build();
         when(feedRepository.findById(feedItemId)).thenReturn(Optional.of(feedItem));
@@ -144,7 +145,7 @@ class FeedLikeServiceTest {
 
         FeedItemEntity feedItem = FeedItemEntity.builder()
                 .id(feedItemId)
-                .itemType(FeedItemEntity.FeedItemType.SESSION)
+                .itemType(SESSION)
                 .referenceId(UUID.randomUUID())
                 .build();
         when(feedRepository.findById(feedItemId)).thenReturn(Optional.of(feedItem));

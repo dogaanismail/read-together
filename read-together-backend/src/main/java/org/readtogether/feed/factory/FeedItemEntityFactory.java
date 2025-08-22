@@ -6,8 +6,9 @@ import org.readtogether.session.entity.SessionEntity;
 
 import java.util.UUID;
 
-import static org.readtogether.feed.entity.FeedItemEntity.FeedItemType.*;
-import static org.readtogether.feed.entity.FeedItemEntity.FeedItemType.SESSION;
+import static org.readtogether.feed.entity.enums.FeedItemType.SESSION;
+import static org.readtogether.feed.entity.enums.FeedItemType.ACHIEVEMENT;
+import static org.readtogether.feed.entity.enums.FeedItemType.MILESTONE;
 
 @UtilityClass
 public class FeedItemEntityFactory {

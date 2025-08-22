@@ -1,7 +1,7 @@
 package org.readtogether.feed.model;
 
 import lombok.Data;
-import org.readtogether.feed.entity.FeedItemEntity;
+import org.readtogether.feed.entity.enums.FeedItemType;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -13,7 +13,7 @@ public class FeedItemResponse {
     private UUID userId;
     private String username;
     private String userProfilePicture;
-    private FeedItemEntity.FeedItemType itemType;
+    private FeedItemType itemType;
     private UUID referenceId;
     private String title;
     private String description;

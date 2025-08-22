@@ -9,9 +9,9 @@ import java.util.UUID;
 public class FeedCommentEntityFactory {
 
     public static FeedCommentEntity createFeedComment(
-            UUID feedItemId, 
-            UUID userId, 
-            String content, 
+            UUID feedItemId,
+            UUID userId,
+            String content,
             UUID parentCommentId) {
 
         return FeedCommentEntity.builder()

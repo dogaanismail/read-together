@@ -2,9 +2,13 @@ package org.readtogether.chat.factory;
 
 import lombok.experimental.UtilityClass;
 import org.readtogether.chat.entity.ChatParticipantEntity;
+import org.readtogether.chat.entity.enums.ParticipantRole;
 
 import java.time.Instant;
 import java.util.UUID;
+
+import static org.readtogether.chat.entity.enums.ParticipantRole.ADMIN;
+import static org.readtogether.chat.entity.enums.ParticipantRole.MEMBER;
 
 @UtilityClass
 public class ChatParticipantEntityFactory {
@@ -12,8 +16,8 @@ public class ChatParticipantEntityFactory {
     public static ChatParticipantEntity createParticipant(
             UUID chatRoomId,
             UUID userId,
-            ChatParticipantEntity.ParticipantRole role) {
-        
+            ParticipantRole role) {
+
         return ChatParticipantEntity.builder()
                 .chatRoomId(chatRoomId)
                 .userId(userId)
@@ -25,11 +29,17 @@ public class ChatParticipantEntityFactory {
                 .build();
     }
 
-    public static ChatParticipantEntity createMember(UUID chatRoomId, UUID userId) {
-        return createParticipant(chatRoomId, userId, ChatParticipantEntity.ParticipantRole.MEMBER);
+    public static ChatParticipantEntity createMember(
+            UUID chatRoomId,
+            UUID userId) {
+
+        return createParticipant(chatRoomId, userId, MEMBER);
     }
 
-    public static ChatParticipantEntity createAdmin(UUID chatRoomId, UUID userId) {
-        return createParticipant(chatRoomId, userId, ChatParticipantEntity.ParticipantRole.ADMIN);
+    public static ChatParticipantEntity createAdmin(
+            UUID chatRoomId,
+            UUID userId) {
+
+        return createParticipant(chatRoomId, userId, ADMIN);
     }
 }

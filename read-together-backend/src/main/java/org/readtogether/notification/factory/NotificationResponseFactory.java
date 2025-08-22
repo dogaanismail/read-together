@@ -2,6 +2,7 @@ package org.readtogether.notification.factory;
 
 import lombok.experimental.UtilityClass;
 import org.readtogether.notification.entity.NotificationEntity;
+import org.readtogether.notification.entity.enums.NotificationType;
 import org.readtogether.notification.model.NotificationResponse;
 
 import java.time.LocalDateTime;
@@ -37,7 +38,7 @@ public class NotificationResponseFactory {
         return createFromEntity(entity, null, null, null);
     }
 
-    private static String mapNotificationTypeToFrontend(NotificationEntity.NotificationType type) {
+    private static String mapNotificationTypeToFrontend(NotificationType type) {
 
         return switch (type) {
             case SESSION_UPLOAD_STARTED, SESSION_PROCESSING_STARTED -> "session_start";

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.readtogether.common.entity.BaseEntity;
+import org.readtogether.feed.entity.enums.FeedItemType;
 
 import java.util.UUID;
 
@@ -63,11 +64,4 @@ public class FeedItemEntity extends BaseEntity {
     @Column(name = "metadata", columnDefinition = "TEXT")
     private String metadata;
 
-    public enum FeedItemType {
-        SESSION,
-        ACHIEVEMENT,
-        MILESTONE,
-        ROOM_JOIN,
-        STREAK
-    }
 }

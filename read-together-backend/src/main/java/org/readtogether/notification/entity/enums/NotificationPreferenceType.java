@@ -1,4 +1,4 @@
-package org.readtogether.notification.entity;
+package org.readtogether.notification.entity.enums;
 
 public enum NotificationPreferenceType {
     SESSION_LIKES,

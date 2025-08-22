@@ -3,6 +3,7 @@ package org.readtogether.chat.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.readtogether.chat.entity.enums.ChatRoomType;
 import org.readtogether.common.entity.BaseEntity;
 
 import java.util.UUID;
@@ -22,7 +23,7 @@ public class ChatRoomEntity extends BaseEntity {
     @Column(name = "id")
     private UUID id;
 
-    @Column(name = "name", nullable = false, length = 255)
+    @Column(name = "name", nullable = false)
     private String name;
 
     @Column(name = "description", columnDefinition = "TEXT")
@@ -37,13 +38,9 @@ public class ChatRoomEntity extends BaseEntity {
 
     @Column(name = "is_active", nullable = false)
     @Builder.Default
-    private Boolean isActive = true;
+    private boolean isActive = true;
 
     @Column(name = "max_participants")
     private Integer maxParticipants;
 
-    public enum ChatRoomType {
-        DIRECT,
-        GROUP
-    }
 }

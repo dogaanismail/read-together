@@ -1,6 +1,7 @@
 package org.readtogether.feed.repository;
 
 import org.readtogether.feed.entity.FeedItemEntity;
+import org.readtogether.feed.entity.enums.FeedItemType;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,16 +19,18 @@ public interface FeedRepository extends JpaRepository<FeedItemEntity, UUID> {
     Page<FeedItemEntity> findByIsPublicTrueOrderByCreatedAtDesc(Pageable pageable);
 
     Page<FeedItemEntity> findByItemTypeAndIsPublicTrueOrderByCreatedAtDesc(
-        FeedItemEntity.FeedItemType itemType, Pageable pageable);
+            FeedItemType itemType,
+            Pageable pageable);
 
-    Page<FeedItemEntity> findByUserIdOrderByCreatedAtDesc(UUID userId, Pageable pageable);
+    Page<FeedItemEntity> findByUserIdOrderByCreatedAtDesc(UUID userId,
+                                                          Pageable pageable);
 
     @Query("SELECT f FROM feedItem f WHERE f.isPublic = true AND " +
-           "f.createdAt > :since AND (f.likeCount + f.commentCount + f.viewCount) > :minEngagement " +
-           "ORDER BY (f.likeCount + f.commentCount + f.viewCount) DESC")
+            "f.createdAt > :since AND (f.likeCount + f.commentCount + f.viewCount) > :minEngagement " +
+            "ORDER BY (f.likeCount + f.commentCount + f.viewCount) DESC")
     Page<FeedItemEntity> findTrendingItems(@Param("since") Instant since,
-                                         @Param("minEngagement") Long minEngagement,
-                                         Pageable pageable);
+                                           @Param("minEngagement") Long minEngagement,
+                                           Pageable pageable);
 
     @Modifying
     @Query("UPDATE feedItem f SET f.viewCount = f.viewCount + 1 WHERE f.id = :id")

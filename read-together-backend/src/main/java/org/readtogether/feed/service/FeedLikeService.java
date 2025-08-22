@@ -17,6 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 import java.util.UUID;
 
+import static org.readtogether.feed.entity.enums.FeedItemType.SESSION;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -29,7 +31,7 @@ public class FeedLikeService {
 
     @Transactional
     public boolean likeFeedItem(
-            UUID feedItemId, 
+            UUID feedItemId,
             UUID userId) {
 
         if (feedLikeRepository.existsByFeedItemIdAndUserId(feedItemId, userId)) {
@@ -49,11 +51,11 @@ public class FeedLikeService {
 
     @Transactional
     public boolean unlikeFeedItem(
-            UUID feedItemId, 
+            UUID feedItemId,
             UUID userId) {
 
         Optional<FeedLikeEntity> likeOpt = feedLikeRepository.findByFeedItemIdAndUserId(feedItemId, userId);
-        
+
         if (likeOpt.isEmpty()) {
             return false;
         }
@@ -67,14 +69,14 @@ public class FeedLikeService {
 
     @Transactional(readOnly = true)
     public boolean isLikedByUser(
-            UUID feedItemId, 
+            UUID feedItemId,
             UUID userId) {
 
         return feedLikeRepository.existsByFeedItemIdAndUserId(feedItemId, userId);
     }
 
     private void sendLikeNotificationIfSession(
-            UUID feedItemId, 
+            UUID feedItemId,
             UUID likerUserId) {
 
         Optional<FeedItemEntity> feedItemOpt = feedRepository.findById(feedItemId);
@@ -83,7 +85,7 @@ public class FeedLikeService {
         }
 
         FeedItemEntity feedItem = feedItemOpt.get();
-        if (feedItem.getItemType() == FeedItemEntity.FeedItemType.SESSION) {
+        if (feedItem.getItemType() == SESSION) {
             Optional<SessionEntity> sessionOpt = sessionRepository.findById(feedItem.getReferenceId());
             if (sessionOpt.isPresent()) {
                 SessionEntity session = sessionOpt.get();

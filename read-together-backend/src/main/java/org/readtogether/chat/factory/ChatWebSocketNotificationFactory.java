@@ -3,7 +3,6 @@ package org.readtogether.chat.factory;
 import lombok.experimental.UtilityClass;
 import org.readtogether.chat.model.response.ChatMessageResponse;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 

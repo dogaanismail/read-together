@@ -1,6 +1,7 @@
 package org.readtogether.chat.model.response;
 
 import lombok.*;
+import org.readtogether.chat.entity.enums.ParticipantRole;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -25,9 +26,4 @@ public class ChatParticipantResponse {
     private Boolean online;
     private String lastSeen;
 
-    public enum ParticipantRole {
-        ADMIN,
-        MODERATOR,
-        MEMBER
-    }
 }

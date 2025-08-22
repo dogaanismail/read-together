@@ -3,6 +3,7 @@ package org.readtogether.feed.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.readtogether.feed.entity.FeedItemEntity;
+import org.readtogether.feed.entity.enums.FeedItemType;
 import org.readtogether.feed.factory.FeedItemEntityFactory;
 import org.readtogether.feed.factory.FeedItemResponseFactory;
 import org.readtogether.feed.model.FeedItemResponse;
@@ -34,7 +35,7 @@ public class FeedService {
 
     @Transactional(readOnly = true)
     public Page<FeedItemResponse> getFeedByType(
-            FeedItemEntity.FeedItemType itemType,
+            FeedItemType itemType,
             Pageable pageable) {
 
         return feedRepository.findByItemTypeAndIsPublicTrueOrderByCreatedAtDesc(itemType, pageable)
@@ -52,7 +53,7 @@ public class FeedService {
 
     @Transactional(readOnly = true)
     public Page<FeedItemResponse> getFeedWithFilters(
-            FeedItemEntity.FeedItemType itemType,
+            FeedItemType itemType,
             String search,
             String language,
             String sortBy,
@@ -124,7 +125,7 @@ public class FeedService {
     }
 
     /**
-     * @deprecated Use FeedLikeService.unlikeFeedItem instead  
+     * @deprecated Use FeedLikeService.unlikeFeedItem instead
      */
     @Deprecated
     @Transactional
@@ -138,7 +139,7 @@ public class FeedService {
         return feedLikeService.likeFeedItem(feedItemId, userId);
     }
 
-    @Transactional  
+    @Transactional
     public boolean unlikeFeedItem(UUID feedItemId, UUID userId) {
         return feedLikeService.unlikeFeedItem(feedItemId, userId);
     }

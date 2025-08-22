@@ -4,7 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.readtogether.common.utils.SecurityUtils;
-import org.readtogether.feed.entity.FeedItemEntity;
+import org.readtogether.feed.entity.enums.FeedItemType;
 import org.readtogether.feed.model.CreateCommentRequest;
 import org.readtogether.feed.model.FeedCommentResponse;
 import org.readtogether.feed.model.FeedItemResponse;
@@ -43,8 +43,8 @@ public class FeedController {
 
         if (type != null || search != null || language != null) {
             try {
-                FeedItemEntity.FeedItemType itemType = type != null ?
-                    FeedItemEntity.FeedItemType.valueOf(type.toUpperCase()) : null;
+                FeedItemType itemType = type != null ?
+                    FeedItemType.valueOf(type.toUpperCase()) : null;
                 feedItems = feedService.getFeedWithFilters(itemType, search, language, sortBy, sortDirection, pageable);
             } catch (IllegalArgumentException e) {
                 log.warn("Invalid feed item type: {}", type);

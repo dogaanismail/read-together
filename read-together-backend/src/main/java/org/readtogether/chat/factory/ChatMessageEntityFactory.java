@@ -4,10 +4,11 @@ import lombok.experimental.UtilityClass;
 import org.readtogether.chat.entity.ChatMessageEntity;
 import org.readtogether.chat.model.request.ChatMessageSendRequest;
 import org.readtogether.chat.model.request.ChatMessageWebSocketRequest;
-import org.readtogether.common.enums.MessageType;
 
 import java.time.Instant;
 import java.util.UUID;
+
+import static org.readtogether.common.enums.MessageType.SYSTEM;
 
 @UtilityClass
 public class ChatMessageEntityFactory {
@@ -62,7 +63,7 @@ public class ChatMessageEntityFactory {
                 .chatRoomId(chatRoomId)
                 .senderId(null) // System messages have no sender
                 .content(content)
-                .messageType(MessageType.SYSTEM)
+                .messageType(SYSTEM)
                 .sentAt(Instant.now())
                 .isDeleted(false)
                 .build();

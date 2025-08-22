@@ -6,6 +6,13 @@ import org.readtogether.session.entity.SessionEntity;
 
 import java.util.UUID;
 
+import static org.readtogether.notification.entity.enums.NotificationType.SESSION_UPLOAD_PROGRESS;
+import static org.readtogether.notification.entity.enums.NotificationType.SESSION_UPLOAD_STARTED;
+import static org.readtogether.notification.entity.enums.NotificationType.SESSION_UPLOAD_COMPLETED;
+import static org.readtogether.notification.entity.enums.NotificationType.SESSION_UPLOAD_FAILED;
+import static org.readtogether.notification.entity.enums.NotificationType.SESSION_PROCESSING_STARTED;
+import static org.readtogether.notification.entity.enums.NotificationType.GENERAL_INFO;
+
 @UtilityClass
 public class NotificationEntityFactory {
 
@@ -20,7 +27,7 @@ public class NotificationEntityFactory {
         return NotificationEntity.builder()
                 .userId(userId)
                 .sessionId(session.getId())
-                .type(NotificationEntity.NotificationType.SESSION_UPLOAD_STARTED)
+                .type(SESSION_UPLOAD_STARTED)
                 .title("Upload Started")
                 .message(message)
                 .metadata(metadata)
@@ -38,7 +45,7 @@ public class NotificationEntityFactory {
         return NotificationEntity.builder()
                 .userId(userId)
                 .sessionId(sessionId)
-                .type(NotificationEntity.NotificationType.SESSION_UPLOAD_PROGRESS)
+                .type(SESSION_UPLOAD_PROGRESS)
                 .title("Upload Progress")
                 .message(message)
                 .metadata(metadata)
@@ -56,7 +63,7 @@ public class NotificationEntityFactory {
         return NotificationEntity.builder()
                 .userId(userId)
                 .sessionId(session.getId())
-                .type(NotificationEntity.NotificationType.SESSION_UPLOAD_COMPLETED)
+                .type(SESSION_UPLOAD_COMPLETED)
                 .title("Upload Complete")
                 .message(message)
                 .metadata(metadata)
@@ -75,7 +82,7 @@ public class NotificationEntityFactory {
         return NotificationEntity.builder()
                 .userId(userId)
                 .sessionId(session.getId())
-                .type(NotificationEntity.NotificationType.SESSION_UPLOAD_FAILED)
+                .type(SESSION_UPLOAD_FAILED)
                 .title("Upload Failed")
                 .message(message)
                 .metadata(metadata)
@@ -93,7 +100,7 @@ public class NotificationEntityFactory {
         return NotificationEntity.builder()
                 .userId(userId)
                 .sessionId(session.getId())
-                .type(NotificationEntity.NotificationType.SESSION_PROCESSING_STARTED)
+                .type(SESSION_PROCESSING_STARTED)
                 .title("Processing Started")
                 .message(message)
                 .metadata(metadata)
@@ -110,7 +117,7 @@ public class NotificationEntityFactory {
         return NotificationEntity.builder()
                 .userId(sessionOwnerId)
                 .sessionId(session.getId())
-                .type(NotificationEntity.NotificationType.GENERAL_INFO)
+                .type(GENERAL_INFO)
                 .title("Session Liked")
                 .message(message)
                 .metadata(metadata)
@@ -127,7 +134,7 @@ public class NotificationEntityFactory {
         return NotificationEntity.builder()
                 .userId(sessionOwnerId)
                 .sessionId(session.getId())
-                .type(NotificationEntity.NotificationType.GENERAL_INFO)
+                .type(GENERAL_INFO)
                 .title("New Comment")
                 .message(message)
                 .metadata(metadata)
@@ -143,7 +150,7 @@ public class NotificationEntityFactory {
 
         return NotificationEntity.builder()
                 .userId(followedUserId)
-                .type(NotificationEntity.NotificationType.GENERAL_INFO)
+                .type(GENERAL_INFO)
                 .title("New Follower")
                 .message(message)
                 .metadata(metadata)
@@ -160,7 +167,7 @@ public class NotificationEntityFactory {
 
         return NotificationEntity.builder()
                 .userId(userId)
-                .type(NotificationEntity.NotificationType.GENERAL_INFO)
+                .type(GENERAL_INFO)
                 .title("Live Stream Started")
                 .message(message)
                 .metadata(metadata)

@@ -8,7 +8,8 @@ import org.readtogether.feed.model.FeedCommentResponse;
 @UtilityClass
 public class FeedCommentResponseFactory {
 
-    public static FeedCommentResponse createFromEntity(FeedCommentEntity comment) {
+    public static FeedCommentResponse createFromEntity(
+            FeedCommentEntity comment) {
 
         FeedCommentResponse response = new FeedCommentResponse();
         response.setId(comment.getId());
@@ -28,9 +29,9 @@ public class FeedCommentResponseFactory {
     }
 
     public static FeedCommentResponse createFromEntity(
-            FeedCommentEntity comment, 
-            String username, 
-            String userProfilePicture, 
+            FeedCommentEntity comment,
+            String username,
+            String userProfilePicture,
             boolean canEdit) {
 
         FeedCommentResponse response = createFromEntity(comment);

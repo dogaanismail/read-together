@@ -64,21 +64,17 @@ public class ChatService {
 
         log.info("Creating chat room: {} by user: {}", request.getName(), creatorId);
 
-        // Validate creator exists
         if (!userRepository.existsById(creatorId)) {
             throw new UserNotFoundException("User not found: " + creatorId);
         }
 
-        // Create room
         ChatRoomEntity room = ChatRoomEntityFactory.createFromRequest(request, creatorId);
         room = chatRoomRepository.save(room);
 
-        // Add creator as admin
         ChatParticipantEntity creatorParticipant = ChatParticipantEntityFactory
                 .createAdmin(room.getId(), creatorId);
         chatParticipantRepository.save(creatorParticipant);
 
-        // Add other participants if specified
         if (request.getParticipantIds() != null) {
             for (UUID participantId : request.getParticipantIds()) {
                 if (!participantId.equals(creatorId) && userRepository.existsById(participantId)) {
@@ -102,7 +98,6 @@ public class ChatService {
 
         log.debug("Getting messages for chat room: {} by user: {}", chatRoomId, userId);
 
-        // Verify user is participant
         if (!chatRoomRepository.isUserParticipant(chatRoomId, userId)) {
             throw new AccessDeniedException("User is not a participant in this chat room");
         }
@@ -121,16 +116,13 @@ public class ChatService {
 
         log.debug("Sending WebSocket message to room: {} from user: {}", request.getChatRoomId(), senderId);
 
-        // Verify user is participant
         if (!chatRoomRepository.isUserParticipant(request.getChatRoomId(), senderId)) {
             throw new AccessDeniedException("User is not a participant in this chat room");
         }
 
-        // Create and save message
         ChatMessageEntity message = ChatMessageEntityFactory.createFromWebSocketRequest(request, senderId);
         message = chatMessageRepository.save(message);
 
-        // Update unread counts
         chatParticipantRepository.incrementUnreadCount(request.getChatRoomId(), senderId);
 
         log.info("Sent message: {} to room: {}", message.getId(), request.getChatRoomId());
@@ -148,18 +140,16 @@ public class ChatService {
 
         log.debug("Sending REST message with attachment to room: {} from user: {}", request.getChatRoomId(), senderId);
 
-        // Verify user is participant
         if (!chatRoomRepository.isUserParticipant(request.getChatRoomId(), senderId)) {
             throw new AccessDeniedException("User is not a participant in this chat room");
         }
 
-        // Create and save message
         ChatMessageEntity message = ChatMessageEntityFactory.createFromRestRequest(
                 request, senderId, attachmentUrl, attachmentName, attachmentSize, attachmentType
         );
+
         message = chatMessageRepository.save(message);
 
-        // Update unread counts
         chatParticipantRepository.incrementUnreadCount(request.getChatRoomId(), senderId);
 
         log.info("Sent message with attachment: {} to room: {}", message.getId(), request.getChatRoomId());
@@ -187,7 +177,6 @@ public class ChatService {
 
         log.debug("Getting or creating direct chat between users: {} and {}", user1Id, user2Id);
 
-        // Check if direct chat already exists
         return chatRoomRepository.findDirectChatRoom(user1Id, user2Id)
                 .map(room -> mapToChatRoomResponse(room, user1Id))
                 .orElseGet(() -> createDirectChatRoom(user1Id, user2Id));
@@ -197,7 +186,6 @@ public class ChatService {
             UUID user1Id,
             UUID user2Id) {
 
-        // Get user names for room name
         UserEntity user1 = userRepository.findById(user1Id)
                 .orElseThrow(() -> new UserNotFoundException("User not found: " + user1Id));
         UserEntity user2 = userRepository.findById(user2Id)
@@ -208,11 +196,9 @@ public class ChatService {
                 user2.getFirstName() + " " + user2.getLastName()
         );
 
-        // Create room
-        ChatRoomEntity room = ChatRoomEntityFactory.createDirectChatRoom(user1Id, user2Id, roomName);
+        ChatRoomEntity room = ChatRoomEntityFactory.createDirectChatRoom(user1Id, roomName);
         room = chatRoomRepository.save(room);
 
-        // Add both users as members
         ChatParticipantEntity participant1 = ChatParticipantEntityFactory.createMember(room.getId(), user1Id);
         ChatParticipantEntity participant2 = ChatParticipantEntityFactory.createMember(room.getId(), user2Id);
 
@@ -227,7 +213,6 @@ public class ChatService {
             ChatRoomEntity room,
             UUID currentUserId) {
 
-        // Get participants
         List<ChatParticipantEntity> participants = chatParticipantRepository
                 .findByChatRoomIdAndIsActiveTrue(room.getId());
 
@@ -235,13 +220,11 @@ public class ChatService {
                 .map(this::mapToChatParticipantResponse)
                 .toList();
 
-        // Get last message
         ChatMessageResponse lastMessage = chatMessageRepository
                 .findLastMessageByChatRoomId(room.getId())
                 .map(this::mapMessageUsingUtils)
                 .orElse(null);
 
-        // Get unread count for current user
         int unreadCount = participants.stream()
                 .filter(p -> p.getUserId().equals(currentUserId))
                 .findFirst()
@@ -256,7 +239,7 @@ public class ChatService {
                 .creatorId(room.getCreatorId())
                 .createdAt(room.getCreatedAt())
                 .updatedAt(room.getUpdatedAt())
-                .isActive(room.getIsActive())
+                .isActive(room.isActive())
                 .maxParticipants(room.getMaxParticipants())
                 .participants(participantResponses)
                 .lastMessage(lastMessage)
@@ -265,7 +248,9 @@ public class ChatService {
     }
 
     private ChatParticipantResponse mapToChatParticipantResponse(ChatParticipantEntity participant) {
-        UserEntity user = userRepository.findById(participant.getUserId()).orElse(null);
+
+        UserEntity user = userRepository.findById(participant.getUserId())
+                .orElse(null);
 
         return ChatParticipantResponse.builder()
                 .id(participant.getId())
@@ -285,8 +270,10 @@ public class ChatService {
 
     private ChatMessageResponse mapMessageUsingUtils(ChatMessageEntity message) {
         UserEntity sender = null;
+
         if (message.getSenderId() != null) {
-            sender = userRepository.findById(message.getSenderId()).orElse(null);
+            sender = userRepository.findById(message.getSenderId())
+                    .orElse(null);
         }
 
         return ChatMapperUtils.mapToChatMessageResponse(message, sender);

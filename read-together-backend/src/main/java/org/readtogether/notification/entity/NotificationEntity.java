@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.readtogether.common.entity.BaseEntity;
+import org.readtogether.notification.entity.enums.NotificationType;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -48,15 +49,4 @@ public class NotificationEntity extends BaseEntity {
     @Column(name = "read_at")
     private LocalDateTime readAt;
 
-    public enum NotificationType {
-        SESSION_UPLOAD_STARTED,
-        SESSION_UPLOAD_PROGRESS,
-        SESSION_UPLOAD_COMPLETED,
-        SESSION_UPLOAD_FAILED,
-        SESSION_PROCESSING_STARTED,
-        SESSION_PROCESSING_COMPLETED,
-        SESSION_PROCESSING_FAILED,
-        GENERAL_INFO,
-        SYSTEM_ALERT
-    }
 }

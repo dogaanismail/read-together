@@ -53,7 +53,7 @@ public class ChatMessageEntity extends BaseEntity {
     @Column(name = "attachment_url", length = 500)
     private String attachmentUrl;
 
-    @Column(name = "attachment_name", length = 255)
+    @Column(name = "attachment_name")
     private String attachmentName;
 
     @Column(name = "attachment_size")
@@ -61,4 +61,5 @@ public class ChatMessageEntity extends BaseEntity {
 
     @Column(name = "attachment_type", length = 100)
     private String attachmentType;
+
 }

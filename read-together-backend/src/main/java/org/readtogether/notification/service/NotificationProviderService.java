@@ -2,7 +2,7 @@ package org.readtogether.notification.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.readtogether.notification.entity.NotificationPreferenceType;
+import org.readtogether.notification.entity.enums.NotificationPreferenceType;
 import org.readtogether.notification.provider.NotificationProvider;
 import org.readtogether.notification.provider.email.EmailNotificationProvider;
 import org.readtogether.notification.provider.sms.SmsNotificationProvider;

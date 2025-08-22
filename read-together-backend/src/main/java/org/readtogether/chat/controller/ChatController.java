@@ -9,6 +9,7 @@ import org.readtogether.chat.model.response.ChatMessageResponse;
 import org.readtogether.chat.model.response.ChatRoomResponse;
 import org.readtogether.chat.service.ChatFileService;
 import org.readtogether.chat.service.ChatService;
+import org.readtogether.chat.utils.ChatFileStorageUtils;
 import org.readtogether.common.model.CustomResponse;
 import org.readtogether.common.utils.SecurityUtils;
 import org.springframework.core.io.Resource;
@@ -127,7 +128,7 @@ public class ChatController {
         log.info("Downloading file: {}", fileName);
         
         try {
-            String filePath = chatFileService.getFileUrl(fileName);
+            String filePath = ChatFileStorageUtils.getFilePath(fileName).toString();
             Path path = Paths.get(filePath);
             Resource resource = new UrlResource(path.toUri());
             

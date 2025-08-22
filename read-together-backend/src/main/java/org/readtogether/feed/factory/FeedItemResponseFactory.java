@@ -9,7 +9,8 @@ import org.readtogether.feed.model.FeedItemResponse;
 @UtilityClass
 public class FeedItemResponseFactory {
 
-    public static FeedItemResponse createFromEntity(FeedItemEntity feedItem) {
+    public static FeedItemResponse createFromEntity(
+            FeedItemEntity feedItem) {
 
         FeedItemResponse response = new FeedItemResponse();
         response.setId(feedItem.getId());
@@ -29,7 +30,7 @@ public class FeedItemResponseFactory {
 
         response.setTimeAgo(TimeUtils.formatTimeAgo(feedItem.getCreatedAt()));
         response.setFormattedEngagement(EngagementUtils.formatEngagement(
-            feedItem.getViewCount(), feedItem.getLikeCount(), feedItem.getCommentCount()));
+                feedItem.getViewCount(), feedItem.getLikeCount(), feedItem.getCommentCount()));
 
         return response;
     }

@@ -3,12 +3,13 @@ package org.readtogether.chat.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.readtogether.chat.entity.enums.ParticipantRole;
 import org.readtogether.common.entity.BaseEntity;
 
 import java.time.Instant;
 import java.util.UUID;
 
-import static org.readtogether.chat.entity.ChatParticipantEntity.ParticipantRole.MEMBER;
+import static org.readtogether.chat.entity.enums.ParticipantRole.MEMBER;
 
 @Getter
 @Setter
@@ -53,9 +54,4 @@ public class ChatParticipantEntity extends BaseEntity {
     @Column(name = "last_read_at")
     private Instant lastReadAt;
 
-    public enum ParticipantRole {
-        ADMIN,
-        MODERATOR,
-        MEMBER
-    }
 }

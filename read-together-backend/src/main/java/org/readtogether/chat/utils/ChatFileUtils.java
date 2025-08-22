@@ -16,6 +16,7 @@ public class ChatFileUtils {
     };
 
     public static void validateFile(MultipartFile file) {
+
         if (file.isEmpty()) {
             throw new IllegalArgumentException("File cannot be empty");
         }

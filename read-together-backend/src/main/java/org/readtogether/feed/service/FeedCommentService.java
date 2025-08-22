@@ -21,6 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 import java.util.UUID;
 
+import static org.readtogether.feed.entity.enums.FeedItemType.SESSION;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -112,7 +114,7 @@ public class FeedCommentService {
         }
 
         FeedItemEntity feedItem = feedItemOpt.get();
-        if (feedItem.getItemType() == FeedItemEntity.FeedItemType.SESSION) {
+        if (feedItem.getItemType() == SESSION) {
             Optional<SessionEntity> sessionOpt = sessionRepository.findById(feedItem.getReferenceId());
             if (sessionOpt.isPresent()) {
                 SessionEntity session = sessionOpt.get();

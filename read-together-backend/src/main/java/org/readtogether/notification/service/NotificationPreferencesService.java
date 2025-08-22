@@ -3,7 +3,7 @@ package org.readtogether.notification.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.readtogether.notification.entity.NotificationPreferenceEntity;
-import org.readtogether.notification.entity.NotificationPreferenceType;
+import org.readtogether.notification.entity.enums.NotificationPreferenceType;
 import org.readtogether.notification.factory.NotificationPreferencesFactory;
 import org.readtogether.notification.model.NotificationPreferencesUpdateRequest;
 import org.readtogether.notification.repository.NotificationPreferencesRepository;

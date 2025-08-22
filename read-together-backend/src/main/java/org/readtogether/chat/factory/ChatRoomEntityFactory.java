@@ -2,9 +2,13 @@ package org.readtogether.chat.factory;
 
 import lombok.experimental.UtilityClass;
 import org.readtogether.chat.entity.ChatRoomEntity;
+import org.readtogether.chat.entity.enums.ChatRoomType;
 import org.readtogether.chat.model.request.ChatRoomCreateRequest;
 
 import java.util.UUID;
+
+import static org.readtogether.chat.entity.enums.ChatRoomType.DIRECT;
+import static org.readtogether.chat.entity.enums.ChatRoomType.GROUP;
 
 @UtilityClass
 public class ChatRoomEntityFactory {
@@ -12,7 +16,7 @@ public class ChatRoomEntityFactory {
     public static ChatRoomEntity createFromRequest(
             ChatRoomCreateRequest request,
             UUID createdBy) {
-        
+
         return ChatRoomEntity.builder()
                 .name(request.getName())
                 .description(request.getDescription())
@@ -25,22 +29,22 @@ public class ChatRoomEntityFactory {
 
     public static ChatRoomEntity createDirectChatRoom(
             UUID user1Id,
-            UUID user2Id,
             String roomName) {
-        
+
         return ChatRoomEntity.builder()
                 .name(roomName)
-                .type(ChatRoomEntity.ChatRoomType.DIRECT)
+                .type(DIRECT)
                 .creatorId(user1Id)
                 .isActive(true)
                 .maxParticipants(2)
                 .build();
     }
 
-    private static ChatRoomEntity.ChatRoomType mapToEntityType(ChatRoomCreateRequest.ChatRoomType requestType) {
+    private static ChatRoomType mapToEntityType(ChatRoomType requestType) {
+
         return switch (requestType) {
-            case DIRECT -> ChatRoomEntity.ChatRoomType.DIRECT;
-            case GROUP -> ChatRoomEntity.ChatRoomType.GROUP;
+            case DIRECT -> DIRECT;
+            case GROUP -> GROUP;
         };
     }
 }

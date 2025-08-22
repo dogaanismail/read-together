@@ -1,6 +1,7 @@
 package org.readtogether.chat.model.response;
 
 import lombok.*;
+import org.readtogether.chat.entity.enums.ChatRoomType;
 
 import java.time.Instant;
 import java.util.List;
@@ -26,8 +27,4 @@ public class ChatRoomResponse {
     private ChatMessageResponse lastMessage;
     private Integer unreadCount;
 
-    public enum ChatRoomType {
-        DIRECT,
-        GROUP
-    }
 }
