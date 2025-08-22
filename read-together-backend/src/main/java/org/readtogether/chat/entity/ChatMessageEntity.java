@@ -31,7 +31,7 @@ public class ChatMessageEntity extends BaseEntity {
     private UUID senderId;
 
     @Column(name = "content", columnDefinition = "TEXT")
-    private String content;
+    private String content; //TODO: Encrypt content before storing
 
     @Enumerated(EnumType.STRING)
     @Column(name = "message_type", nullable = false)

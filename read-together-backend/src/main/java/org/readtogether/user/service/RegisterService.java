@@ -21,9 +21,7 @@ public class RegisterService {
 
     public void registerUser(RegisterRequest registerRequest) {
 
-        if (userRepository.existsUserEntityByEmail(registerRequest.getEmail())) {
-            throw new UserAlreadyExistException("The email is already used for another user : " + registerRequest.getEmail());
-        }
+        isEmailExist(registerRequest.getEmail());
 
         UserEntity userEntityToBeSave = UserEntityFactory
                 .getUserEntityByRegisterRequest(registerRequest);
@@ -33,4 +31,14 @@ public class RegisterService {
         userEntityToUserMapper.map(savedUserEntity);
     }
 
+    private void isEmailExist(String email) {
+
+        if (userRepository.existsUserEntityByEmail(email)) {
+            throw new UserAlreadyExistException("The email is already used for another user : " + email);
+        }
+
+    }
+
 }
+
+
