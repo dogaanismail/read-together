@@ -22,12 +22,4 @@ public class FeedCommentEntityFactory {
                 .isDeleted(false)
                 .build();
     }
-
-    public static FeedCommentEntity createFeedComment(
-            UUID feedItemId, 
-            UUID userId, 
-            String content) {
-
-        return createFeedComment(feedItemId, userId, content, null);
-    }
 }
