@@ -21,7 +21,8 @@ public class UserLoginService {
     private final PasswordEncoder passwordEncoder;
     private final TokenService tokenService;
 
-    public Token login(LoginRequest loginRequest) {
+    public Token login(
+            LoginRequest loginRequest) {
 
         Optional<UserEntity> optionalUserEntity = userRepository
                 .findUserEntityByEmail(loginRequest.getEmail());

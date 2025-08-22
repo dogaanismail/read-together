@@ -25,18 +25,18 @@ public class UserService {
             UserEntityToUserMapper.initialize();
 
     public User getCurrentUser() {
-        Optional<String> userId = getCurrentIdFromJwt();
 
+        Optional<String> userId = getCurrentIdFromJwt();
         return userId
                 .map(s -> getUser(UUID.fromString(s)))
                 .orElse(null);
     }
 
-    public User getUser(UUID userId) {
+    public User getUser(
+            UUID userId) {
 
         Optional<UserEntity> optionalUserEntity = userRepository
                 .findById(userId);
-
         if (optionalUserEntity.isEmpty()) {
             throw new UserNotFoundException("User not found by id: " + userId);
         }
@@ -45,7 +45,9 @@ public class UserService {
         return userEntityToUserMapper.map(userEntity);
     }
 
-    public UserEntity findUserEntityById(UUID userId) {
+    public UserEntity findUserEntityById(
+            UUID userId) {
+
         return userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException("User not found by id: " + userId));
     }

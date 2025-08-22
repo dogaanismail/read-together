@@ -18,5 +18,5 @@ public class User {
     private String firstName;
     private String lastName;
     private UserStatus userStatus;
-    private UserType customerType;
+    private UserType userType;
 }

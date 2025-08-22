@@ -15,7 +15,8 @@ public class LogoutService {
     private final TokenService tokenService;
     private final InvalidTokenService invalidTokenService;
 
-    public void logout(TokenInvalidateRequest tokenInvalidateRequest) {
+    public void logout(
+            TokenInvalidateRequest tokenInvalidateRequest) {
 
         tokenService.verifyAndValidate(
                 Set.of(

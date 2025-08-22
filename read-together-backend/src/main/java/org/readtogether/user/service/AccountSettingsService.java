@@ -27,7 +27,8 @@ public class AccountSettingsService {
     private final ReadingPreferencesService readingPreferencesService;
     private final NotificationPreferencesService notificationPreferencesService;
 
-    public AccountSettingsResponse getAllSettings(UUID userId) {
+    public AccountSettingsResponse getAllSettings(
+            UUID userId) {
 
         PrivacySettingsEntity privacySettings = privacySettingsService.getUserPrivacySettings(userId);
         ReadingPreferencesEntity readingPreferences = readingPreferencesService.getUserReadingPreferences(userId);

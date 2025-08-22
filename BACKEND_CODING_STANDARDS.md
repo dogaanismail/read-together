@@ -265,107 +265,192 @@ app.jwt.secret=${JWT_SECRET:default-secret}
 - **Pattern**: Use `@DataJpaTest` for repository layer
 - **Focus**: Verify query correctness and database interactions
 
-## 📚 Dependencies & Libraries
+# Backend Coding Standards
 
-### Required Dependencies
-- **Lombok**: `@SuperBuilder`, `@RequiredArgsConstructor`, `@Slf4j`
-- **Validation**: `@Valid`, `@NotNull`, `@NotBlank`
-- **JPA**: `@Entity`, `@Repository`, `@Transactional`
-- **Security**: JWT token handling with Spring Security
-- **AWS**: S3 integration for file storage
+## Testing Standards
 
-### Code Organization
-```
-domain/
-├── controller/     # REST endpoints
-├── service/        # Business logic
-├── repository/     # Data access
-├── entity/         # JPA entities
-├── model/          # DTOs (Request/Response)
-├── factory/        # Entity factories
-└── exception/      # Domain exceptions
-```
+### Unit Testing Structure
 
-## 🔄 Refactoring Checklist
+#### Test Organization
+- **Fixtures Directory**: `src/test/java/org/readtogether/{domain}/fixtures/`
+- **Factory Tests**: `src/test/java/org/readtogether/{domain}/factory/`
+- **Service Tests**: `src/test/java/org/readtogether/{domain}/service/`
 
-When adding new features or refactoring existing code:
+#### Fixture Naming Conventions
+Follow the pattern: `{create}.{generic-name}.{entity-name}`
 
-- [ ] ✅ No comments in code (self-documenting)
-- [ ] ✅ Proper spacing between methods
-- [ ] ✅ Primitive types for `@Builder.Default` fields
-- [ ] ✅ UUID for all entity IDs
-- [ ] ✅ Controllers delegate to services (no business logic)
-- [ ] ✅ Factory pattern for entity creation
-- [ ] ✅ Proper Lombok annotations in correct order
-- [ ] ✅ Authentication handling in services
-- [ ] ✅ Consistent naming conventions
-- [ ] ✅ Async operations where appropriate
-
-## 🤝 Collaboration Guidelines
-
-### Code Review Focus Areas
-1. **Architecture**: Does it follow our domain patterns?
-2. **Business Logic**: Is it in the right layer (service, not controller)?
-3. **Data Types**: Correct primitive vs object type usage?
-4. **Naming**: Consistent with our conventions?
-5. **Testing**: Adequate coverage of business logic?
-
-### Communication
-- **Issues**: Reference this document when discussing code standards
-- **Improvements**: Update this document when patterns evolve
-- **New Features**: Follow established patterns from existing domains
-
----
-
-*This document should be updated as our coding standards evolve. All team members should refer to this guide to maintain consistency across the codebase.*
-
-## 🔧 Utility Classes
-
-### When to Create Utility Classes
-- **Rule**: Always check if a method can be moved to a utility class
-- **Criteria**: Pure functions with no dependencies on instance state
-- **Pattern**: Methods that could be reused across multiple domains
-- **Location**: Place in `org.readtogether.common.util` package
-
-### Utility Class Guidelines
+**Examples:**
 ```java
-// ✅ Good candidates for utility classes
-private String determineContentType(String filename) { ... }
-private String formatFileSize(Long bytes) { ... }
-private String formatTimeAgo(Instant dateTime) { ... }
-private boolean isValidEmail(String email) { ... }
+// Entity Fixtures
+createDefaultUserEntity()
+createSecondaryUserEntity() 
+createAdminUserEntity()
 
-// ❌ Should NOT be in utility classes
-private User getCurrentUser() { ... }  // Uses authentication context
-private void saveEntity(Entity entity) { ... }  // Uses repository dependency
+// Request Fixtures
+createDefaultRegisterRequest()
+createPrivacyUpdateRequestWithNulls()
+createPartialReadingPreferencesRequest()
+
+// Response Fixtures
+createDefaultPrivacySettingsResponse()
+createFastReaderResponse()
 ```
 
-### Utility Class Structure
+#### Fixture Class Structure
 ```java
 @UtilityClass
-public class FileUtils {
-    
-    public static String determineContentType(String filename) {
-        
-        if (filename == null || !filename.contains(".")) {
-            return "application/octet-stream";
-        }
-        
-        String extension = extractFileExtension(filename);
-        return CONTENT_TYPE_MAP.getOrDefault(extension, "application/octet-stream");
+public class UserEntityFixtures {
+
+    public static final UUID DEFAULT_USER_ID = UUID.fromString("550e8400-e29b-41d4-a716-446655440000");
+    public static final UUID SECONDARY_USER_ID = UUID.fromString("550e8400-e29b-41d4-a716-446655440001");
+
+    public static UserEntity createDefaultUserEntity() {
+
+        return createUserEntity(DEFAULT_USER_ID,
+                "test@example.com",
+                "John",
+                "Doe",
+                UserType.USER
+        );
     }
-    
-    public static boolean isImageFile(String filename) {
-        
-        String extension = extractFileExtension(filename);
-        return extension.equals("jpg") || extension.equals("jpeg");
+
+    public static UserEntity createUserEntity(
+            UUID id,
+            String email,
+            String firstName,
+            String lastName,
+            UserType userType) {
+
+        return UserEntity.builder()
+                .id(id)
+                .email(email)
+                .firstName(firstName)
+                .lastName(lastName)
+                .userType(userType)
+                .createdAt(Instant.now())
+                .updatedAt(Instant.now())
+                .build();
     }
 }
 ```
 
-### Common Utility Classes
-- **FileUtils**: File operations, content type detection, size formatting
-- **TimeUtils**: Date/time formatting, relative time calculations
-- **EngagementUtils**: Social media metrics formatting (likes, views, etc.)
-- **ValidationUtils**: Input validation, format checking
-- **StringUtils**: String manipulation, formatting operations
+#### Factory Test Standards
+- **Use fixtures instead of inline object construction**
+- **Only keep Given/When/Then comments**
+- **Reference fixtures from other fixture classes when needed**
+
+**Good Example:**
+```java
+@Test
+@DisplayName("Should create user entity from register request with USER role")
+void shouldCreateUserEntityFromRegisterRequestWithUserRole() {
+    // Given
+    RegisterRequest request = RequestFixtures.createDefaultRegisterRequest();
+
+    // When
+    UserEntity result = UserEntityFactory.getUserEntityByRegisterRequest(request);
+
+    // Then
+    assertThat(result).isNotNull();
+    assertThat(result.getEmail()).isEqualTo("newuser@example.com");
+    assertThat(result.getUserType()).isEqualTo(UserType.USER);
+}
+```
+
+**Avoid:**
+```java
+// Don't create objects inline in tests
+RegisterRequest request = RegisterRequest.builder()
+    .email("test@example.com")
+    .firstName("Test")
+    .lastName("User")
+    .role("user")
+    .build();
+```
+
+#### Service Test Standards
+- **Use Mockito for dependencies**
+- **Test happy paths, edge cases, and exceptions**
+- **Use fixtures for test data**
+- **Verify mock interactions**
+
+#### Test Method Formatting
+- **Empty line after method signature**
+- **Use `var` for obvious types in Given section**
+- **Group assertions logically**
+
+```java
+public static UserEntity createDefaultUserEntity() {
+
+    return createUserEntity(DEFAULT_USER_ID,
+            "test@example.com", 
+            "John",
+            "Doe",
+            UserType.USER
+    );
+}
+```
+
+### Key Principles
+1. **DRY (Don't Repeat Yourself)**: Use fixtures to eliminate duplication
+2. **Maintainability**: Centralize test data in fixture classes
+3. **Readability**: Clear naming conventions and minimal comments
+4. **Consistency**: Follow established patterns across all domains
+
+---
+
+## General Coding Standards
+
+### Package Structure
+```
+src/main/java/org/readtogether/
+├── common/           # Shared utilities and base classes
+├── config/           # Configuration classes
+├── security/         # Authentication and authorization
+└── {domain}/         # Domain-specific packages
+    ├── controller/   # REST controllers
+    ├── service/      # Business logic
+    ├── repository/   # Data access
+    ├── entity/       # JPA entities
+    ├── model/        # DTOs and domain models
+    │   ├── request/  # Request DTOs
+    │   └── response/ # Response DTOs
+    ├── factory/      # Object creation utilities
+    ├── mapper/       # Entity-DTO mappers
+    ├── exception/    # Domain-specific exceptions
+    └── utils/        # Domain utilities
+```
+
+### Naming Conventions
+- **Classes**: PascalCase (`UserService`, `ReadingRoomController`)
+- **Methods**: camelCase (`getCurrentUser`, `createReadingRoom`)
+- **Constants**: UPPER_SNAKE_CASE (`DEFAULT_ROOM_SIZE`, `MAX_PARTICIPANTS`)
+- **Packages**: lowercase (`user`, `readingroom`, `notification`)
+
+### Code Style
+- **Indentation**: 4 spaces
+- **Line Length**: 120 characters maximum
+- **Imports**: Group by package, static imports last
+- **Method Length**: Keep methods under 20 lines when possible
+
+### Documentation
+- **Public APIs**: Include Javadoc with @param and @return
+- **Complex Logic**: Add inline comments explaining the "why"
+- **README**: Each module should have usage examples
+
+### Exception Handling
+- **Custom Exceptions**: Create domain-specific exceptions
+- **Global Handler**: Use @ControllerAdvice for centralized error handling
+- **Logging**: Log exceptions with appropriate levels
+
+### Database
+- **Entity Naming**: Use singular nouns (`User`, `ReadingRoom`)
+- **Table Naming**: Use snake_case (`user`, `reading_room`)
+- **Foreign Keys**: Follow pattern `{table}_id` (`user_id`, `room_id`)
+- **Indexes**: Add indexes for frequently queried columns
+
+### Security
+- **Authentication**: JWT-based with proper validation
+- **Authorization**: Method-level security annotations
+- **Input Validation**: Use Bean Validation annotations
+- **SQL Injection**: Always use parameterized queries

@@ -21,7 +21,8 @@ public class ReadingPreferencesService {
     private final ReadingPreferencesRepository readingPreferencesRepository;
 
     @Transactional(readOnly = true)
-    public ReadingPreferencesEntity getUserReadingPreferences(UUID userId) {
+    public ReadingPreferencesEntity getUserReadingPreferences(
+            UUID userId) {
 
         return readingPreferencesRepository.findByUserId(userId)
                 .orElse(ReadingPreferencesFactory.createDefaultPreferences(userId));
@@ -42,35 +43,40 @@ public class ReadingPreferencesService {
         return readingPreferencesRepository.save(existing);
     }
 
-    public double getSpeedMultiplier(UUID userId) {
+    public double getSpeedMultiplier(
+            UUID userId) {
 
         ReadingPreferencesEntity preferences = readingPreferencesRepository.findByUserId(userId)
                 .orElse(ReadingPreferencesFactory.createDefaultPreferences(userId));
         return ReadingPreferencesUtils.getSpeedMultiplier(preferences.getReadingSpeed());
     }
 
-    public String getVideoQualityResolution(UUID userId) {
+    public String getVideoQualityResolution(
+            UUID userId) {
 
         ReadingPreferencesEntity preferences = readingPreferencesRepository.findByUserId(userId)
                 .orElse(ReadingPreferencesFactory.createDefaultPreferences(userId));
         return ReadingPreferencesUtils.getVideoQualityResolution(preferences.getVideoQuality());
     }
 
-    public String getLanguageCode(UUID userId) {
+    public String getLanguageCode(
+            UUID userId) {
 
         ReadingPreferencesEntity preferences = readingPreferencesRepository.findByUserId(userId)
                 .orElse(ReadingPreferencesFactory.createDefaultPreferences(userId));
         return ReadingPreferencesUtils.getLanguageCode(preferences.getDefaultLanguage());
     }
 
-    public boolean shouldEnableSubtitles(UUID userId) {
+    public boolean shouldEnableSubtitles(
+            UUID userId) {
 
         ReadingPreferencesEntity preferences = readingPreferencesRepository.findByUserId(userId)
                 .orElse(ReadingPreferencesFactory.createDefaultPreferences(userId));
         return preferences.isSubtitlesEnabled();
     }
 
-    public boolean shouldAutoplay(UUID userId) {
+    public boolean shouldAutoplay(
+            UUID userId) {
 
         ReadingPreferencesEntity preferences = readingPreferencesRepository.findByUserId(userId)
                 .orElse(ReadingPreferencesFactory.createDefaultPreferences(userId));

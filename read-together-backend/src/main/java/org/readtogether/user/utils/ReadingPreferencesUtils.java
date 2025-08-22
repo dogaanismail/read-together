@@ -21,7 +21,8 @@ public class ReadingPreferencesUtils {
         existing.setTheme(updates.getTheme());
     }
 
-    public static double getSpeedMultiplier(ReadingSpeed speed) {
+    public static double getSpeedMultiplier(
+            ReadingSpeed speed) {
 
         return switch (speed) {
             case SLOW -> 0.75;
@@ -31,7 +32,8 @@ public class ReadingPreferencesUtils {
         };
     }
 
-    public static String getVideoQualityResolution(VideoQuality quality) {
+    public static String getVideoQualityResolution(
+            VideoQuality quality) {
 
         return switch (quality) {
             case LOW -> "480p";
@@ -41,7 +43,8 @@ public class ReadingPreferencesUtils {
         };
     }
 
-    public static String getLanguageCode(ReadingPreferencesEntity.Language language) {
+    public static String getLanguageCode(
+            ReadingPreferencesEntity.Language language) {
 
         return switch (language) {
             case ENGLISH -> "en";

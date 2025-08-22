@@ -21,7 +21,8 @@ public class PrivacySettingsService {
     private final PrivacySettingsRepository privacySettingsRepository;
 
     @Transactional(readOnly = true)
-    public PrivacySettingsEntity getUserPrivacySettings(UUID userId) {
+    public PrivacySettingsEntity getUserPrivacySettings(
+            UUID userId) {
 
         return privacySettingsRepository.findByUserId(userId)
                 .orElse(PrivacySettingsFactory.createDefaultSettings(userId));
