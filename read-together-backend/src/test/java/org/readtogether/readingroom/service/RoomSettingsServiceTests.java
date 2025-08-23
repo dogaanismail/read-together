@@ -303,17 +303,18 @@ class RoomSettingsServiceTests {
     }
 
     @Test
-    @DisplayName("Should throw when settings not found for validation")
-    void shouldThrowWhenSettingsNotFoundForValidation() {
+    @DisplayName("Should return false when settings not found for validation")
+    void shouldReturnFalseWhenSettingsNotFoundForValidation() {
         // Given
         UUID roomId = UUID.randomUUID();
 
         when(settingsRepository.findByReadingRoomId(roomId)).thenReturn(Optional.empty());
 
-        // When / Then
-        assertThatThrownBy(() -> roomSettingsService.validateRoomPassword(roomId, "password"))
-                .isInstanceOf(RuntimeException.class)
-                .hasMessageContaining("Settings not found");
+        // When
+        boolean result = roomSettingsService.validateRoomPassword(roomId, "password");
+
+        // Then
+        assertThat(result).isFalse();
 
         verify(passwordEncoder, never()).matches(anyString(), anyString());
     }
