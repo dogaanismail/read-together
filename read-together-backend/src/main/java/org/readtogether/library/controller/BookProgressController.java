@@ -7,6 +7,7 @@ import org.readtogether.library.model.response.BookProgressResponse;
 import org.readtogether.library.model.request.BookProgressUpdateRequest;
 import org.readtogether.library.service.BookProgressService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +22,7 @@ public class BookProgressController {
     private final BookProgressService bookProgressService;
 
     @PutMapping("/{bookId}")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<BookProgressResponse> updateProgress(
             @PathVariable UUID bookId,
             @Valid @RequestBody BookProgressUpdateRequest request,
@@ -33,6 +35,7 @@ public class BookProgressController {
     }
 
     @GetMapping("/{bookId}")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<BookProgressResponse> getBookProgress(
             @PathVariable UUID bookId,
             Authentication authentication) {
@@ -44,6 +47,7 @@ public class BookProgressController {
     }
 
     @GetMapping("/my-progress")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<List<BookProgressResponse>> getUserProgress(
             Authentication authentication) {
 
@@ -54,6 +58,7 @@ public class BookProgressController {
     }
 
     @GetMapping("/currently-reading")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<List<BookProgressResponse>> getCurrentlyReadingBooks(
             Authentication authentication) {
 
@@ -64,6 +69,7 @@ public class BookProgressController {
     }
 
     @GetMapping("/completed")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<List<BookProgressResponse>> getCompletedBooks(
             Authentication authentication) {
 
@@ -74,6 +80,7 @@ public class BookProgressController {
     }
 
     @GetMapping("/favorites")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<List<BookProgressResponse>> getFavoriteBooks(
             Authentication authentication) {
 
@@ -84,6 +91,7 @@ public class BookProgressController {
     }
 
     @GetMapping("/recent")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<List<BookProgressResponse>> getRecentlyReadBooks(
             @RequestParam(defaultValue = "30") int days,
             Authentication authentication) {
@@ -95,6 +103,7 @@ public class BookProgressController {
     }
 
     @GetMapping("/stats/reading-time")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<Long> getTotalReadingTime(
             Authentication authentication) {
 
@@ -105,6 +114,7 @@ public class BookProgressController {
     }
 
     @GetMapping("/stats/completed-count")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<Long> getCompletedBooksCount(
             Authentication authentication) {
 
@@ -115,6 +125,7 @@ public class BookProgressController {
     }
 
     @GetMapping("/stats/in-progress-count")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<Long> getInProgressBooksCount(
             Authentication authentication) {
 
@@ -125,6 +136,7 @@ public class BookProgressController {
     }
 
     @GetMapping("/stats/average-progress")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<Double> getAverageProgress(
             Authentication authentication) {
 
@@ -135,6 +147,7 @@ public class BookProgressController {
     }
 
     @DeleteMapping("/{bookId}")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<Void> deleteProgress(
             @PathVariable UUID bookId,
             Authentication authentication) {

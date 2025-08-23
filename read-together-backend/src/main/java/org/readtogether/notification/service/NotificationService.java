@@ -15,7 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.UUID;
 
 @Slf4j
@@ -190,7 +190,7 @@ public class NotificationService {
 
         notificationRepository.save(notification);
 
-        // Send real-time notification using new WebSocket service method
+        // Send real-time notification using a new WebSocket service method
         webSocketService.notifyNewFollower(followedUserId, followerUserId, followerUsername);
 
         // Send multi-channel notification
@@ -237,7 +237,9 @@ public class NotificationService {
         log.info("Notified user {} about live stream from {}", userId, streamerUsername);
     }
 
-    public Page<NotificationEntity> getUserNotifications(UUID userId, Pageable pageable) {
+    public Page<NotificationEntity> getUserNotifications(
+            UUID userId,
+            Pageable pageable) {
 
         return notificationRepository.findByUserIdOrderByCreatedAtDesc(userId, pageable);
     }
@@ -248,15 +250,17 @@ public class NotificationService {
     }
 
     @Transactional
-    public boolean markAsRead(UUID notificationId, UUID userId) {
+    public boolean markAsRead(
+            UUID notificationId,
+            UUID userId) {
 
-        int updated = notificationRepository.markAsRead(notificationId, userId, LocalDateTime.now());
+        int updated = notificationRepository.markAsRead(notificationId, userId, Instant.now());
         return updated > 0;
     }
 
     @Transactional
     public int markAllAsRead(UUID userId) {
 
-        return notificationRepository.markAllAsRead(userId, LocalDateTime.now());
+        return notificationRepository.markAllAsRead(userId, Instant.now());
     }
 }

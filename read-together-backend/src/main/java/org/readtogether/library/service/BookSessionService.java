@@ -8,7 +8,8 @@ import org.readtogether.library.repository.BookSessionRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.UUID;
 
@@ -108,7 +109,7 @@ public class BookSessionService {
             UUID userId,
             int days) {
 
-        LocalDateTime sinceDate = LocalDateTime.now().minusDays(days);
+        Instant sinceDate = Instant.now().minus(days, ChronoUnit.DAYS);
         return bookSessionRepository.findRecentSessionsByUserId(userId, sinceDate);
     }
 

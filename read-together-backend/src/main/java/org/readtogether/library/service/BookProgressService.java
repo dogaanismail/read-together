@@ -10,7 +10,8 @@ import org.readtogether.library.factory.BookProgressFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.UUID;
 
@@ -105,7 +106,7 @@ public class BookProgressService {
             UUID userId,
             int days) {
 
-        LocalDateTime sinceDate = LocalDateTime.now().minusDays(days);
+        Instant sinceDate = Instant.now().minus(days, ChronoUnit.DAYS);
         List<BookProgressEntity> progressList = bookProgressRepository.findRecentlyReadBooks(userId, sinceDate);
 
         return BookProgressFactory.createProgressResponses(progressList);
@@ -148,7 +149,7 @@ public class BookProgressService {
             BookProgressEntity progressEntity,
             BookProgressUpdateRequest request) {
 
-        LocalDateTime now = LocalDateTime.now();
+        Instant now = Instant.now();
 
         if (progressEntity.getStartedReadingAt() == null && request.getStatus() == IN_PROGRESS) {
             progressEntity.setStartedReadingAt(now);
@@ -181,9 +182,9 @@ public class BookProgressService {
 
         if (progressEntity.getStatus() == NOT_STARTED) {
             progressEntity.setStatus(IN_PROGRESS);
-            progressEntity.setStartedReadingAt(LocalDateTime.now());
+            progressEntity.setStartedReadingAt(Instant.now());
         }
 
-        progressEntity.setLastReadAt(LocalDateTime.now());
+        progressEntity.setLastReadAt(Instant.now());
     }
 }

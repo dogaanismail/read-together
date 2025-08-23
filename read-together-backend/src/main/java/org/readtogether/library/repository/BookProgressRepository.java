@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -29,7 +29,7 @@ public interface BookProgressRepository extends JpaRepository<BookProgressEntity
     @Query("SELECT bp FROM book_progress bp WHERE bp.userId = :userId AND " +
            "bp.lastReadAt >= :sinceDate ORDER BY bp.lastReadAt DESC")
     List<BookProgressEntity> findRecentlyReadBooks(@Param("userId") UUID userId,
-                                                   @Param("sinceDate") LocalDateTime sinceDate);
+                                                   @Param("sinceDate") Instant sinceDate);
 
     @Query("SELECT SUM(bp.totalReadingTimeSeconds) FROM book_progress bp WHERE bp.userId = :userId")
     Long getTotalReadingTimeByUserId(@Param("userId") UUID userId);

@@ -5,6 +5,7 @@ import org.readtogether.common.utils.SecurityUtils;
 import org.readtogether.library.entity.BookSessionEntity;
 import org.readtogether.library.service.BookSessionService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,6 +20,7 @@ public class BookSessionController {
     private final BookSessionService bookSessionService;
 
     @PostMapping
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<BookSessionEntity> createBookSession(
             @RequestParam UUID sessionId,
             @RequestParam UUID bookId,
@@ -26,6 +28,7 @@ public class BookSessionController {
             @RequestParam(required = false) Integer readingTimeSeconds,
             Authentication authentication) {
 
+        //TODO: We have to fix here, no exposing entity, have to use dto
         UUID userId = SecurityUtils.getCurrentUserId(authentication);
         BookSessionEntity response = bookSessionService.createBookSession(sessionId,
                 bookId,
@@ -38,6 +41,7 @@ public class BookSessionController {
     }
 
     @PutMapping("/{sessionId}")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<BookSessionEntity> updateBookSession(
             @PathVariable UUID sessionId,
             @RequestParam(required = false) Integer pagesRead,
@@ -46,6 +50,7 @@ public class BookSessionController {
             @RequestParam(required = false) Integer difficultyRating,
             @RequestParam(required = false) Integer comprehensionRating) {
 
+        //TODO: We have to fix here, no exposing entity, have to use dto
         BookSessionEntity response = bookSessionService.updateBookSession(sessionId,
                 pagesRead,
                 readingTimeSeconds,
@@ -57,17 +62,21 @@ public class BookSessionController {
     }
 
     @GetMapping("/book/{bookId}")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<List<BookSessionEntity>> getBookSessions(
             @PathVariable UUID bookId) {
 
+        //TODO: We have to fix here, no exposing entity, have to use dto
         List<BookSessionEntity> response = bookSessionService.getBookSessions(bookId);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/user")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<List<BookSessionEntity>> getUserSessions(
             Authentication authentication) {
 
+        //TODO: We have to fix here, no exposing entity, have to use dto
         UUID userId = SecurityUtils.getCurrentUserId(authentication);
         List<BookSessionEntity> response = bookSessionService.getUserSessions(userId);
 
@@ -75,6 +84,7 @@ public class BookSessionController {
     }
 
     @GetMapping("/user/book/{bookId}")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<List<BookSessionEntity>> getUserBookSessions(
             @PathVariable UUID bookId,
             Authentication authentication) {
@@ -86,15 +96,18 @@ public class BookSessionController {
     }
 
     @GetMapping("/user/recent")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<List<BookSessionEntity>> getRecentUserSessions(
             @RequestParam(defaultValue = "30") int days,
             @RequestHeader("User-ID") UUID userId) {
 
+        //TODO: We have to fix here, no exposing entity, have to use dto
         List<BookSessionEntity> response = bookSessionService.getRecentUserSessions(userId, days);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/stats/reading-time/{bookId}")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<Long> getTotalReadingTimeForBook(
             @PathVariable UUID bookId,
             Authentication authentication) {
@@ -106,6 +119,7 @@ public class BookSessionController {
     }
 
     @GetMapping("/stats/pages-read/{bookId}")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<Integer> getTotalPagesReadForBook(
             @PathVariable UUID bookId,
             Authentication authentication) {
@@ -117,6 +131,7 @@ public class BookSessionController {
     }
 
     @GetMapping("/stats/session-count/{bookId}")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<Long> getSessionCountForBook(
             @PathVariable UUID bookId,
             Authentication authentication) {
@@ -128,6 +143,7 @@ public class BookSessionController {
     }
 
     @DeleteMapping("/{sessionId}")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<Void> deleteBookSession(
             @PathVariable UUID sessionId) {
 
@@ -136,6 +152,7 @@ public class BookSessionController {
     }
 
     @GetMapping("/{sessionId}/exists")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<Boolean> sessionExists(
             @PathVariable UUID sessionId) {
 

@@ -8,6 +8,7 @@ import org.readtogether.notification.model.NotificationPreferencesResponse;
 import org.readtogether.notification.model.NotificationPreferencesUpdateRequest;
 import org.readtogether.notification.service.NotificationPreferencesService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +22,9 @@ public class NotificationPreferencesController {
     private final NotificationPreferencesService preferencesService;
 
     @GetMapping
-    public ResponseEntity<NotificationPreferencesResponse> getPreferences(Authentication authentication) {
+    @PreAuthorize("hasAuthority('USER')")
+    public ResponseEntity<NotificationPreferencesResponse> getPreferences(
+            Authentication authentication) {
 
         UUID userId = SecurityUtils.getCurrentUserId(authentication);
         NotificationPreferenceEntity preferences = preferencesService.getUserPreferences(userId);
@@ -29,6 +32,7 @@ public class NotificationPreferencesController {
     }
 
     @PutMapping
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<NotificationPreferencesResponse> updatePreferences(
             @RequestBody NotificationPreferencesUpdateRequest request,
             Authentication authentication) {
@@ -39,6 +43,7 @@ public class NotificationPreferencesController {
     }
 
     @PostMapping("/push-subscription")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<Void> updatePushSubscription(
             @RequestBody PushSubscriptionRequest request,
             Authentication authentication) {

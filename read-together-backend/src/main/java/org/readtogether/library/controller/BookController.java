@@ -1,5 +1,6 @@
 package org.readtogether.library.controller;
 
+import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.readtogether.common.utils.SecurityUtils;
@@ -11,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,6 +27,7 @@ public class BookController {
     private final BookService bookService;
 
     @PostMapping
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<BookResponse> createBook(
             @Valid @RequestBody BookCreateRequest request,
             Authentication authentication) {
@@ -38,6 +41,7 @@ public class BookController {
     }
 
     @PutMapping("/{bookId}")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<BookResponse> updateBook(
             @PathVariable UUID bookId,
             @Valid @RequestBody BookUpdateRequest request,
@@ -50,6 +54,7 @@ public class BookController {
     }
 
     @DeleteMapping("/{bookId}")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<Void> deleteBook(
             @PathVariable UUID bookId,
             Authentication authentication) {
@@ -63,6 +68,7 @@ public class BookController {
     }
 
     @GetMapping("/{bookId}")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<BookResponse> getBook(
             @PathVariable UUID bookId,
             Authentication authentication) {
@@ -74,6 +80,7 @@ public class BookController {
     }
 
     @GetMapping("/my-books")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<List<BookResponse>> getUserBooks(
             Authentication authentication) {
 
@@ -84,6 +91,7 @@ public class BookController {
     }
 
     @GetMapping("/my-books/paged")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<Page<BookResponse>> getUserBooksPaged(
             Authentication authentication,
             Pageable pageable) {
@@ -95,6 +103,7 @@ public class BookController {
     }
 
     @GetMapping("/public")
+    @PermitAll
     public ResponseEntity<List<BookResponse>> getPublicBooks() {
 
         List<BookResponse> response = bookService.getPublicBooks();
@@ -102,6 +111,7 @@ public class BookController {
     }
 
     @GetMapping("/public/paged")
+    @PermitAll
     public ResponseEntity<Page<BookResponse>> getPublicBooksPaged(
             Pageable pageable) {
 
@@ -110,6 +120,7 @@ public class BookController {
     }
 
     @GetMapping("/search/my-books")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<List<BookResponse>> searchUserBooks(
             @RequestParam String query,
             Authentication authentication) {
@@ -121,6 +132,7 @@ public class BookController {
     }
 
     @GetMapping("/search/public")
+    @PermitAll
     public ResponseEntity<List<BookResponse>> searchPublicBooks(
             @RequestParam String query) {
 
@@ -129,6 +141,7 @@ public class BookController {
     }
 
     @GetMapping("/my-books/count")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<Long> getUserBooksCount(
             Authentication authentication) {
 
@@ -139,6 +152,7 @@ public class BookController {
     }
 
     @GetMapping("/public/count")
+    @PermitAll
     public ResponseEntity<Long> getPublicBooksCount() {
 
         long count = bookService.getPublicBooksCount();
