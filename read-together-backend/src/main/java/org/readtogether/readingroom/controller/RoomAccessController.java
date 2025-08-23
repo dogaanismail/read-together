@@ -25,6 +25,7 @@ public class RoomAccessController {
     private final RoomAccessService roomAccessService;
 
     @GetMapping("/join")
+    @PreAuthorize("hasAnyAuthority('ANONYMOUS')")
     @Operation(summary = "Get room information from invitation token (public access)")
     public ResponseEntity<InvitationResponse> getRoomFromInvitation(
             @Parameter(description = "Invitation token") @RequestParam String token) {

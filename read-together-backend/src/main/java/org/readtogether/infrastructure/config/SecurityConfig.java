@@ -46,6 +46,7 @@ public class SecurityConfig {
                         .requestMatchers(POST, "/api/v1/users/**").permitAll()
                         .requestMatchers(GET, "/api/v1/sessions/public").permitAll()
                         .requestMatchers(GET, "/api/v1/library/books/public").permitAll()
+                        .requestMatchers(GET, "/api/v1/room/join").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(customizer -> customizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

@@ -103,6 +103,7 @@ public class ReadingRoomController {
     }
 
     @GetMapping("/code/{roomCode}")
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     @Operation(summary = "Get room by room code")
     public ResponseEntity<ReadingRoomResponse> getRoomByCode(
             @Parameter(description = "Room code") @PathVariable String roomCode) {

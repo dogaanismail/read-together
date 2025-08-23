@@ -50,7 +50,7 @@ class RoomSettingsControllerIntegrationTests extends BaseIntegrationTest {
 
         // When: update room settings
         UpdateRoomSettingsRequest updateRequest = ReadingRoomRequestFixtures.createPrivateUpdateRoomSettingsRequest();
-        
+
         mockMvc.perform(put("/api/v1/rooms/" + roomId + "/settings")
                         .header("Authorization", "Bearer " + hostToken)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -71,7 +71,7 @@ class RoomSettingsControllerIntegrationTests extends BaseIntegrationTest {
     @DisplayName("GET /api/v1/rooms/{roomId}/settings should return room settings")
     void shouldGetRoomSettings() throws Exception {
         // Given: user creates room
-        String hostEmail = "host@test.local";
+        String hostEmail = "host_user@test.local";
         String hostPassword = "Password1!";
         String hostToken = registerAndLogin(hostEmail, hostPassword, "Host", "User");
 
@@ -87,10 +87,10 @@ class RoomSettingsControllerIntegrationTests extends BaseIntegrationTest {
         JsonNode roomNode = objectMapper.readTree(roomResult.getResponse().getContentAsString());
         String roomId = roomNode.path("id").asText();
 
-        // When: get room settings (public access - no auth required)
-        mockMvc.perform(get("/api/v1/rooms/" + roomId + "/settings"))
+        mockMvc.perform(get("/api/v1/rooms/" + roomId + "/settings")
+                        .header("Authorization", "Bearer " + hostToken))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.isPublic").value(true)) // default values
+                .andExpect(jsonPath("$.isPublic").value(true))
                 .andExpect(jsonPath("$.requireHostApproval").value(false))
                 .andExpect(jsonPath("$.enableChat").value(true))
                 .andExpect(jsonPath("$.enableAudio").value(true))
@@ -105,7 +105,7 @@ class RoomSettingsControllerIntegrationTests extends BaseIntegrationTest {
     @DisplayName("POST /api/v1/rooms/{roomId}/settings/validate-password should validate room password")
     void shouldValidateRoomPassword() throws Exception {
         // Given: user creates private room with password
-        String hostEmail = "host@test.local";
+        String hostEmail = "host_user1@test.local";
         String hostPassword = "Password1!";
         String hostToken = registerAndLogin(hostEmail, hostPassword, "Host", "User");
 
@@ -129,15 +129,17 @@ class RoomSettingsControllerIntegrationTests extends BaseIntegrationTest {
                         .content(objectMapper.writeValueAsString(settingsRequest)))
                 .andExpect(status().isOk());
 
-        // When: validate correct password
+        // When: validate the correct password
         mockMvc.perform(post("/api/v1/rooms/" + roomId + "/settings/validate-password")
+                        .header("Authorization", "Bearer " + hostToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"password\":\"newPassword123\"}"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.valid").value(true));
+                .andExpect(jsonPath("$").value(true));
 
         // And: validate incorrect password
         mockMvc.perform(post("/api/v1/rooms/" + roomId + "/settings/validate-password")
+                        .header("Authorization", "Bearer " + hostToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"password\":\"wrongPassword\"}"))
                 .andExpect(status().isOk())
@@ -147,12 +149,12 @@ class RoomSettingsControllerIntegrationTests extends BaseIntegrationTest {
     @Test
     @DisplayName("PUT /api/v1/rooms/{roomId}/settings should update password and enable private access")
     void shouldUpdatePasswordAndEnablePrivateAccess() throws Exception {
-        // Given: user creates public room
-        String hostEmail = "host@test.local";
+        // Given: user creates a public room
+        String hostEmail = "host_user2@test.local";
         String hostPassword = "Password1!";
         String hostToken = registerAndLogin(hostEmail, hostPassword, "Host", "User");
 
-        // Create public room first
+        // Create a public room first
         CreateReadingRoomRequest createRequest = ReadingRoomRequestFixtures.createDefaultCreateReadingRoomRequest();
         MvcResult roomResult = mockMvc.perform(post("/api/v1/rooms")
                         .header("Authorization", "Bearer " + hostToken)
@@ -175,7 +177,7 @@ class RoomSettingsControllerIntegrationTests extends BaseIntegrationTest {
                 .autoMuteNewJoiners(true)
                 .roomVolume(75)
                 .build();
-        
+
         mockMvc.perform(put("/api/v1/rooms/" + roomId + "/settings")
                         .header("Authorization", "Bearer " + hostToken)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -186,6 +188,7 @@ class RoomSettingsControllerIntegrationTests extends BaseIntegrationTest {
 
         // Then: verify password can be validated
         mockMvc.perform(post("/api/v1/rooms/" + roomId + "/settings/validate-password")
+                        .header("Authorization", "Bearer " + hostToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"password\":\"securePassword123\"}"))
                 .andExpect(status().isOk())
@@ -206,8 +209,19 @@ class RoomSettingsControllerIntegrationTests extends BaseIntegrationTest {
                 .andExpect(status().isUnauthorized());
     }
 
-    private String registerAndLogin(String email, String password, String firstName, String lastName) throws Exception {
-        RegisterRequest register = RequestFixtures.createRegisterRequest(email, password, firstName, lastName, "user");
+    private String registerAndLogin(
+            String email,
+            String password,
+            String firstName,
+            String lastName) throws Exception {
+
+        RegisterRequest register = RequestFixtures.createRegisterRequest(
+                email,
+                password,
+                firstName,
+                lastName,
+                "user"
+        );
 
         mockMvc.perform(post("/api/v1/users/register")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -217,7 +231,10 @@ class RoomSettingsControllerIntegrationTests extends BaseIntegrationTest {
         return loginAndGetAccessToken(email, password);
     }
 
-    private String loginAndGetAccessToken(String email, String password) throws Exception {
+    private String loginAndGetAccessToken(
+            String email,
+            String password) throws Exception {
+
         LoginRequest login = RequestFixtures.createLoginRequest(email, password);
 
         MvcResult loginResult = mockMvc.perform(post("/api/v1/users/login")

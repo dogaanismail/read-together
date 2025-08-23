@@ -81,7 +81,8 @@ class ReadingRoomControllerIntegrationTests extends BaseIntegrationTest {
     @DisplayName("POST /api/v1/rooms should return 401 when not authenticated")
     void shouldReturn401WhenNotAuthenticated() throws Exception {
         // Given
-        CreateReadingRoomRequest createRequest = ReadingRoomRequestFixtures.createDefaultCreateReadingRoomRequest();
+        CreateReadingRoomRequest createRequest = ReadingRoomRequestFixtures
+                .createDefaultCreateReadingRoomRequest();
 
         // When / Then
         mockMvc.perform(post("/api/v1/rooms")

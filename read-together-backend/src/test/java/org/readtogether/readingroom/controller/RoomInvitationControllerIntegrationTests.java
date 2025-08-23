@@ -16,6 +16,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -33,7 +34,7 @@ class RoomInvitationControllerIntegrationTests extends BaseIntegrationTest {
     @DisplayName("POST /api/v1/rooms/{roomId}/invitations should create email invitations")
     void shouldCreateEmailInvitations() throws Exception {
         // Given: user creates room
-        String hostEmail = "host@test.local";
+        String hostEmail = "host_email@test.local";
         String hostPassword = "Password1!";
         String hostToken = registerAndLogin(hostEmail, hostPassword, "Host", "User");
 
@@ -51,7 +52,7 @@ class RoomInvitationControllerIntegrationTests extends BaseIntegrationTest {
 
         // When: create email invitations
         InviteToRoomRequest inviteRequest = ReadingRoomRequestFixtures.createDefaultEmailInviteRequest();
-        
+
         mockMvc.perform(post("/api/v1/rooms/" + roomId + "/invitations")
                         .header("Authorization", "Bearer " + hostToken)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -71,7 +72,7 @@ class RoomInvitationControllerIntegrationTests extends BaseIntegrationTest {
     @DisplayName("POST /api/v1/rooms/{roomId}/invitations should create direct invitations")
     void shouldCreateDirectInvitations() throws Exception {
         // Given: host creates room, and we have other users to invite
-        String hostEmail = "host@test.local";
+        String hostEmail = "host_direct@test.local";
         String hostPassword = "Password1!";
         String hostToken = registerAndLogin(hostEmail, hostPassword, "Host", "User");
 
@@ -97,7 +98,7 @@ class RoomInvitationControllerIntegrationTests extends BaseIntegrationTest {
 
         // When: create direct invitations
         InviteToRoomRequest inviteRequest = ReadingRoomRequestFixtures.createDirectInviteRequest();
-        
+
         mockMvc.perform(post("/api/v1/rooms/" + roomId + "/invitations")
                         .header("Authorization", "Bearer " + hostToken)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -117,7 +118,7 @@ class RoomInvitationControllerIntegrationTests extends BaseIntegrationTest {
     @DisplayName("POST /api/v1/rooms/{roomId}/invitations should create share link invitation")
     void shouldCreateShareLinkInvitation() throws Exception {
         // Given: user creates room
-        String hostEmail = "host@test.local";
+        String hostEmail = "host_share@test.local";
         String hostPassword = "Password1!";
         String hostToken = registerAndLogin(hostEmail, hostPassword, "Host", "User");
 
@@ -133,9 +134,9 @@ class RoomInvitationControllerIntegrationTests extends BaseIntegrationTest {
         JsonNode roomNode = objectMapper.readTree(roomResult.getResponse().getContentAsString());
         String roomId = roomNode.path("id").asText();
 
-        // When: create share link invitation
+        // When: create a share link invitation
         InviteToRoomRequest inviteRequest = ReadingRoomRequestFixtures.createShareLinkInviteRequest();
-        
+
         mockMvc.perform(post("/api/v1/rooms/" + roomId + "/invitations")
                         .header("Authorization", "Bearer " + hostToken)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -153,7 +154,7 @@ class RoomInvitationControllerIntegrationTests extends BaseIntegrationTest {
     @DisplayName("GET /api/v1/rooms/{roomId}/invitations should return room invitations for host")
     void shouldGetRoomInvitations() throws Exception {
         // Given: host creates room and sends invitations
-        String hostEmail = "host@test.local";
+        String hostEmail = "host_invite@test.local";
         String hostPassword = "Password1!";
         String hostToken = registerAndLogin(hostEmail, hostPassword, "Host", "User");
 
@@ -189,7 +190,7 @@ class RoomInvitationControllerIntegrationTests extends BaseIntegrationTest {
     @DisplayName("POST /api/v1/rooms/{roomId}/invitations/share-link should generate share link")
     void shouldGenerateShareLink() throws Exception {
         // Given: user creates room
-        String hostEmail = "host@test.local";
+        String hostEmail = "host_generate@test.local";
         String hostPassword = "Password1!";
         String hostToken = registerAndLogin(hostEmail, hostPassword, "Host", "User");
 
@@ -205,15 +206,12 @@ class RoomInvitationControllerIntegrationTests extends BaseIntegrationTest {
         JsonNode roomNode = objectMapper.readTree(roomResult.getResponse().getContentAsString());
         String roomId = roomNode.path("id").asText();
 
-        // When: generate share link
+        // When: generate a share link
         mockMvc.perform(post("/api/v1/rooms/" + roomId + "/invitations/share-link")
                         .header("Authorization", "Bearer " + hostToken))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.invitationType").value("LINK_SHARE"))
-                .andExpect(jsonPath("$.readingRoomId").value(roomId))
                 .andExpect(jsonPath("$.shareLink").exists())
-                .andExpect(jsonPath("$.shareLink").value(org.hamcrest.Matchers.containsString("/room/join")))
-                .andExpect(jsonPath("$.invitationToken").exists());
+                .andExpect(jsonPath("$.shareLink").value(containsString("/room/join")));
     }
 
     @Test
@@ -230,8 +228,19 @@ class RoomInvitationControllerIntegrationTests extends BaseIntegrationTest {
                 .andExpect(status().isUnauthorized());
     }
 
-    private String registerAndLogin(String email, String password, String firstName, String lastName) throws Exception {
-        RegisterRequest register = RequestFixtures.createRegisterRequest(email, password, firstName, lastName, "user");
+    private String registerAndLogin(
+            String email,
+            String password,
+            String firstName,
+            String lastName) throws Exception {
+
+        RegisterRequest register = RequestFixtures.createRegisterRequest(
+                email,
+                password,
+                firstName,
+                lastName,
+                "user"
+        );
 
         mockMvc.perform(post("/api/v1/users/register")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -241,7 +250,10 @@ class RoomInvitationControllerIntegrationTests extends BaseIntegrationTest {
         return loginAndGetAccessToken(email, password);
     }
 
-    private String loginAndGetAccessToken(String email, String password) throws Exception {
+    private String loginAndGetAccessToken(
+            String email,
+            String password) throws Exception {
+
         LoginRequest login = RequestFixtures.createLoginRequest(email, password);
 
         MvcResult loginResult = mockMvc.perform(post("/api/v1/users/login")

@@ -5,10 +5,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.readtogether.common.BaseIntegrationTest;
+import org.readtogether.readingroom.common.enums.InvitationType;
 import org.readtogether.readingroom.fixtures.ReadingRoomRequestFixtures;
 import org.readtogether.readingroom.model.request.CreateReadingRoomRequest;
 import org.readtogether.readingroom.model.request.InviteToRoomRequest;
 import org.readtogether.readingroom.model.request.JoinRoomRequest;
+import org.readtogether.readingroom.model.request.UpdateRoomSettingsRequest;
 import org.readtogether.user.fixtures.RequestFixtures;
 import org.readtogether.user.model.request.LoginRequest;
 import org.readtogether.user.model.request.RegisterRequest;
@@ -16,6 +18,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+
+import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -33,8 +38,8 @@ class RoomAccessControllerIntegrationTests extends BaseIntegrationTest {
     @Test
     @DisplayName("GET /api/v1/room/join should return room information from invitation token")
     void shouldGetRoomFromInvitation() throws Exception {
-        // Given: user creates room and generates share link
-        String hostEmail = "host@test.local";
+        // Given: user creates a room and generates a share link
+        String hostEmail = "host_invitation@test.local";
         String hostPassword = "Password1!";
         String hostToken = registerAndLogin(hostEmail, hostPassword, "Host", "User");
 
@@ -72,7 +77,7 @@ class RoomAccessControllerIntegrationTests extends BaseIntegrationTest {
     @DisplayName("POST /api/v1/room/join should join room via invitation token")
     void shouldJoinRoomViaInvitation() throws Exception {
         // Given: host creates room and invites user
-        String hostEmail = "host@test.local";
+        String hostEmail = "host_user_2@test.local";
         String hostPassword = "Password1!";
         String hostToken = registerAndLogin(hostEmail, hostPassword, "Host", "User");
 
@@ -94,13 +99,13 @@ class RoomAccessControllerIntegrationTests extends BaseIntegrationTest {
 
         // Create invitation
         InviteToRoomRequest inviteRequest = ReadingRoomRequestFixtures.createInviteToRoomRequest(
-                org.readtogether.readingroom.common.enums.InvitationType.EMAIL,
-                java.util.Arrays.asList(inviteeEmail),
+                InvitationType.EMAIL,
+                List.of(inviteeEmail),
                 null,
                 "Please join our reading room!",
                 24
         );
-        
+
         MvcResult inviteResult = mockMvc.perform(post("/api/v1/rooms/" + roomId + "/invitations")
                         .header("Authorization", "Bearer " + hostToken)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -111,7 +116,7 @@ class RoomAccessControllerIntegrationTests extends BaseIntegrationTest {
         JsonNode inviteNode = objectMapper.readTree(inviteResult.getResponse().getContentAsString());
         String invitationToken = inviteNode.path(0).path("invitationToken").asText();
 
-        // When: join room via invitation
+        // When: join a room via invitation
         mockMvc.perform(post("/api/v1/room/join")
                         .param("token", invitationToken)
                         .header("Authorization", "Bearer " + inviteeToken))
@@ -123,16 +128,16 @@ class RoomAccessControllerIntegrationTests extends BaseIntegrationTest {
     @Test
     @DisplayName("POST /api/v1/room/join-by-code should join room by room code")
     void shouldJoinRoomByCode() throws Exception {
-        // Given: user creates public room
-        String hostEmail = "host@test.local";
+        // Given: user creates a public room
+        String hostEmail = "host_user@test.local";
         String hostPassword = "Password1!";
         String hostToken = registerAndLogin(hostEmail, hostPassword, "Host", "User");
 
-        String joinerEmail = "joiner@test.local";
+        String joinerEmail = "joiner_2@test.local";
         String joinerPassword = "Password1!";
         String joinerToken = registerAndLogin(joinerEmail, joinerPassword, "Joiner", "User");
 
-        // Create public room
+        // Create a public room
         CreateReadingRoomRequest createRequest = ReadingRoomRequestFixtures.createDefaultCreateReadingRoomRequest();
         MvcResult roomResult = mockMvc.perform(post("/api/v1/rooms")
                         .header("Authorization", "Bearer " + hostToken)
@@ -144,9 +149,10 @@ class RoomAccessControllerIntegrationTests extends BaseIntegrationTest {
         JsonNode roomNode = objectMapper.readTree(roomResult.getResponse().getContentAsString());
         String roomCode = roomNode.path("roomCode").asText();
 
-        // When: join room by code
-        JoinRoomRequest joinRequest = ReadingRoomRequestFixtures.createJoinRoomRequest(roomCode, null);
-        
+        // When: join the room by code
+        JoinRoomRequest joinRequest = ReadingRoomRequestFixtures
+                .createJoinRoomRequest(roomCode, null);
+
         mockMvc.perform(post("/api/v1/room/join-by-code")
                         .header("Authorization", "Bearer " + joinerToken)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -160,7 +166,7 @@ class RoomAccessControllerIntegrationTests extends BaseIntegrationTest {
     @DisplayName("POST /api/v1/room/join-by-code should handle private room with password")
     void shouldJoinPrivateRoomWithPassword() throws Exception {
         // Given: user creates private room with password
-        String hostEmail = "host@test.local";
+        String hostEmail = "host2@test.local";
         String hostPassword = "Password1!";
         String hostToken = registerAndLogin(hostEmail, hostPassword, "Host", "User");
 
@@ -168,7 +174,7 @@ class RoomAccessControllerIntegrationTests extends BaseIntegrationTest {
         String joinerPassword = "Password1!";
         String joinerToken = registerAndLogin(joinerEmail, joinerPassword, "Joiner", "User");
 
-        // Create private room
+        // Create a private room
         CreateReadingRoomRequest createRequest = ReadingRoomRequestFixtures.createPrivateCreateReadingRoomRequest();
         MvcResult roomResult = mockMvc.perform(post("/api/v1/rooms")
                         .header("Authorization", "Bearer " + hostToken)
@@ -182,18 +188,21 @@ class RoomAccessControllerIntegrationTests extends BaseIntegrationTest {
         String roomCode = roomNode.path("roomCode").asText();
 
         // Set room password
-        org.readtogether.readingroom.model.request.UpdateRoomSettingsRequest settingsRequest = 
-            ReadingRoomRequestFixtures.createPrivateUpdateRoomSettingsRequest();
+        UpdateRoomSettingsRequest settingsRequest =
+                ReadingRoomRequestFixtures.createPrivateUpdateRoomSettingsRequest();
 
-        mockMvc.perform(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put("/api/v1/rooms/" + roomId + "/settings")
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/v1/rooms/" + roomId + "/settings")
                         .header("Authorization", "Bearer " + hostToken)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(settingsRequest)))
                 .andExpect(status().isOk());
 
-        // When: join room by code with correct password
-        JoinRoomRequest joinRequest = ReadingRoomRequestFixtures.createJoinRoomRequest(roomCode, "newPassword123");
-        
+        // When: join the room by code with the correct password
+        JoinRoomRequest joinRequest = ReadingRoomRequestFixtures.createJoinRoomRequest(
+                roomCode,
+                "newPassword123"
+        );
+
         mockMvc.perform(post("/api/v1/room/join-by-code")
                         .header("Authorization", "Bearer " + joinerToken)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -212,8 +221,19 @@ class RoomAccessControllerIntegrationTests extends BaseIntegrationTest {
                 .andExpect(status().isUnauthorized());
     }
 
-    private String registerAndLogin(String email, String password, String firstName, String lastName) throws Exception {
-        RegisterRequest register = RequestFixtures.createRegisterRequest(email, password, firstName, lastName, "user");
+    private String registerAndLogin(
+            String email,
+            String password,
+            String firstName,
+            String lastName) throws Exception {
+
+        RegisterRequest register = RequestFixtures.createRegisterRequest(
+                email,
+                password,
+                firstName,
+                lastName,
+                "user"
+        );
 
         mockMvc.perform(post("/api/v1/users/register")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -223,7 +243,10 @@ class RoomAccessControllerIntegrationTests extends BaseIntegrationTest {
         return loginAndGetAccessToken(email, password);
     }
 
-    private String loginAndGetAccessToken(String email, String password) throws Exception {
+    private String loginAndGetAccessToken(
+            String email,
+            String password) throws Exception {
+
         LoginRequest login = RequestFixtures.createLoginRequest(email, password);
 
         MvcResult loginResult = mockMvc.perform(post("/api/v1/users/login")
