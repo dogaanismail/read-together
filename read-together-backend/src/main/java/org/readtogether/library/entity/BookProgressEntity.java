@@ -6,7 +6,7 @@ import lombok.experimental.SuperBuilder;
 import org.readtogether.common.entity.BaseEntity;
 import org.readtogether.library.common.enums.BookStatus;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.UUID;
 
 import static org.readtogether.library.common.enums.BookStatus.NOT_STARTED;
@@ -55,13 +55,13 @@ public class BookProgressEntity extends BaseEntity {
     private long totalReadingTimeSeconds = 0L;
 
     @Column(name = "started_reading_at")
-    private LocalDateTime startedReadingAt;
+    private Instant startedReadingAt;
 
     @Column(name = "last_read_at")
-    private LocalDateTime lastReadAt;
+    private Instant lastReadAt;
 
     @Column(name = "completed_at")
-    private LocalDateTime completedAt;
+    private Instant completedAt;
 
     @Column(name = "notes", columnDefinition = "TEXT")
     private String notes;

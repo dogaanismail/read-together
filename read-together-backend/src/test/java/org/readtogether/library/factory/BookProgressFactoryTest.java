@@ -7,6 +7,7 @@ import org.readtogether.library.model.request.BookProgressUpdateRequest;
 import org.readtogether.library.fixtures.LibraryRequestFixtures;
 import org.readtogether.library.fixtures.LibraryEntityFixtures;
 import org.readtogether.library.common.enums.BookStatus;
+import org.readtogether.library.model.response.BookProgressResponse;
 
 import java.util.UUID;
 
@@ -15,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DisplayName("BookProgressFactory Tests")
 class BookProgressFactoryTest {
 
-    private static final UUID TEST_USER_ID = UUID.fromString("123e4567-e89b-12d3-a456-426614174000");
+    private static final UUID TEST_USER_ID = UUID.fromString("123e4567-e89b-12d3-a456-426614174016");
     private static final UUID TEST_BOOK_ID = UUID.fromString("123e4567-e89b-12d3-a456-426614174001");
 
     @Test
@@ -63,7 +64,7 @@ class BookProgressFactoryTest {
         assertThat(existingEntity.getPersonalRating()).isEqualTo(updateRequest.getPersonalRating());
         assertThat(existingEntity.getReadingGoalPagesPerDay()).isEqualTo(updateRequest.getReadingGoalPagesPerDay());
         assertThat(existingEntity.isFavorite()).isEqualTo(updateRequest.getIsFavorite());
-        
+
         // Fields that should not change
         assertThat(existingEntity.getId()).isEqualTo(LibraryEntityFixtures.DEFAULT_PROGRESS_ID);
         assertThat(existingEntity.getUserId()).isEqualTo(LibraryEntityFixtures.DEFAULT_USER_ID);
@@ -77,7 +78,7 @@ class BookProgressFactoryTest {
         BookProgressEntity existingEntity = LibraryEntityFixtures.createDefaultBookProgressEntity();
         BookStatus originalStatus = existingEntity.getStatus();
         int originalCurrentPage = existingEntity.getCurrentPage();
-        
+
         BookProgressUpdateRequest partialUpdate = BookProgressUpdateRequest.builder()
                 .progressPercentage(75)
                 .notes("Updated notes only")
@@ -89,11 +90,11 @@ class BookProgressFactoryTest {
         // Then
         assertThat(existingEntity.getProgressPercentage()).isEqualTo(75);
         assertThat(existingEntity.getNotes()).isEqualTo("Updated notes only");
-        
+
         // Unchanged fields should remain the same
         assertThat(existingEntity.getStatus()).isEqualTo(originalStatus);
         assertThat(existingEntity.getCurrentPage()).isEqualTo(originalCurrentPage);
-        assertThat(existingEntity.getPersonalRating()).isEqualTo(4); // From original fixture
+        assertThat(existingEntity.getPersonalRating()).isEqualTo(4);
     }
 
     @Test
@@ -102,7 +103,7 @@ class BookProgressFactoryTest {
         // Given
         BookProgressEntity existingEntity = LibraryEntityFixtures.createDefaultBookProgressEntity();
         String originalNotes = existingEntity.getNotes();
-        
+
         BookProgressUpdateRequest updateWithNulls = BookProgressUpdateRequest.builder()
                 .status(null)
                 .currentPage(null)
@@ -131,7 +132,7 @@ class BookProgressFactoryTest {
         // Given
         BookProgressEntity entity = LibraryEntityFixtures.createDefaultBookProgressEntity();
         assertThat(entity.isFavorite()).isTrue(); // From fixture
-        
+
         BookProgressUpdateRequest toggleOff = LibraryRequestFixtures.createToggleFavoriteRequest(TEST_BOOK_ID, false);
 
         // When
@@ -139,7 +140,7 @@ class BookProgressFactoryTest {
 
         // Then
         assertThat(entity.isFavorite()).isFalse();
-        
+
         // When - toggle back on
         BookProgressUpdateRequest toggleOn = LibraryRequestFixtures.createToggleFavoriteRequest(TEST_BOOK_ID, true);
         BookProgressFactory.updateProgressEntity(entity, toggleOn);
@@ -167,8 +168,6 @@ class BookProgressFactoryTest {
         assertThat(entity.getNotes()).isEqualTo("Finished the book! Great read.");
     }
 
-    /*
-    // TODO: Fix timestamp conversion from Instant to LocalDateTime in BookProgressFactory
     @Test
     @DisplayName("Should create progress response from entity")
     void shouldCreateProgressResponseFromEntity() {
@@ -201,5 +200,5 @@ class BookProgressFactoryTest {
         assertThat(result.getCreatedAt()).isNotNull();
         assertThat(result.getUpdatedAt()).isNotNull();
     }
-    */
+
 }

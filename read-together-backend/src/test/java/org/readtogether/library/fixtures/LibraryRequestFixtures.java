@@ -14,6 +14,7 @@ public class LibraryRequestFixtures {
 
     // BookCreateRequest fixtures
     public static BookCreateRequest createDefaultAddBookRequest() {
+
         return BookCreateRequest.builder()
                 .title("The Great Gatsby")
                 .author("F. Scott Fitzgerald")
@@ -41,7 +42,7 @@ public class LibraryRequestFixtures {
             String source,
             String externalId,
             String coverUrl) {
-        
+
         return BookCreateRequest.builder()
                 .title(title)
                 .author(author)
@@ -62,6 +63,7 @@ public class LibraryRequestFixtures {
     }
 
     public static BookCreateRequest createPublicBookRequest() {
+
         return BookCreateRequest.builder()
                 .title("Public Educational Book")
                 .author("Education Expert")
@@ -80,6 +82,7 @@ public class LibraryRequestFixtures {
     }
 
     public static BookCreateRequest createMinimalBookRequest() {
+
         return BookCreateRequest.builder()
                 .title("Minimal Book")
                 .author("Author Name")
@@ -89,6 +92,7 @@ public class LibraryRequestFixtures {
 
     // BookUpdateRequest fixtures
     public static BookUpdateRequest createDefaultUpdateRequest() {
+
         return BookUpdateRequest.builder()
                 .title("Updated Title")
                 .author("Updated Author")
@@ -104,6 +108,7 @@ public class LibraryRequestFixtures {
     }
 
     public static BookUpdateRequest createPartialUpdateRequest() {
+
         return BookUpdateRequest.builder()
                 .title("Partially Updated Title")
                 .description("Only updating title and description")
@@ -112,6 +117,7 @@ public class LibraryRequestFixtures {
 
     // BookProgressUpdateRequest fixtures
     public static BookProgressUpdateRequest createDefaultUpdateProgressRequest() {
+
         return BookProgressUpdateRequest.builder()
                 .status(BookStatus.IN_PROGRESS)
                 .currentPage(50)
@@ -128,7 +134,7 @@ public class LibraryRequestFixtures {
             UUID bookId,
             Integer progressPercent,
             Integer currentPage) {
-        
+
         return BookProgressUpdateRequest.builder()
                 .status(progressPercent >= 100 ? BookStatus.COMPLETED : BookStatus.IN_PROGRESS)
                 .currentPage(currentPage)
@@ -139,13 +145,14 @@ public class LibraryRequestFixtures {
     public static BookProgressUpdateRequest createToggleFavoriteRequest(
             UUID bookId,
             boolean favorite) {
-        
+
         return BookProgressUpdateRequest.builder()
                 .isFavorite(favorite)
                 .build();
     }
 
     public static BookProgressUpdateRequest createCompleteBookRequest() {
+
         return BookProgressUpdateRequest.builder()
                 .status(BookStatus.COMPLETED)
                 .currentPage(180)
@@ -157,6 +164,7 @@ public class LibraryRequestFixtures {
     }
 
     public static BookProgressUpdateRequest createStartReadingRequest() {
+
         return BookProgressUpdateRequest.builder()
                 .status(BookStatus.IN_PROGRESS)
                 .currentPage(1)
@@ -167,6 +175,7 @@ public class LibraryRequestFixtures {
     }
 
     public static BookProgressUpdateRequest createOnHoldRequest() {
+
         return BookProgressUpdateRequest.builder()
                 .status(BookStatus.ON_HOLD)
                 .notes("Putting this book on hold for now")
@@ -174,6 +183,7 @@ public class LibraryRequestFixtures {
     }
 
     public static BookProgressUpdateRequest createInvalidProgressRequest() {
+
         return BookProgressUpdateRequest.builder()
                 .status(BookStatus.IN_PROGRESS)
                 .currentPage(-1) // Invalid page
@@ -185,7 +195,7 @@ public class LibraryRequestFixtures {
     public static BookProgressUpdateRequest createProgressBoundsRequest(
             int currentPage,
             int progressPercentage) {
-        
+
         return BookProgressUpdateRequest.builder()
                 .status(BookStatus.IN_PROGRESS)
                 .currentPage(currentPage)

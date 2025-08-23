@@ -20,7 +20,6 @@ import org.readtogether.library.repository.BookRepository;
 import org.readtogether.library.repository.BookProgressRepository;
 import org.readtogether.library.fixtures.LibraryEntityFixtures;
 import org.readtogether.library.fixtures.LibraryRequestFixtures;
-import org.readtogether.library.common.enums.BookCategory;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,14 +28,13 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("BookService Tests")
 class BookServiceTest {
 
-    private static final UUID TEST_USER_ID = UUID.fromString("123e4567-e89b-12d3-a456-426614174000");
+    private static final UUID TEST_USER_ID = UUID.fromString("123e4567-e89b-12d3-a456-426614174014");
     private static final UUID TEST_BOOK_ID = UUID.fromString("123e4567-e89b-12d3-a456-426614174001");
 
     @Mock

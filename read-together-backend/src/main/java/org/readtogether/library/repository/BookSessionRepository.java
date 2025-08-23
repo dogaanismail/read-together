@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 
@@ -22,7 +22,7 @@ public interface BookSessionRepository extends JpaRepository<BookSessionEntity, 
     @Query("SELECT bs FROM book_session bs WHERE bs.userId = :userId AND bs.createdAt >= :sinceDate " +
            "ORDER BY bs.createdAt DESC")
     List<BookSessionEntity> findRecentSessionsByUserId(@Param("userId") UUID userId,
-                                                       @Param("sinceDate") LocalDateTime sinceDate);
+                                                       @Param("sinceDate") Instant sinceDate);
 
     @Query("SELECT SUM(bs.readingTimeSeconds) FROM book_session bs WHERE bs.bookId = :bookId AND bs.userId = :userId")
     Long getTotalReadingTimeForUserBook(@Param("userId") UUID userId, @Param("bookId") UUID bookId);

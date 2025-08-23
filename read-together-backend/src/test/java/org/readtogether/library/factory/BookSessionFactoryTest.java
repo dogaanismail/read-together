@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DisplayName("BookSessionFactory Tests")
 class BookSessionFactoryTest {
 
-    private static final UUID TEST_SESSION_ID = UUID.fromString("123e4567-e89b-12d3-a456-426614174000");
+    private static final UUID TEST_SESSION_ID = UUID.fromString("123e4567-e89b-12d3-a456-426614174011");
     private static final UUID TEST_BOOK_ID = UUID.fromString("123e4567-e89b-12d3-a456-426614174001");
     private static final UUID TEST_USER_ID = UUID.fromString("123e4567-e89b-12d3-a456-426614174002");
 

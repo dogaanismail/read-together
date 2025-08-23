@@ -12,9 +12,8 @@ import org.readtogether.library.entity.BookSessionEntity;
 import org.readtogether.library.repository.BookSessionRepository;
 import org.readtogether.library.fixtures.LibraryEntityFixtures;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -24,7 +23,7 @@ import static org.mockito.Mockito.*;
 @DisplayName("BookSessionService Tests")
 class BookSessionServiceTest {
 
-    private static final UUID TEST_USER_ID = UUID.fromString("123e4567-e89b-12d3-a456-426614174000");
+    private static final UUID TEST_USER_ID = UUID.fromString("123e4567-e89b-12d3-a456-426614174013");
     private static final UUID TEST_BOOK_ID = UUID.fromString("123e4567-e89b-12d3-a456-426614174001");
     private static final UUID TEST_SESSION_ID = UUID.fromString("123e4567-e89b-12d3-a456-426614174002");
 
@@ -54,7 +53,7 @@ class BookSessionServiceTest {
 
         // Then
         assertThat(result).hasSize(1);
-        assertThat(result.get(0)).isEqualTo(testSessionEntity);
+        assertThat(result.getFirst()).isEqualTo(testSessionEntity);
         verify(bookSessionRepository).findByUserIdOrderByCreatedAtDesc(TEST_USER_ID);
     }
 
@@ -71,7 +70,7 @@ class BookSessionServiceTest {
 
         // Then
         assertThat(result).hasSize(1);
-        assertThat(result.get(0)).isEqualTo(testSessionEntity);
+        assertThat(result.getFirst()).isEqualTo(testSessionEntity);
         verify(bookSessionRepository).findByUserIdAndBookIdOrderByCreatedAtDesc(TEST_USER_ID, TEST_BOOK_ID);
     }
 
@@ -81,9 +80,8 @@ class BookSessionServiceTest {
         // Given
         int days = 30;
         List<BookSessionEntity> recentSessions = List.of(testSessionEntity);
-        LocalDateTime expectedDate = LocalDateTime.now().minusDays(days);
-        
-        when(bookSessionRepository.findRecentSessionsByUserId(eq(TEST_USER_ID), any(LocalDateTime.class)))
+
+        when(bookSessionRepository.findRecentSessionsByUserId(eq(TEST_USER_ID), any(Instant.class)))
                 .thenReturn(recentSessions);
 
         // When
@@ -91,7 +89,7 @@ class BookSessionServiceTest {
 
         // Then
         assertThat(result).hasSize(1);
-        verify(bookSessionRepository).findRecentSessionsByUserId(eq(TEST_USER_ID), any(LocalDateTime.class));
+        verify(bookSessionRepository).findRecentSessionsByUserId(eq(TEST_USER_ID), any(Instant.class));
     }
 
     @Test

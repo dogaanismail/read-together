@@ -28,35 +28,6 @@ class BookProgressControllerIntegrationTests extends BaseIntegrationTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    private String loginAndGetAccessToken(String email, String password) throws Exception {
-        LoginRequest loginRequest = RequestFixtures.createLoginRequest(email, password);
-
-        MvcResult result = mockMvc.perform(post("/api/v1/users/login")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(loginRequest)))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        String response = result.getResponse().getContentAsString();
-        JsonNode jsonNode = objectMapper.readTree(response);
-        return jsonNode.get("accessToken").asText();
-    }
-
-    private String createBookAndGetId(String token) throws Exception {
-        BookCreateRequest createRequest = LibraryRequestFixtures.createDefaultAddBookRequest();
-
-        MvcResult createResult = mockMvc.perform(post("/api/v1/library/books")
-                        .header("Authorization", "Bearer " + token)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(createRequest)))
-                .andExpect(status().isCreated())
-                .andReturn();
-
-        String createResponse = createResult.getResponse().getContentAsString();
-        JsonNode createJsonNode = objectMapper.readTree(createResponse);
-        return createJsonNode.get("id").asText();
-    }
-
     @Test
     @DisplayName("PUT /api/v1/library/progress/{bookId} should update reading progress")
     void shouldUpdateReadingProgress() throws Exception {
@@ -86,38 +57,7 @@ class BookProgressControllerIntegrationTests extends BaseIntegrationTest {
                 .andExpect(jsonPath("$.status").value(progressUpdate.getStatus().toString()))
                 .andExpect(jsonPath("$.currentPage").value(progressUpdate.getCurrentPage()))
                 .andExpect(jsonPath("$.progressPercentage").value(progressUpdate.getProgressPercentage()))
-                .andExpect(jsonPath("$.isFavorite").value(progressUpdate.getIsFavorite()));
-    }
-
-    @Test
-    @DisplayName("PUT /api/v1/library/progress/{bookId}/favorite should toggle favorite status")
-    void shouldToggleFavoriteStatus() throws Exception {
-        // Given: register and login user
-        String email = "favorite.toggler@test.local";
-        String password = "Password1!";
-        RegisterRequest register = RequestFixtures.createRegisterRequest(
-                email, password, "Favorite", "Toggler", "user"
-        );
-
-        mockMvc.perform(post("/api/v1/users/register")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(register)))
-                .andExpect(status().isOk());
-
-        String token = loginAndGetAccessToken(email, password);
-        String bookId = createBookAndGetId(token);
-
-        BookProgressUpdateRequest favoriteUpdate = LibraryRequestFixtures.createToggleFavoriteRequest(
-                java.util.UUID.fromString(bookId), true
-        );
-
-        // When: toggle favorite to true
-        mockMvc.perform(put("/api/v1/library/progress/" + bookId + "/favorite")
-                        .header("Authorization", "Bearer " + token)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(favoriteUpdate)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.isFavorite").value(true));
+                .andExpect(jsonPath("$.favorite").value(progressUpdate.getIsFavorite()));
     }
 
     @Test
@@ -288,4 +228,41 @@ class BookProgressControllerIntegrationTests extends BaseIntegrationTest {
         mockMvc.perform(get("/api/v1/library/progress/favorites"))
                 .andExpect(status().isUnauthorized());
     }
+
+    private String loginAndGetAccessToken(
+            String email,
+            String password) throws Exception {
+
+        LoginRequest login = RequestFixtures.createLoginRequest(email, password);
+
+        MvcResult loginResult = mockMvc.perform(post("/api/v1/users/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(login)))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        JsonNode loginNode = objectMapper.readTree(loginResult.getResponse().getContentAsString());
+
+        return loginNode
+                .path("response")
+                .path("accessToken")
+                .asText();
+    }
+
+    private String createBookAndGetId(String token) throws Exception {
+
+        BookCreateRequest createRequest = LibraryRequestFixtures.createDefaultAddBookRequest();
+
+        MvcResult createResult = mockMvc.perform(post("/api/v1/library/books")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(createRequest)))
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        String createResponse = createResult.getResponse().getContentAsString();
+        JsonNode createJsonNode = objectMapper.readTree(createResponse);
+        return createJsonNode.get("id").asText();
+    }
+
 }

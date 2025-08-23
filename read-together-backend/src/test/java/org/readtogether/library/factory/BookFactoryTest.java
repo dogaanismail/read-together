@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DisplayName("BookFactory Tests")
 class BookFactoryTest {
 
-    private static final UUID TEST_USER_ID = UUID.fromString("123e4567-e89b-12d3-a456-426614174000");
+    public static final UUID TEST_USER_ID = UUID.fromString("123e4567-e89b-12d3-a456-426614174015");
 
     @Test
     @DisplayName("Should create book entity from add request")
@@ -65,7 +65,7 @@ class BookFactoryTest {
         assertThat(result.getAuthor()).isEqualTo("Author Name");
         assertThat(result.getCategory()).isEqualTo(BookCategory.OTHER);
         assertThat(result.getAddedByUserId()).isEqualTo(TEST_USER_ID);
-        
+
         // Default values
         assertThat(result.getLanguage()).isEqualTo("en"); // Default language
         assertThat(result.isPublic()).isFalse(); // Default visibility
@@ -89,7 +89,7 @@ class BookFactoryTest {
                 .title("Test Book")
                 .author("Test Author")
                 .category(BookCategory.FICTION)
-                .language(null) // Explicitly null
+                .language(null)
                 .build();
 
         // When
@@ -120,8 +120,8 @@ class BookFactoryTest {
         assertThat(existingEntity.getPublicationYear()).isEqualTo(updateRequest.getPublicationYear());
         assertThat(existingEntity.isPublic()).isEqualTo(updateRequest.getIsPublic());
         assertThat(existingEntity.getDifficultyLevel()).isEqualTo(updateRequest.getDifficultyLevel());
-        
-        // These fields should not change during update
+
+        // These fields should not change during the update
         assertThat(existingEntity.getId()).isEqualTo(LibraryEntityFixtures.DEFAULT_BOOK_ID);
         assertThat(existingEntity.getAddedByUserId()).isEqualTo(LibraryEntityFixtures.DEFAULT_USER_ID);
         assertThat(existingEntity.getIsbn()).isEqualTo("9780743273565");
@@ -135,7 +135,7 @@ class BookFactoryTest {
         BookEntity existingEntity = LibraryEntityFixtures.createDefaultBookEntity();
         String originalAuthor = existingEntity.getAuthor();
         Integer originalPages = existingEntity.getTotalPages();
-        
+
         BookUpdateRequest partialUpdate = LibraryRequestFixtures.createPartialUpdateRequest();
 
         // When
@@ -144,17 +144,16 @@ class BookFactoryTest {
         // Then
         assertThat(existingEntity.getTitle()).isEqualTo("Partially Updated Title");
         assertThat(existingEntity.getDescription()).isEqualTo("Only updating title and description");
-        
+
         // Unchanged fields should remain the same
         assertThat(existingEntity.getAuthor()).isEqualTo(originalAuthor);
         assertThat(existingEntity.getTotalPages()).isEqualTo(originalPages);
     }
 
-    /*
+
     @Test
     @DisplayName("Should create book response from entity")
     void shouldCreateBookResponseFromEntity() {
-        // TODO: Fix timestamp conversion from Instant to LocalDateTime in BookFactory
         // Given
         BookEntity entity = LibraryEntityFixtures.createDefaultBookEntity();
         // Set timestamps that would be set by JPA
@@ -190,16 +189,15 @@ class BookFactoryTest {
     @Test
     @DisplayName("Should create book responses from list of entities")
     void shouldCreateBookResponsesFromListOfEntities() {
-        // TODO: Fix timestamp conversion from Instant to LocalDateTime in BookFactory
         // Given
         BookEntity entity1 = LibraryEntityFixtures.createDefaultBookEntity();
         entity1.setCreatedAt(java.time.Instant.now().minusSeconds(86400));
         entity1.setUpdatedAt(java.time.Instant.now());
-        
+
         BookEntity entity2 = LibraryEntityFixtures.createPublicBookEntity();
         entity2.setCreatedAt(java.time.Instant.now().minusSeconds(86400));
         entity2.setUpdatedAt(java.time.Instant.now());
-        
+
         List<BookEntity> entities = List.of(entity1, entity2);
 
         // When
@@ -212,7 +210,7 @@ class BookFactoryTest {
         assertThat(results.get(0).isPublic()).isFalse();
         assertThat(results.get(1).isPublic()).isTrue();
     }
-    */
+
 
     @Test
     @DisplayName("Should create empty list when given empty entity list")

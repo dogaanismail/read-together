@@ -13,13 +13,11 @@ import org.readtogether.library.model.request.BookProgressUpdateRequest;
 import org.readtogether.library.repository.BookProgressRepository;
 import org.readtogether.library.fixtures.LibraryEntityFixtures;
 import org.readtogether.library.fixtures.LibraryRequestFixtures;
-import org.readtogether.library.common.enums.BookStatus;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -27,7 +25,7 @@ import static org.mockito.Mockito.*;
 @DisplayName("BookProgressService Tests")
 class BookProgressServiceTest {
 
-    private static final UUID TEST_USER_ID = UUID.fromString("123e4567-e89b-12d3-a456-426614174000");
+    private static final UUID TEST_USER_ID = UUID.fromString("123e4567-e89b-12d3-a456-426614174012");
     private static final UUID TEST_BOOK_ID = UUID.fromString("123e4567-e89b-12d3-a456-426614174001");
 
     @Mock

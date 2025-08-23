@@ -7,19 +7,20 @@ import org.readtogether.library.entity.BookSessionEntity;
 import org.readtogether.library.common.enums.BookCategory;
 import org.readtogether.library.common.enums.BookStatus;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
 @UtilityClass
 public class LibraryEntityFixtures {
 
-    public static final UUID DEFAULT_USER_ID = UUID.fromString("123e4567-e89b-12d3-a456-426614174000");
+    public static final UUID DEFAULT_USER_ID = UUID.fromString("123e4567-e89b-12d3-a456-426614174010");
     public static final UUID DEFAULT_BOOK_ID = UUID.fromString("123e4567-e89b-12d3-a456-426614174001");
     public static final UUID DEFAULT_PROGRESS_ID = UUID.fromString("123e4567-e89b-12d3-a456-426614174002");
     public static final UUID DEFAULT_SESSION_ID = UUID.fromString("123e4567-e89b-12d3-a456-426614174003");
 
-    // BookEntity fixtures
     public static BookEntity createDefaultBookEntity() {
+
         return BookEntity.builder()
                 .id(DEFAULT_BOOK_ID)
                 .title("The Great Gatsby")
@@ -49,7 +50,7 @@ public class LibraryEntityFixtures {
             String author,
             BookCategory category,
             boolean isPublic) {
-        
+
         return BookEntity.builder()
                 .id(id)
                 .title(title)
@@ -76,7 +77,7 @@ public class LibraryEntityFixtures {
             String author,
             BookCategory category,
             boolean isPublic) {
-        
+
         return BookEntity.builder()
                 .title(title)
                 .author(author)
@@ -96,6 +97,7 @@ public class LibraryEntityFixtures {
     }
 
     public static BookEntity createPublicBookEntity() {
+
         return createBookEntity(
                 UUID.randomUUID(),
                 DEFAULT_USER_ID,
@@ -107,8 +109,8 @@ public class LibraryEntityFixtures {
         );
     }
 
-    // BookProgressEntity fixtures
     public static BookProgressEntity createDefaultBookProgressEntity() {
+
         return BookProgressEntity.builder()
                 .id(DEFAULT_PROGRESS_ID)
                 .userId(DEFAULT_USER_ID)
@@ -118,8 +120,8 @@ public class LibraryEntityFixtures {
                 .progressPercentage(25)
                 .totalSessionsCompleted(5)
                 .totalReadingTimeSeconds(3600L)
-                .startedReadingAt(LocalDateTime.now().minusDays(10))
-                .lastReadAt(LocalDateTime.now().minusDays(1))
+                .startedReadingAt(Instant.now().minus(10, ChronoUnit.DAYS))
+                .lastReadAt(Instant.now().minus(1, ChronoUnit.DAYS))
                 .notes("Great book so far!")
                 .isFavorite(true)
                 .personalRating(4)
@@ -135,7 +137,7 @@ public class LibraryEntityFixtures {
             int currentPage,
             int progressPercentage,
             boolean isFavorite) {
-        
+
         return BookProgressEntity.builder()
                 .id(id)
                 .userId(userId)
@@ -145,8 +147,8 @@ public class LibraryEntityFixtures {
                 .progressPercentage(progressPercentage)
                 .totalSessionsCompleted(3)
                 .totalReadingTimeSeconds(1800L)
-                .startedReadingAt(LocalDateTime.now().minusDays(5))
-                .lastReadAt(LocalDateTime.now().minusDays(1))
+                .startedReadingAt(Instant.now().minus(5, ChronoUnit.DAYS))
+                .lastReadAt(Instant.now().minus(1, ChronoUnit.DAYS))
                 .isFavorite(isFavorite)
                 .personalRating(status == BookStatus.COMPLETED ? 5 : null)
                 .readingGoalPagesPerDay(15)
@@ -160,7 +162,7 @@ public class LibraryEntityFixtures {
             int currentPage,
             int progressPercentage,
             boolean isFavorite) {
-        
+
         return BookProgressEntity.builder()
                 .userId(userId)
                 .bookId(bookId)
@@ -169,8 +171,8 @@ public class LibraryEntityFixtures {
                 .progressPercentage(progressPercentage)
                 .totalSessionsCompleted(3)
                 .totalReadingTimeSeconds(1800L)
-                .startedReadingAt(LocalDateTime.now().minusDays(5))
-                .lastReadAt(LocalDateTime.now().minusDays(1))
+                .startedReadingAt(Instant.now().minus(5, ChronoUnit.DAYS))
+                .lastReadAt(Instant.now().minus(1, ChronoUnit.DAYS))
                 .isFavorite(isFavorite)
                 .personalRating(status == BookStatus.COMPLETED ? 5 : null)
                 .readingGoalPagesPerDay(15)
@@ -178,6 +180,7 @@ public class LibraryEntityFixtures {
     }
 
     public static BookProgressEntity createCompletedBookProgressEntity() {
+
         return createBookProgressEntity(
                 UUID.randomUUID(),
                 DEFAULT_USER_ID,
@@ -189,8 +192,8 @@ public class LibraryEntityFixtures {
         );
     }
 
-    // BookSessionEntity fixtures
     public static BookSessionEntity createDefaultBookSessionEntity() {
+
         return BookSessionEntity.builder()
                 .id(DEFAULT_SESSION_ID)
                 .userId(DEFAULT_USER_ID)
@@ -215,7 +218,7 @@ public class LibraryEntityFixtures {
             int pagesRead,
             int startPage,
             int endPage) {
-        
+
         return BookSessionEntity.builder()
                 .id(id)
                 .userId(userId)
@@ -239,7 +242,7 @@ public class LibraryEntityFixtures {
             int pagesRead,
             int startPage,
             int endPage) {
-        
+
         return BookSessionEntity.builder()
                 .userId(userId)
                 .bookId(bookId)
@@ -255,6 +258,7 @@ public class LibraryEntityFixtures {
     }
 
     public static BookSessionEntity createRecentBookSessionEntity() {
+
         return createBookSessionEntity(
                 UUID.randomUUID(),
                 DEFAULT_USER_ID,

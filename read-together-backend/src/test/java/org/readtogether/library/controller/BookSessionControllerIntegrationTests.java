@@ -7,11 +7,15 @@ import org.junit.jupiter.api.Test;
 import org.readtogether.common.BaseIntegrationTest;
 import org.readtogether.library.fixtures.LibraryRequestFixtures;
 import org.readtogether.library.model.request.BookCreateRequest;
+import org.readtogether.library.service.BookSessionService;
+import org.readtogether.session.fixtures.SessionRequestFixtures;
+import org.readtogether.session.model.request.SessionCreateRequest;
 import org.readtogether.user.fixtures.RequestFixtures;
 import org.readtogether.user.model.request.LoginRequest;
 import org.readtogether.user.model.request.RegisterRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -29,34 +33,8 @@ class BookSessionControllerIntegrationTests extends BaseIntegrationTest {
     @Autowired
     private ObjectMapper objectMapper;
 
-    private String loginAndGetAccessToken(String email, String password) throws Exception {
-        LoginRequest loginRequest = RequestFixtures.createLoginRequest(email, password);
-
-        MvcResult result = mockMvc.perform(post("/api/v1/users/login")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(loginRequest)))
-                .andExpect(status().isOk())
-                .andReturn();
-
-        String response = result.getResponse().getContentAsString();
-        JsonNode jsonNode = objectMapper.readTree(response);
-        return jsonNode.get("accessToken").asText();
-    }
-
-    private String createBookAndGetId(String token) throws Exception {
-        BookCreateRequest createRequest = LibraryRequestFixtures.createDefaultAddBookRequest();
-
-        MvcResult createResult = mockMvc.perform(post("/api/v1/library/books")
-                        .header("Authorization", "Bearer " + token)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(createRequest)))
-                .andExpect(status().isCreated())
-                .andReturn();
-
-        String createResponse = createResult.getResponse().getContentAsString();
-        JsonNode createJsonNode = objectMapper.readTree(createResponse);
-        return createJsonNode.get("id").asText();
-    }
+    @Autowired
+    private BookSessionService bookSessionService;
 
     @Test
     @DisplayName("GET /api/v1/library/sessions/user should return user's reading sessions")
@@ -124,16 +102,23 @@ class BookSessionControllerIntegrationTests extends BaseIntegrationTest {
 
         String token = loginAndGetAccessToken(email, password);
 
-        // Get a user ID for the header (note: this endpoint seems to require User-ID header instead of auth)
-        // Let's assume we need to create a session first or this endpoint works differently
-        String userId = UUID.randomUUID().toString(); // This might need to be the actual user ID
+        UUID userId = UUID.fromString("123e4567-e89b-12d3-a456-426614174001");
+        UUID sessionId = UUID.fromString(createSessionAndGetId(token));
+        UUID bookId = UUID.fromString(createBookAndGetId(token));
+
+        bookSessionService.createBookSession(sessionId, bookId, userId, 0, 10 );
 
         // When: get recent sessions
         mockMvc.perform(get("/api/v1/library/sessions/user/recent")
                         .param("days", "30")
-                        .header("User-ID", userId))
+                        .header("User-ID", userId.toString())
+                        .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$").isArray());
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$[0].sessionId").value(sessionId.toString()))
+                .andExpect(jsonPath("$[0].bookId").value(bookId.toString()))
+                .andExpect(jsonPath("$[0].userId").value(userId.toString()))
+                .andExpect(jsonPath("$[0].pagesRead").value(0));
     }
 
     @Test
@@ -154,7 +139,7 @@ class BookSessionControllerIntegrationTests extends BaseIntegrationTest {
         String token = loginAndGetAccessToken(email, password);
         String bookId = createBookAndGetId(token);
 
-        // When: get total reading time for book
+        // When: get total reading time for a book
         mockMvc.perform(get("/api/v1/library/sessions/stats/reading-time/" + bookId)
                         .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
@@ -179,7 +164,7 @@ class BookSessionControllerIntegrationTests extends BaseIntegrationTest {
         String token = loginAndGetAccessToken(email, password);
         String bookId = createBookAndGetId(token);
 
-        // When: get total pages read for book
+        // When: get total pages read for a book
         mockMvc.perform(get("/api/v1/library/sessions/stats/pages-read/" + bookId)
                         .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
@@ -204,7 +189,7 @@ class BookSessionControllerIntegrationTests extends BaseIntegrationTest {
         String token = loginAndGetAccessToken(email, password);
         String bookId = createBookAndGetId(token);
 
-        // When: get session count for book
+        // When: get session count for a book
         mockMvc.perform(get("/api/v1/library/sessions/stats/session-count/" + bookId)
                         .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
@@ -230,10 +215,10 @@ class BookSessionControllerIntegrationTests extends BaseIntegrationTest {
 
         // For this test, we would need to create a session first
         // Since we don't have a POST endpoint for creating sessions in the controller,
-        // let's test with a mock session ID
+        // let's test it with a mock session ID
         String sessionId = UUID.randomUUID().toString();
 
-        // When: delete session (this might return 404 if session doesn't exist)
+        // When: delete session (this might return 404 if the session doesn't exist)
         mockMvc.perform(delete("/api/v1/library/sessions/" + sessionId)
                         .header("Authorization", "Bearer " + token))
                 .andExpect(status().isNoContent());
@@ -259,7 +244,7 @@ class BookSessionControllerIntegrationTests extends BaseIntegrationTest {
         // Test with a non-existent session ID
         String sessionId = UUID.randomUUID().toString();
 
-        // When: check if session exists
+        // When: check if a session exists
         mockMvc.perform(get("/api/v1/library/sessions/" + sessionId + "/exists")
                         .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
@@ -270,7 +255,6 @@ class BookSessionControllerIntegrationTests extends BaseIntegrationTest {
     @DisplayName("Should return 401 when not authenticated")
     void shouldReturn401WhenNotAuthenticated() throws Exception {
         String bookId = "123e4567-e89b-12d3-a456-426614174001";
-        String sessionId = "123e4567-e89b-12d3-a456-426614174002";
 
         // When: try to get user sessions without authentication
         mockMvc.perform(get("/api/v1/library/sessions/user"))
@@ -309,4 +293,71 @@ class BookSessionControllerIntegrationTests extends BaseIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string("0.0")); // Should be 0.0 initially
     }
+
+    private String loginAndGetAccessToken(
+            String email,
+            String password) throws Exception {
+
+        LoginRequest login = RequestFixtures.createLoginRequest(email, password);
+
+        MvcResult loginResult = mockMvc.perform(post("/api/v1/users/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(login)))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        JsonNode loginNode = objectMapper.readTree(loginResult.getResponse().getContentAsString());
+
+        return loginNode
+                .path("response")
+                .path("accessToken")
+                .asText();
+    }
+
+    private String createBookAndGetId(String token) throws Exception {
+        BookCreateRequest createRequest = LibraryRequestFixtures.createDefaultAddBookRequest();
+
+        MvcResult createResult = mockMvc.perform(post("/api/v1/library/books")
+                        .header("Authorization", "Bearer " + token)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(createRequest)))
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        String createResponse = createResult.getResponse().getContentAsString();
+        JsonNode createJsonNode = objectMapper.readTree(createResponse);
+        return createJsonNode.get("id").asText();
+    }
+
+    private String createSessionAndGetId(String token) throws Exception {
+
+        SessionCreateRequest request = SessionRequestFixtures.createPublicVideoCreateRequest();
+        MockMultipartFile file = new MockMultipartFile(
+                "file",
+                "test-video.mp4",
+                "video/mp4",
+                "fake video content".getBytes()
+        );
+        MockMultipartFile sessionPart = new MockMultipartFile(
+                "session",
+                "",
+                "application/json",
+                objectMapper.writeValueAsBytes(request)
+        );
+
+        MvcResult createResult = mockMvc.perform(multipart("/api/v1/sessions/sync")
+                        .file(sessionPart)
+                        .file(file)
+                        .header("Authorization", "Bearer " + token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.title").value(request.getTitle()))
+                .andExpect(jsonPath("$.mediaType").value(request.getMediaType().toString()))
+                .andExpect(jsonPath("$.public").value(request.isPublic()))
+                .andReturn();
+
+        String createResponse = createResult.getResponse().getContentAsString();
+        JsonNode createJsonNode = objectMapper.readTree(createResponse);
+        return createJsonNode.get("id").asText();
+    }
+
 }
