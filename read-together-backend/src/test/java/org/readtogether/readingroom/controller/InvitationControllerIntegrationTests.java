@@ -35,15 +35,53 @@ class InvitationControllerIntegrationTests extends BaseIntegrationTest {
     @Test
     @DisplayName("GET /api/v1/invitations/my-invitations should return user's pending invitations")
     void shouldGetMyPendingInvitations() throws Exception {
-        // Given: user with authenticated session
-        String email = "invitee@test.local";
-        String password = "Password1!";
-        String token = registerAndLogin(email, password, "Invitee", "User");
+        // Given: host creates room
+        String hostEmail = "host@test.local";
+        String hostPassword = "Password1!";
+        String hostToken = registerAndLogin(hostEmail, hostPassword, "Host", "User");
 
+        // Create room
+        CreateReadingRoomRequest createRequest = ReadingRoomRequestFixtures.createDefaultCreateReadingRoomRequest();
+        MvcResult roomResult = mockMvc.perform(post("/api/v1/rooms")
+                        .header("Authorization", "Bearer " + hostToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(createRequest)))
+                .andExpect(status().isCreated())
+                .andReturn();
+
+        JsonNode roomNode = objectMapper.readTree(roomResult.getResponse().getContentAsString());
+        String roomId = roomNode.path("id").asText();
+
+        // Given: invitee user
+        String inviteeEmail = "invitee@test.local";
+        String inviteePassword = "Password1!";
+        String inviteeToken = registerAndLogin(inviteeEmail, inviteePassword, "Invitee", "User");
+
+        // Create invitation for the invitee
+        InviteToRoomRequest inviteRequest = ReadingRoomRequestFixtures.createInviteToRoomRequest(
+                InvitationType.EMAIL,
+                List.of(inviteeEmail),
+                null,
+                "Join our reading room!",
+                24
+        );
+
+        mockMvc.perform(post("/api/v1/rooms/" + roomId + "/invitations")
+                        .header("Authorization", "Bearer " + hostToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(inviteRequest)))
+                .andExpect(status().isCreated());
+
+        // When: invitee checks their pending invitations
         mockMvc.perform(get("/api/v1/invitations/my-invitations")
-                        .header("Authorization", "Bearer " + token))
+                        .header("Authorization", "Bearer " + inviteeToken))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$").isArray());
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$.length()").value(1))
+                .andExpect(jsonPath("$[0].readingRoomId").value(roomId))
+                .andExpect(jsonPath("$[0].invitationType").value("EMAIL"))
+                .andExpect(jsonPath("$[0].status").value("PENDING"))
+                .andExpect(jsonPath("$[0].message").value("Join our reading room!"));
     }
 
     @Test
