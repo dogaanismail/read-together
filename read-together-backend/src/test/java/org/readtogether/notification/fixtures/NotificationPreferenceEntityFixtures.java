@@ -16,7 +16,9 @@ public class NotificationPreferenceEntityFixtures {
         return createDefaultPreferencesEntity(DEFAULT_USER_ID);
     }
 
-    public static NotificationPreferenceEntity createDefaultPreferencesEntity(UUID userId) {
+    public static NotificationPreferenceEntity createDefaultPreferencesEntity(
+            UUID userId) {
+
         return NotificationPreferenceEntity.builder()
                 .id(UUID.randomUUID())
                 .userId(userId)
@@ -37,7 +39,9 @@ public class NotificationPreferenceEntityFixtures {
                 .build();
     }
 
-    public static NotificationPreferenceEntity createAllDisabledPreferences(UUID userId) {
+    public static NotificationPreferenceEntity createAllDisabledPreferences(
+            UUID userId) {
+
         return NotificationPreferenceEntity.builder()
                 .id(UUID.randomUUID())
                 .userId(userId)
@@ -58,7 +62,9 @@ public class NotificationPreferenceEntityFixtures {
                 .build();
     }
 
-    public static NotificationPreferenceEntity createMinimalPreferences(UUID userId) {
+    public static NotificationPreferenceEntity createMinimalPreferences(
+            UUID userId) {
+
         return NotificationPreferenceEntity.builder()
                 .id(UUID.randomUUID())
                 .userId(userId)

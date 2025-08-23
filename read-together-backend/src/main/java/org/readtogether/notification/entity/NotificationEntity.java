@@ -6,7 +6,7 @@ import lombok.experimental.SuperBuilder;
 import org.readtogether.common.entity.BaseEntity;
 import org.readtogether.notification.common.enums.NotificationType;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.UUID;
 
 @Getter
@@ -47,6 +47,6 @@ public class NotificationEntity extends BaseEntity {
     private String metadata; // JSON string for additional data
 
     @Column(name = "read_at")
-    private LocalDateTime readAt;
+    private Instant readAt;
 
 }

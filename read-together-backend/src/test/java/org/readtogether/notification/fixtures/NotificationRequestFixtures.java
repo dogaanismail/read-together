@@ -8,6 +8,7 @@ import org.readtogether.notification.model.NotificationPreferencesUpdateRequest;
 public class NotificationRequestFixtures {
 
     public static NotificationPreferencesUpdateRequest createDefaultPreferencesUpdateRequest() {
+
         return NotificationPreferencesUpdateRequest.builder()
                 .emailNotifications(true)
                 .pushNotifications(true)
@@ -50,7 +51,10 @@ public class NotificationRequestFixtures {
                 .build();
     }
 
-    public static PushSubscriptionRequest createPushSubscriptionRequest(String endpoint, String keys) {
+    public static PushSubscriptionRequest createPushSubscriptionRequest(
+            String endpoint,
+            String keys) {
+
         PushSubscriptionRequest request = new PushSubscriptionRequest();
         request.endpoint = endpoint;
         request.keys = keys;
@@ -58,6 +62,7 @@ public class NotificationRequestFixtures {
     }
 
     public static PushSubscriptionRequest createDefaultPushSubscriptionRequest() {
+
         return createPushSubscriptionRequest(
                 "https://push.example.com/subscription/12345",
                 "{\"p256dh\":\"BNcRdreALRFXTkOOUHK1EtK2wtaz5Ry4YfYCA_0QTpQtUbVlUls0VJXg7A8u-Ts1XbjhazAkj7I99e8QcYP7DkM\",\"auth\":\"tBHItJI5svbpez7KI4CCXg\"}"
@@ -65,6 +70,7 @@ public class NotificationRequestFixtures {
     }
 
     public static PushSubscriptionRequest createInvalidPushSubscriptionRequest() {
+
         return createPushSubscriptionRequest(
                 "invalid-endpoint",
                 "invalid-keys"

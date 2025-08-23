@@ -12,13 +12,11 @@ import org.readtogether.notification.model.NotificationPreferencesUpdateRequest;
 import org.readtogether.notification.fixtures.NotificationPreferenceEntityFixtures;
 import org.readtogether.notification.fixtures.NotificationRequestFixtures;
 
-import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -115,7 +113,7 @@ class NotificationPreferencesServiceTests {
         
         verify(preferencesRepository).findByUserId(userId);
         verify(preferencesRepository).save(any(NotificationPreferenceEntity.class));
-        // Note: updatePreferences creates entity from DTO, doesn't call existsByUserId or createDefaultPreferences
+        // Note: updatePreferences creates an entity from DTO, doesn't call existsByUserId or createDefaultPreferences
     }
 
     @Test

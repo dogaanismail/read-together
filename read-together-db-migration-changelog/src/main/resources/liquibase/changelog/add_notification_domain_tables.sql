@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS notifications (
     message VARCHAR(1000) NOT NULL,
     is_read BOOLEAN NOT NULL DEFAULT FALSE,
     metadata TEXT,
-    read_at TIMESTAMP,
+    read_at TIMESTAMPTZ,
     created_at TIMESTAMPTZ NOT NULL,
     created_by VARCHAR(255) NOT NULL DEFAULT 'anonymousUser',
     updated_at TIMESTAMPTZ NOT NULL,

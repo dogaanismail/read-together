@@ -6,9 +6,6 @@ import org.readtogether.notification.entity.NotificationEntity;
 import org.readtogether.notification.model.NotificationResponse;
 import org.readtogether.notification.fixtures.NotificationEntityFixtures;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("NotificationResponseFactory Tests")
@@ -36,7 +33,7 @@ class NotificationResponseFactoryTests {
         assertThat(result.getTitle()).isEqualTo(entity.getTitle());
         assertThat(result.getMessage()).isEqualTo(entity.getMessage());
         assertThat(result.isRead()).isEqualTo(entity.isRead());
-        assertThat(result.getCreatedAt()).isEqualTo(LocalDateTime.ofInstant(entity.getCreatedAt(), ZoneId.systemDefault()));
+        assertThat(result.getCreatedAt()).isEqualTo(entity.getCreatedAt());
         assertThat(result.getReadAt()).isEqualTo(entity.getReadAt());
         assertThat(result.getUserName()).isEqualTo(userName);
         assertThat(result.getUserAvatar()).isEqualTo(userAvatar);

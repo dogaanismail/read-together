@@ -1,6 +1,5 @@
 package org.readtogether.notification.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,13 +9,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.readtogether.notification.entity.NotificationEntity;
 import org.readtogether.notification.repository.NotificationRepository;
 import org.readtogether.notification.fixtures.NotificationEntityFixtures;
-import org.readtogether.infrastructure.websocket.service.WebSocketNotificationService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -32,18 +30,6 @@ class NotificationServiceTests {
 
     @Mock
     private NotificationRepository notificationRepository;
-
-    @Mock
-    private WebSocketNotificationService webSocketService;
-
-    @Mock
-    private NotificationPreferencesService preferencesService;
-
-    @Mock
-    private NotificationProviderService providerService;
-
-    @Mock
-    private ObjectMapper objectMapper;
 
     @InjectMocks
     private NotificationService notificationService;
@@ -101,7 +87,7 @@ class NotificationServiceTests {
         UUID notificationId = UUID.randomUUID();
         UUID userId = NotificationEntityFixtures.DEFAULT_USER_ID;
         
-        when(notificationRepository.markAsRead(eq(notificationId), eq(userId), any(LocalDateTime.class)))
+        when(notificationRepository.markAsRead(eq(notificationId), eq(userId), any(Instant.class)))
                 .thenReturn(1); // 1 row updated
 
         // When
@@ -109,7 +95,7 @@ class NotificationServiceTests {
 
         // Then
         assertThat(result).isTrue();
-        verify(notificationRepository).markAsRead(eq(notificationId), eq(userId), any(LocalDateTime.class));
+        verify(notificationRepository).markAsRead(eq(notificationId), eq(userId), any(Instant.class));
     }
 
     @Test
@@ -119,15 +105,15 @@ class NotificationServiceTests {
         UUID notificationId = UUID.randomUUID();
         UUID userId = NotificationEntityFixtures.DEFAULT_USER_ID;
         
-        when(notificationRepository.markAsRead(eq(notificationId), eq(userId), any(LocalDateTime.class)))
-                .thenReturn(0); // 0 rows updated (notification not found or not owned by user)
+        when(notificationRepository.markAsRead(eq(notificationId), eq(userId), any(Instant.class)))
+                .thenReturn(0); // 0 rows updated (notification not found or not owned by the user)
 
         // When
         boolean result = notificationService.markAsRead(notificationId, userId);
 
         // Then
         assertThat(result).isFalse();
-        verify(notificationRepository).markAsRead(eq(notificationId), eq(userId), any(LocalDateTime.class));
+        verify(notificationRepository).markAsRead(eq(notificationId), eq(userId), any(Instant.class));
     }
 
     @Test
@@ -137,7 +123,7 @@ class NotificationServiceTests {
         UUID userId = NotificationEntityFixtures.DEFAULT_USER_ID;
         int expectedUpdatedCount = 3;
         
-        when(notificationRepository.markAllAsRead(eq(userId), any(LocalDateTime.class)))
+        when(notificationRepository.markAllAsRead(eq(userId), any(Instant.class)))
                 .thenReturn(expectedUpdatedCount);
 
         // When
@@ -145,7 +131,7 @@ class NotificationServiceTests {
 
         // Then
         assertThat(result).isEqualTo(expectedUpdatedCount);
-        verify(notificationRepository).markAllAsRead(eq(userId), any(LocalDateTime.class));
+        verify(notificationRepository).markAllAsRead(eq(userId), any(Instant.class));
     }
 
     @Test
@@ -154,7 +140,7 @@ class NotificationServiceTests {
         // Given
         UUID userId = NotificationEntityFixtures.DEFAULT_USER_ID;
         
-        when(notificationRepository.markAllAsRead(eq(userId), any(LocalDateTime.class)))
+        when(notificationRepository.markAllAsRead(eq(userId), any(Instant.class)))
                 .thenReturn(0); // No unread notifications to mark
 
         // When
@@ -162,7 +148,7 @@ class NotificationServiceTests {
 
         // Then
         assertThat(result).isEqualTo(0);
-        verify(notificationRepository).markAllAsRead(eq(userId), any(LocalDateTime.class));
+        verify(notificationRepository).markAllAsRead(eq(userId), any(Instant.class));
     }
 
     @Test

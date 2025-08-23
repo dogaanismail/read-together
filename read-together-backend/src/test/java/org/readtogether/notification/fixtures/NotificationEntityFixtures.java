@@ -5,7 +5,7 @@ import org.readtogether.notification.entity.NotificationEntity;
 import org.readtogether.notification.common.enums.NotificationType;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
 @UtilityClass
@@ -16,6 +16,7 @@ public class NotificationEntityFixtures {
     public static final UUID DEFAULT_SESSION_ID = UUID.fromString("550e8400-e29b-41d4-a716-446655440200");
 
     public static NotificationEntity createDefaultNotificationEntity() {
+
         return createNotificationEntity(
                 DEFAULT_NOTIFICATION_ID,
                 DEFAULT_USER_ID,
@@ -30,6 +31,7 @@ public class NotificationEntityFixtures {
     }
 
     public static NotificationEntity createReadNotification() {
+
         return createNotificationEntity(
                 UUID.randomUUID(),
                 DEFAULT_USER_ID,
@@ -39,11 +41,12 @@ public class NotificationEntityFixtures {
                 "Your session has been uploaded successfully",
                 true,
                 Instant.now().minusSeconds(3600),
-                LocalDateTime.now().minusMinutes(30)
+                Instant.now().minus(30, ChronoUnit.MINUTES)
         );
     }
 
     public static NotificationEntity createUnreadNotification() {
+
         return createNotificationEntity(
                 UUID.randomUUID(),
                 DEFAULT_USER_ID,
@@ -57,7 +60,10 @@ public class NotificationEntityFixtures {
         );
     }
 
-    public static NotificationEntity createSessionLikeNotification(UUID userId, UUID sessionId) {
+    public static NotificationEntity createSessionLikeNotification(
+            UUID userId,
+            UUID sessionId) {
+
         return createNotificationEntity(
                 UUID.randomUUID(),
                 userId,
@@ -71,7 +77,9 @@ public class NotificationEntityFixtures {
         );
     }
 
-    public static NotificationEntity createSystemAlertNotification(UUID userId) {
+    public static NotificationEntity createSystemAlertNotification(
+            UUID userId) {
+
         return createNotificationEntity(
                 UUID.randomUUID(),
                 userId,
@@ -94,7 +102,7 @@ public class NotificationEntityFixtures {
             String message,
             boolean isRead,
             Instant createdAt,
-            LocalDateTime readAt) {
+            Instant readAt) {
 
         return NotificationEntity.builder()
                 .id(id)

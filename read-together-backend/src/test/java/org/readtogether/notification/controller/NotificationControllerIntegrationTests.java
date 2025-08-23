@@ -209,20 +209,26 @@ class NotificationControllerIntegrationTests extends BaseIntegrationTest {
                 .andExpect(jsonPath("$.pageable.pageSize").value(5));
     }
 
-    private String registerAndLoginUser(String email, String password) throws Exception {
+    private String registerAndLoginUser
+            (String email,
+             String password) throws Exception {
+        
         // Register user
         RegisterRequest registerRequest = RequestFixtures.createRegisterRequest(email, password, "Test", "User", "user");
-        
+
         mockMvc.perform(post("/api/v1/users/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(registerRequest)))
                 .andExpect(status().isOk());
 
-        // Login and get access token
+        // Login and get an access token
         return loginAndGetAccessToken(email, password);
     }
 
-    private String loginAndGetAccessToken(String email, String password) throws Exception {
+    private String loginAndGetAccessToken(
+            String email,
+            String password) throws Exception {
+
         LoginRequest login = RequestFixtures.createLoginRequest(email, password);
 
         MvcResult loginResult = mockMvc.perform(post("/api/v1/users/login")
@@ -232,10 +238,11 @@ class NotificationControllerIntegrationTests extends BaseIntegrationTest {
                 .andReturn();
 
         JsonNode loginNode = objectMapper.readTree(loginResult.getResponse().getContentAsString());
-        
+
         return loginNode
                 .path("response")
                 .path("accessToken")
                 .asText();
     }
+
 }

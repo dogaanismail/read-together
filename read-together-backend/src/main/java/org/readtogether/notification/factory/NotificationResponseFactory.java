@@ -5,9 +5,6 @@ import org.readtogether.notification.entity.NotificationEntity;
 import org.readtogether.notification.common.enums.NotificationType;
 import org.readtogether.notification.model.NotificationResponse;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-
 @UtilityClass
 public class NotificationResponseFactory {
 
@@ -25,7 +22,7 @@ public class NotificationResponseFactory {
                 .title(entity.getTitle())
                 .message(entity.getMessage())
                 .isRead(entity.isRead())
-                .createdAt(LocalDateTime.ofInstant(entity.getCreatedAt(), ZoneId.systemDefault()))
+                .createdAt(entity.getCreatedAt())
                 .readAt(entity.getReadAt())
                 .userName(userName)
                 .userAvatar(userAvatar)

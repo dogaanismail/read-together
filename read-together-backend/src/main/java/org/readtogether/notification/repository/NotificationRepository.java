@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.UUID;
 
 @Repository
@@ -22,10 +22,10 @@ public interface NotificationRepository extends JpaRepository<NotificationEntity
 
     @Modifying
     @Query("UPDATE notifications n SET n.isRead = true, n.readAt = :readAt WHERE n.id = :notificationId AND n.userId = :userId")
-    int markAsRead(@Param("notificationId") UUID notificationId, @Param("userId") UUID userId, @Param("readAt") LocalDateTime readAt);
+    int markAsRead(@Param("notificationId") UUID notificationId, @Param("userId") UUID userId, @Param("readAt") Instant readAt);
 
     @Modifying
     @Query("UPDATE notifications n SET n.isRead = true, n.readAt = :readAt WHERE n.userId = :userId AND n.isRead = false")
-    int markAllAsRead(@Param("userId") UUID userId, @Param("readAt") LocalDateTime readAt);
+    int markAllAsRead(@Param("userId") UUID userId, @Param("readAt") Instant readAt);
 
 }
