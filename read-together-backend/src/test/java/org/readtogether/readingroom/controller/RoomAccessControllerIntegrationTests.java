@@ -39,7 +39,7 @@ class RoomAccessControllerIntegrationTests extends BaseIntegrationTest {
     @DisplayName("GET /api/v1/room/join should return room information from invitation token")
     void shouldGetRoomFromInvitation() throws Exception {
         // Given: user creates a room and generates a share link
-        String hostEmail = "host_invitation@test.local";
+        String hostEmail = "host_invitation_" + System.currentTimeMillis() + "@test.local";
         String hostPassword = "Password1!";
         String hostToken = registerAndLogin(hostEmail, hostPassword, "Host", "User");
 
@@ -62,7 +62,9 @@ class RoomAccessControllerIntegrationTests extends BaseIntegrationTest {
                 .andReturn();
 
         JsonNode shareNode = objectMapper.readTree(shareResult.getResponse().getContentAsString());
-        String shareToken = shareNode.path("invitationToken").asText();
+        String shareLink = shareNode.path("shareLink").asText();
+        // Extract token from share link (assuming format like "https://domain.com/join?token=TOKEN")
+        String shareToken = shareLink.substring(shareLink.lastIndexOf("=") + 1);
 
         // When: get room from invitation (public access - no auth required)
         mockMvc.perform(get("/api/v1/room/join")
@@ -77,11 +79,11 @@ class RoomAccessControllerIntegrationTests extends BaseIntegrationTest {
     @DisplayName("POST /api/v1/room/join should join room via invitation token")
     void shouldJoinRoomViaInvitation() throws Exception {
         // Given: host creates room and invites user
-        String hostEmail = "host_user_2@test.local";
+        String hostEmail = "host_user_" + System.currentTimeMillis() + "_a@test.local";
         String hostPassword = "Password1!";
         String hostToken = registerAndLogin(hostEmail, hostPassword, "Host", "User");
 
-        String inviteeEmail = "invitee@test.local";
+        String inviteeEmail = "invitee_" + System.currentTimeMillis() + "_b@test.local";
         String inviteePassword = "Password1!";
         String inviteeToken = registerAndLogin(inviteeEmail, inviteePassword, "Invitee", "User");
 
@@ -166,11 +168,11 @@ class RoomAccessControllerIntegrationTests extends BaseIntegrationTest {
     @DisplayName("POST /api/v1/room/join-by-code should handle private room with password")
     void shouldJoinPrivateRoomWithPassword() throws Exception {
         // Given: user creates private room with password
-        String hostEmail = "host2@test.local";
+        String hostEmail = "host_" + System.currentTimeMillis() + "_c@test.local";
         String hostPassword = "Password1!";
         String hostToken = registerAndLogin(hostEmail, hostPassword, "Host", "User");
 
-        String joinerEmail = "joiner@test.local";
+        String joinerEmail = "joiner_" + System.currentTimeMillis() + "_d@test.local";
         String joinerPassword = "Password1!";
         String joinerToken = registerAndLogin(joinerEmail, joinerPassword, "Joiner", "User");
 

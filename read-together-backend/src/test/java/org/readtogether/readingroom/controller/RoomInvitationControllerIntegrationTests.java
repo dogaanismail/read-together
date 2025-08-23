@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.readtogether.common.BaseIntegrationTest;
+import org.readtogether.readingroom.common.enums.InvitationType;
 import org.readtogether.readingroom.fixtures.ReadingRoomRequestFixtures;
 import org.readtogether.readingroom.model.request.CreateReadingRoomRequest;
 import org.readtogether.readingroom.model.request.InviteToRoomRequest;
@@ -15,6 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+
+import java.util.Arrays;
+import java.util.UUID;
 
 import static org.hamcrest.Matchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -34,7 +38,7 @@ class RoomInvitationControllerIntegrationTests extends BaseIntegrationTest {
     @DisplayName("POST /api/v1/rooms/{roomId}/invitations should create email invitations")
     void shouldCreateEmailInvitations() throws Exception {
         // Given: user creates room
-        String hostEmail = "host_email@test.local";
+        String hostEmail = "host_email_" + System.currentTimeMillis() + "@test.local";
         String hostPassword = "Password1!";
         String hostToken = registerAndLogin(hostEmail, hostPassword, "Host", "User");
 
@@ -72,17 +76,19 @@ class RoomInvitationControllerIntegrationTests extends BaseIntegrationTest {
     @DisplayName("POST /api/v1/rooms/{roomId}/invitations should create direct invitations")
     void shouldCreateDirectInvitations() throws Exception {
         // Given: host creates room, and we have other users to invite
-        String hostEmail = "host_direct@test.local";
+        String hostEmail = "host_direct_" + System.currentTimeMillis() + "@test.local";
         String hostPassword = "Password1!";
         String hostToken = registerAndLogin(hostEmail, hostPassword, "Host", "User");
 
-        String user1Email = "user1@test.local";
+        String user1Email = "user1_" + System.currentTimeMillis() + "@test.local";
         String user1Password = "Password1!";
-        String user1Token = registerAndLogin(user1Email, user1Password, "User1", "Test");
+        registerAndLogin(user1Email, user1Password, "User1", "Test");
+        UUID user1Id = getUserIdByEmail(user1Email);
 
-        String user2Email = "user2@test.local";
+        String user2Email = "user2_" + System.currentTimeMillis() + "@test.local";
         String user2Password = "Password1!";
-        String user2Token = registerAndLogin(user2Email, user2Password, "User2", "Test");
+        registerAndLogin(user2Email, user2Password, "User2", "Test");
+        UUID user2Id = getUserIdByEmail(user2Email);
 
         // Create room first
         CreateReadingRoomRequest createRequest = ReadingRoomRequestFixtures.createDefaultCreateReadingRoomRequest();
@@ -96,8 +102,13 @@ class RoomInvitationControllerIntegrationTests extends BaseIntegrationTest {
         JsonNode roomNode = objectMapper.readTree(roomResult.getResponse().getContentAsString());
         String roomId = roomNode.path("id").asText();
 
-        // When: create direct invitations
-        InviteToRoomRequest inviteRequest = ReadingRoomRequestFixtures.createDirectInviteRequest();
+        // When: create direct invitations with actual user IDs
+        InviteToRoomRequest inviteRequest = InviteToRoomRequest.builder()
+                .invitationType(InvitationType.DIRECT_INVITE)
+                .invitedUserIds(Arrays.asList(user1Id, user2Id))
+                .message("Direct invitation to reading room")
+                .expirationHours(48)
+                .build();
 
         mockMvc.perform(post("/api/v1/rooms/" + roomId + "/invitations")
                         .header("Authorization", "Bearer " + hostToken)
@@ -118,7 +129,7 @@ class RoomInvitationControllerIntegrationTests extends BaseIntegrationTest {
     @DisplayName("POST /api/v1/rooms/{roomId}/invitations should create share link invitation")
     void shouldCreateShareLinkInvitation() throws Exception {
         // Given: user creates room
-        String hostEmail = "host_share@test.local";
+        String hostEmail = "host_share_" + System.currentTimeMillis() + "@test.local";
         String hostPassword = "Password1!";
         String hostToken = registerAndLogin(hostEmail, hostPassword, "Host", "User");
 
@@ -154,7 +165,7 @@ class RoomInvitationControllerIntegrationTests extends BaseIntegrationTest {
     @DisplayName("GET /api/v1/rooms/{roomId}/invitations should return room invitations for host")
     void shouldGetRoomInvitations() throws Exception {
         // Given: host creates room and sends invitations
-        String hostEmail = "host_invite@test.local";
+        String hostEmail = "host_invite_" + System.currentTimeMillis() + "@test.local";
         String hostPassword = "Password1!";
         String hostToken = registerAndLogin(hostEmail, hostPassword, "Host", "User");
 
@@ -190,7 +201,7 @@ class RoomInvitationControllerIntegrationTests extends BaseIntegrationTest {
     @DisplayName("POST /api/v1/rooms/{roomId}/invitations/share-link should generate share link")
     void shouldGenerateShareLink() throws Exception {
         // Given: user creates room
-        String hostEmail = "host_generate@test.local";
+        String hostEmail = "host_generate_" + System.currentTimeMillis() + "@test.local";
         String hostPassword = "Password1!";
         String hostToken = registerAndLogin(hostEmail, hostPassword, "Host", "User");
 
@@ -268,5 +279,17 @@ class RoomInvitationControllerIntegrationTests extends BaseIntegrationTest {
                 .path("response")
                 .path("accessToken")
                 .asText();
+    }
+
+    private UUID getUserIdByEmail(String email) throws Exception {
+        // Get user profile to extract user ID
+        String token = loginAndGetAccessToken(email, "Password1!");
+        MvcResult profileResult = mockMvc.perform(get("/api/v1/users/current-user")
+                        .header("Authorization", "Bearer " + token))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        JsonNode profileNode = objectMapper.readTree(profileResult.getResponse().getContentAsString());
+        return UUID.fromString(profileNode.path("response").path("id").asText());
     }
 }

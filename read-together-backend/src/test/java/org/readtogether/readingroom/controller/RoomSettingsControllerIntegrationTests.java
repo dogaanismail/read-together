@@ -32,7 +32,7 @@ class RoomSettingsControllerIntegrationTests extends BaseIntegrationTest {
     @DisplayName("PUT /api/v1/rooms/{roomId}/settings should update room settings")
     void shouldUpdateRoomSettings() throws Exception {
         // Given: user creates room
-        String hostEmail = "host@test.local";
+        String hostEmail = "host_" + System.currentTimeMillis() + "_1@test.local";
         String hostPassword = "Password1!";
         String hostToken = registerAndLogin(hostEmail, hostPassword, "Host", "User");
 
@@ -71,7 +71,7 @@ class RoomSettingsControllerIntegrationTests extends BaseIntegrationTest {
     @DisplayName("GET /api/v1/rooms/{roomId}/settings should return room settings")
     void shouldGetRoomSettings() throws Exception {
         // Given: user creates room
-        String hostEmail = "host_user@test.local";
+        String hostEmail = "host_user_" + System.currentTimeMillis() + "@test.local";
         String hostPassword = "Password1!";
         String hostToken = registerAndLogin(hostEmail, hostPassword, "Host", "User");
 
@@ -105,7 +105,7 @@ class RoomSettingsControllerIntegrationTests extends BaseIntegrationTest {
     @DisplayName("POST /api/v1/rooms/{roomId}/settings/validate-password should validate room password")
     void shouldValidateRoomPassword() throws Exception {
         // Given: user creates private room with password
-        String hostEmail = "host_user1@test.local";
+        String hostEmail = "host_user_" + System.currentTimeMillis() + "_3@test.local";
         String hostPassword = "Password1!";
         String hostToken = registerAndLogin(hostEmail, hostPassword, "Host", "User");
 
@@ -132,25 +132,25 @@ class RoomSettingsControllerIntegrationTests extends BaseIntegrationTest {
         // When: validate the correct password
         mockMvc.perform(post("/api/v1/rooms/" + roomId + "/settings/validate-password")
                         .header("Authorization", "Bearer " + hostToken)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"password\":\"newPassword123\"}"))
+                        .contentType(MediaType.TEXT_PLAIN)
+                        .content("newPassword123"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$").value(true));
 
         // And: validate incorrect password
         mockMvc.perform(post("/api/v1/rooms/" + roomId + "/settings/validate-password")
                         .header("Authorization", "Bearer " + hostToken)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"password\":\"wrongPassword\"}"))
+                        .contentType(MediaType.TEXT_PLAIN)
+                        .content("wrongPassword"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.valid").value(false));
+                .andExpect(jsonPath("$").value(false));
     }
 
     @Test
     @DisplayName("PUT /api/v1/rooms/{roomId}/settings should update password and enable private access")
     void shouldUpdatePasswordAndEnablePrivateAccess() throws Exception {
         // Given: user creates a public room
-        String hostEmail = "host_user2@test.local";
+        String hostEmail = "host_user_" + System.currentTimeMillis() + "_4@test.local";
         String hostPassword = "Password1!";
         String hostToken = registerAndLogin(hostEmail, hostPassword, "Host", "User");
 
@@ -189,10 +189,10 @@ class RoomSettingsControllerIntegrationTests extends BaseIntegrationTest {
         // Then: verify password can be validated
         mockMvc.perform(post("/api/v1/rooms/" + roomId + "/settings/validate-password")
                         .header("Authorization", "Bearer " + hostToken)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content("{\"password\":\"securePassword123\"}"))
+                        .contentType(MediaType.TEXT_PLAIN)
+                        .content("securePassword123"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.valid").value(true));
+                .andExpect(jsonPath("$").value(true));
     }
 
     @Test
