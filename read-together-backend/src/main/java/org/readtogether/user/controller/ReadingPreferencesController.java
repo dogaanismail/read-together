@@ -8,6 +8,7 @@ import org.readtogether.user.model.response.ReadingPreferencesResponse;
 import org.readtogether.user.model.request.ReadingPreferencesUpdateRequest;
 import org.readtogether.user.service.ReadingPreferencesService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,6 +23,7 @@ public class ReadingPreferencesController {
     private final ReadingPreferencesService readingPreferencesService;
 
     @GetMapping
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<ReadingPreferencesResponse> getReadingPreferences(
             Authentication authentication) {
 
@@ -31,6 +33,7 @@ public class ReadingPreferencesController {
     }
 
     @PutMapping
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<ReadingPreferencesResponse> updateReadingPreferences(
             @RequestBody ReadingPreferencesUpdateRequest request,
             Authentication authentication) {
@@ -41,6 +44,7 @@ public class ReadingPreferencesController {
     }
 
     @GetMapping("/playback-settings")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<Map<String, Object>> getPlaybackSettings(
             Authentication authentication) {
 

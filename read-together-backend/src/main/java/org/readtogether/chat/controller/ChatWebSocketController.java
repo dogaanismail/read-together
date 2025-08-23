@@ -13,6 +13,7 @@ import org.readtogether.common.utils.SecurityUtils;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 
@@ -27,6 +28,7 @@ public class ChatWebSocketController {
     private final ChatWebSocketService chatWebSocketService;
 
     @MessageMapping("/chat/send")
+    @PreAuthorize("hasAuthority('USER')")
     public void sendMessage(
             @Payload ChatMessageWebSocketRequest request,
             SimpMessageHeaderAccessor headerAccessor) {
@@ -49,6 +51,7 @@ public class ChatWebSocketController {
     }
 
     @MessageMapping("/chat/typing")
+    @PreAuthorize("hasAuthority('USER')")
     public void handleTyping(
             @Payload TypingWebSocketRequest request,
             SimpMessageHeaderAccessor headerAccessor) {
@@ -74,6 +77,7 @@ public class ChatWebSocketController {
     }
 
     @MessageMapping("/chat/join")
+    @PreAuthorize("hasAuthority('USER')")
     public void joinRoom(
             @Payload JoinLeaveWebSocketRequest request,
             SimpMessageHeaderAccessor headerAccessor) {
@@ -93,6 +97,7 @@ public class ChatWebSocketController {
     }
 
     @MessageMapping("/chat/leave")
+    @PreAuthorize("hasAuthority('USER')")
     public void leaveRoom(
             @Payload JoinLeaveWebSocketRequest request,
             SimpMessageHeaderAccessor headerAccessor) {
@@ -112,6 +117,7 @@ public class ChatWebSocketController {
     }
 
     @MessageMapping("/chat/read")
+    @PreAuthorize("hasAuthority('USER')")
     public void markAsRead(
             @Payload ReadWebSocketRequest request,
             SimpMessageHeaderAccessor headerAccessor) {
