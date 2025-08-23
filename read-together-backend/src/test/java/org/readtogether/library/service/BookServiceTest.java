@@ -91,7 +91,7 @@ class BookServiceTest {
         verify(bookRepository, never()).save(any(BookEntity.class));
     }
 
-    /*
+
     // TODO: Re-enable these tests after fixing timestamp conversion in BookFactory.createBookResponse
     @Test
     @DisplayName("Should allow duplicate ISBN for different users")
@@ -141,7 +141,6 @@ class BookServiceTest {
         assertThat(result).isNotNull();
         verify(bookRepository).findByIdAndAddedByUserId(TEST_BOOK_ID, TEST_USER_ID);
     }
-    */
 
     @Test
     @DisplayName("Should throw when book not found")
