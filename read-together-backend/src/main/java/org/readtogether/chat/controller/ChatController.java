@@ -18,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -38,6 +39,7 @@ public class ChatController {
     private final ChatFileService chatFileService;
 
     @GetMapping("/rooms")
+    @PreAuthorize("hasAuthority('USER')")
     public CustomResponse<Page<ChatRoomResponse>> getUserChatRooms(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
@@ -52,6 +54,7 @@ public class ChatController {
     }
 
     @PostMapping("/rooms")
+    @PreAuthorize("hasAuthority('USER')")
     public CustomResponse<ChatRoomResponse> createChatRoom(
             @Valid @RequestBody ChatRoomCreateRequest request,
             Authentication authentication) {
@@ -65,6 +68,7 @@ public class ChatController {
     }
 
     @GetMapping("/rooms/{roomId}/messages")
+    @PreAuthorize("hasAuthority('USER')")
     public CustomResponse<Page<ChatMessageResponse>> getChatMessages(
             @PathVariable UUID roomId,
             @RequestParam(defaultValue = "0") int page,
@@ -80,6 +84,7 @@ public class ChatController {
     }
 
     @PostMapping("/rooms/{roomId}/read")
+    @PreAuthorize("hasAuthority('USER')")
     public CustomResponse<Void> markMessagesAsRead(
             @PathVariable UUID roomId,
             Authentication authentication) {
@@ -93,6 +98,7 @@ public class ChatController {
     }
 
     @GetMapping("/direct/{otherUserId}")
+    @PreAuthorize("hasAuthority('USER')")
     public CustomResponse<ChatRoomResponse> getOrCreateDirectChat(
             @PathVariable UUID otherUserId,
             Authentication authentication) {
@@ -106,6 +112,7 @@ public class ChatController {
     }
 
     @PostMapping("/rooms/{roomId}/messages")
+    @PreAuthorize("hasAuthority('USER')")
     public CustomResponse<ChatMessageResponse> sendMessageWithFile(
             @PathVariable UUID roomId,
             @RequestPart("message") @Valid ChatMessageSendRequest request,
@@ -124,6 +131,7 @@ public class ChatController {
     }
 
     @GetMapping("/files/{fileName}")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<Resource> downloadFile(@PathVariable String fileName) {
         log.info("Downloading file: {}", fileName);
         

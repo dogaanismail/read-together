@@ -9,7 +9,7 @@ import org.readtogether.chat.common.enums.MessageType;
 import org.readtogether.chat.common.enums.ParticipantRole;
 
 import java.time.Instant;
-import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 @UtilityClass
@@ -30,7 +30,7 @@ public class ChatResponseFixtures {
                 .isActive(true)
                 .maxParticipants(10)
                 .unreadCount(0)
-                .participants(Arrays.asList())
+                .participants(List.of())
                 .createdAt(Instant.now())
                 .updatedAt(Instant.now())
                 .build();

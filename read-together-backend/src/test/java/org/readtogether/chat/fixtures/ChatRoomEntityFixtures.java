@@ -65,4 +65,5 @@ public class ChatRoomEntityFixtures {
                 .maxParticipants(10)
                 .build();
     }
+
 }

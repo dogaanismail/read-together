@@ -82,7 +82,7 @@ class ChatParticipantEntityFactoryTest {
         assertThat(result.getUnreadCount()).isZero();
         assertThat(result.getJoinedAt()).isNotNull();
         assertThat(result.getLastReadAt()).isNotNull();
-        // Verify timestamps are recent (within last 10 seconds)
+        // Verify timestamps are recent (within the last 10 seconds)
         assertThat(result.getJoinedAt().toEpochMilli())
                 .isCloseTo(System.currentTimeMillis(), org.assertj.core.data.Offset.offset(10000L));
         assertThat(result.getLastReadAt().toEpochMilli())
@@ -100,7 +100,7 @@ class ChatParticipantEntityFactoryTest {
         assertThat(admin.getRole()).isEqualTo(ParticipantRole.ADMIN);
         assertThat(member.getRole()).isEqualTo(ParticipantRole.MEMBER);
         
-        // Both should have same defaults for other fields
+        // Both should have the same defaults for other fields
         assertThat(admin.isActive()).isEqualTo(member.isActive()).isTrue();
         assertThat(admin.getUnreadCount()).isEqualTo(member.getUnreadCount()).isZero();
     }

@@ -150,7 +150,7 @@ class ChatFileServiceTests {
 
     @Test
     @DisplayName("Should handle file upload failure")
-    void shouldHandleFileUploadFailure() throws IOException {
+    void shouldHandleFileUploadFailure() {
         // Given
         fileUtilsMock.when(() -> ChatFileUtils.validateFile(multipartFile))
                 .thenAnswer(invocation -> null); // validation passes

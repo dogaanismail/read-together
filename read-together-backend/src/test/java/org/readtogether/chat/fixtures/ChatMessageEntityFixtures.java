@@ -11,7 +11,6 @@ import java.util.UUID;
 public class ChatMessageEntityFixtures {
 
     public static final UUID DEFAULT_MESSAGE_ID = UUID.fromString("550e8400-e29b-41d4-a716-446655440300");
-    public static final UUID SECONDARY_MESSAGE_ID = UUID.fromString("550e8400-e29b-41d4-a716-446655440301");
 
     public static ChatMessageEntity createMessage(
             UUID id,

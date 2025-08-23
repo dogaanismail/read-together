@@ -31,10 +31,7 @@ import org.readtogether.user.repository.UserRepository;
 import org.readtogether.user.fixtures.UserEntityFixtures;
 import org.readtogether.user.exception.UserNotFoundException;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -83,13 +80,13 @@ class ChatServiceTests {
     void shouldGetUserChatRoomsWithPaging() {
         // Given
         Pageable pageable = PageRequest.of(0, 10);
-        List<ChatRoomEntity> rooms = Arrays.asList(testRoom);
+        List<ChatRoomEntity> rooms = Collections.singletonList(testRoom);
         Page<ChatRoomEntity> roomsPage = new PageImpl<>(rooms, pageable, 1);
-        
+
         when(chatRoomRepository.findUserChatRooms(eq(TEST_USER_ID), eq(pageable)))
                 .thenReturn(roomsPage);
         when(chatParticipantRepository.findByChatRoomIdAndIsActiveTrue(eq(TEST_ROOM_ID)))
-                .thenReturn(Arrays.asList(testParticipant));
+                .thenReturn(Collections.singletonList(testParticipant));
 
         // When
         Page<ChatRoomResponse> result = chatService.getUserChatRooms(TEST_USER_ID, 0, 10);
@@ -97,9 +94,9 @@ class ChatServiceTests {
         // Then
         assertThat(result).isNotNull();
         assertThat(result.getContent()).hasSize(1);
-        assertThat(result.getContent().get(0).getId()).isEqualTo(TEST_ROOM_ID);
-        assertThat(result.getContent().get(0).getName()).isEqualTo("Test Chat Room");
-        
+        assertThat(result.getContent().getFirst().getId()).isEqualTo(TEST_ROOM_ID);
+        assertThat(result.getContent().getFirst().getName()).isEqualTo("Test Chat Room");
+
         verify(chatRoomRepository).findUserChatRooms(eq(TEST_USER_ID), eq(pageable));
         verify(chatParticipantRepository).findByChatRoomIdAndIsActiveTrue(eq(TEST_ROOM_ID));
     }
@@ -109,14 +106,14 @@ class ChatServiceTests {
     void shouldCreateChatRoomAndAddParticipants() {
         // Given
         ChatRoomCreateRequest request = ChatRequestFixtures.createDefaultChatRoomCreateRequest();
-        
+
         when(userRepository.existsById(eq(TEST_USER_ID))).thenReturn(true);
         when(userRepository.existsById(eq(UserEntityFixtures.SECONDARY_USER_ID))).thenReturn(true);
         when(chatRoomRepository.save(any(ChatRoomEntity.class))).thenReturn(testRoom);
         when(chatParticipantRepository.save(any(ChatParticipantEntity.class)))
                 .thenAnswer(invocation -> invocation.getArgument(0));
         when(chatParticipantRepository.findByChatRoomIdAndIsActiveTrue(eq(TEST_ROOM_ID)))
-                .thenReturn(Arrays.asList(testParticipant));
+                .thenReturn(Collections.singletonList(testParticipant));
 
         // When
         ChatRoomResponse result = chatService.createChatRoom(request, TEST_USER_ID);
@@ -125,7 +122,7 @@ class ChatServiceTests {
         assertThat(result).isNotNull();
         assertThat(result.getId()).isEqualTo(TEST_ROOM_ID);
         assertThat(result.getName()).isEqualTo("Test Chat Room");
-        
+
         verify(chatRoomRepository).save(any(ChatRoomEntity.class));
         verify(chatParticipantRepository, times(2)).save(any(ChatParticipantEntity.class));
     }
@@ -135,9 +132,9 @@ class ChatServiceTests {
     void shouldGetMessagesForParticipant() {
         // Given
         Pageable pageable = PageRequest.of(0, 20);
-        List<ChatMessageEntity> messages = Arrays.asList(testMessage);
+        List<ChatMessageEntity> messages = Collections.singletonList(testMessage);
         Page<ChatMessageEntity> messagesPage = new PageImpl<>(messages, pageable, 1);
-        
+
         when(chatRoomRepository.isUserParticipant(eq(TEST_ROOM_ID), eq(TEST_USER_ID)))
                 .thenReturn(true);
         when(chatMessageRepository.findByChatRoomIdOrderBySentAtDesc(eq(TEST_ROOM_ID), eq(pageable)))
@@ -150,9 +147,9 @@ class ChatServiceTests {
         // Then
         assertThat(result).isNotNull();
         assertThat(result.getContent()).hasSize(1);
-        assertThat(result.getContent().get(0).getId()).isEqualTo(TEST_MESSAGE_ID);
-        assertThat(result.getContent().get(0).getContent()).isEqualTo("Test message");
-        
+        assertThat(result.getContent().getFirst().getId()).isEqualTo(TEST_MESSAGE_ID);
+        assertThat(result.getContent().getFirst().getContent()).isEqualTo("Test message");
+
         verify(chatRoomRepository).isUserParticipant(eq(TEST_ROOM_ID), eq(TEST_USER_ID));
         verify(chatMessageRepository).findByChatRoomIdOrderBySentAtDesc(eq(TEST_ROOM_ID), eq(pageable));
     }
@@ -164,7 +161,7 @@ class ChatServiceTests {
         ChatMessageWebSocketRequest request = ChatRequestFixtures.createChatMessageWebSocketRequest(
                 TEST_ROOM_ID, "WebSocket message"
         );
-        
+
         when(chatRoomRepository.isUserParticipant(eq(TEST_ROOM_ID), eq(TEST_USER_ID)))
                 .thenReturn(true);
         when(chatMessageRepository.save(any(ChatMessageEntity.class))).thenReturn(testMessage);
@@ -176,7 +173,7 @@ class ChatServiceTests {
         // Then
         assertThat(result).isNotNull();
         assertThat(result.getContent()).isEqualTo("Test message");
-        
+
         verify(chatMessageRepository).save(any(ChatMessageEntity.class));
         verify(chatParticipantRepository).incrementUnreadCount(eq(TEST_ROOM_ID), eq(TEST_USER_ID));
     }
@@ -203,7 +200,7 @@ class ChatServiceTests {
         UUID user2Id = UserEntityFixtures.SECONDARY_USER_ID;
         UserEntity user1 = testUser;
         UserEntity user2 = UserEntityFixtures.createSecondaryUserEntity();
-        
+
         when(userRepository.findById(eq(TEST_USER_ID))).thenReturn(Optional.of(user1));
         when(userRepository.findById(eq(user2Id))).thenReturn(Optional.of(user2));
         when(chatRoomRepository.findDirectChatRoom(eq(TEST_USER_ID), eq(user2Id)))
@@ -218,7 +215,7 @@ class ChatServiceTests {
         // Then
         assertThat(result).isNotNull();
         assertThat(result.getId()).isEqualTo(TEST_ROOM_ID);
-        
+
         verify(chatRoomRepository).findDirectChatRoom(eq(TEST_USER_ID), eq(user2Id));
         verify(chatRoomRepository).save(any(ChatRoomEntity.class));
         verify(chatParticipantRepository, times(2)).save(any(ChatParticipantEntity.class));
@@ -236,7 +233,7 @@ class ChatServiceTests {
         // When & Then
         assertThatThrownBy(() -> chatService.createChatRoom(request, TEST_USER_ID))
                 .isInstanceOf(UserNotFoundException.class);
-        
+
         verify(userRepository).existsById(eq(TEST_USER_ID));
         verify(chatRoomRepository, never()).save(any());
     }
@@ -251,7 +248,7 @@ class ChatServiceTests {
         // When & Then
         assertThatThrownBy(() -> chatService.getChatMessages(TEST_ROOM_ID, TEST_USER_ID, 0, 20))
                 .isInstanceOf(AccessDeniedException.class);
-        
+
         verify(chatRoomRepository).isUserParticipant(eq(TEST_ROOM_ID), eq(TEST_USER_ID));
         verify(chatMessageRepository, never()).findByChatRoomIdOrderBySentAtDesc(any(), any());
     }
@@ -269,7 +266,7 @@ class ChatServiceTests {
         // When & Then
         assertThatThrownBy(() -> chatService.sendMessage(request, TEST_USER_ID))
                 .isInstanceOf(AccessDeniedException.class);
-        
+
         verify(chatMessageRepository, never()).save(any());
     }
 }

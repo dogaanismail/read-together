@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.readtogether.common.BaseIntegrationTest;
 import org.readtogether.chat.model.request.ChatRoomCreateRequest;
 import org.readtogether.chat.fixtures.ChatRequestFixtures;
+import org.readtogether.user.entity.UserEntity;
 import org.readtogether.user.fixtures.RequestFixtures;
 import org.readtogether.user.model.request.LoginRequest;
 import org.readtogether.user.model.request.RegisterRequest;
@@ -47,7 +48,7 @@ class ChatControllerIntegrationTests extends BaseIntegrationTest {
                         .param("page", "0")
                         .param("size", "20"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.isSuccess").value(true))
                 .andExpect(jsonPath("$.response").exists());
     }
 
@@ -67,7 +68,7 @@ class ChatControllerIntegrationTests extends BaseIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.isSuccess").value(true))
                 .andExpect(jsonPath("$.response").exists())
                 .andExpect(jsonPath("$.response.name").value("Test Room"));
     }
@@ -97,7 +98,7 @@ class ChatControllerIntegrationTests extends BaseIntegrationTest {
                         .param("page", "0")
                         .param("size", "50"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.success").value(true));
+                .andExpect(jsonPath("$.isSuccess").value(true));
     }
 
     @Test
@@ -123,7 +124,7 @@ class ChatControllerIntegrationTests extends BaseIntegrationTest {
         mockMvc.perform(post("/api/v1/chat/rooms/{roomId}/read", roomId)
                         .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.success").value(true));
+                .andExpect(jsonPath("$.isSuccess").value(true));
     }
 
     @Test
@@ -146,8 +147,12 @@ class ChatControllerIntegrationTests extends BaseIntegrationTest {
         mockMvc.perform(get("/api/v1/chat/direct/{otherUserId}", user2Id)
                         .header("Authorization", "Bearer " + token1))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.response").exists());
+                .andExpect(jsonPath("$.isSuccess").value(true))
+                .andExpect(jsonPath("$.response").exists())
+                .andExpect(jsonPath("$.response.id").exists())
+                .andExpect(jsonPath("$.response.name").value("Direct chat between Chat User1 and Chat User2"));
+
+
     }
 
     @Test
@@ -199,10 +204,19 @@ class ChatControllerIntegrationTests extends BaseIntegrationTest {
                 .andExpect(status().isForbidden());
     }
 
-    private String registerAndLogin(String email, String password, String firstName, String lastName) throws Exception {
+    private String registerAndLogin(
+            String email,
+            String password,
+            String firstName,
+            String lastName) throws Exception {
+
         // Register user
         RegisterRequest registerRequest = RequestFixtures.createRegisterRequest(
-                email, password, firstName, lastName, "user"
+                email,
+                password,
+                firstName,
+                lastName,
+                "user"
         );
 
         mockMvc.perform(post("/api/v1/users/register")
@@ -214,7 +228,10 @@ class ChatControllerIntegrationTests extends BaseIntegrationTest {
         return loginAndGetAccessToken(email, password);
     }
 
-    private String loginAndGetAccessToken(String email, String password) throws Exception {
+    private String loginAndGetAccessToken(
+            String email,
+            String password) throws Exception {
+        
         LoginRequest login = RequestFixtures.createLoginRequest(email, password);
 
         MvcResult loginResult = mockMvc.perform(post("/api/v1/users/login")
@@ -233,7 +250,7 @@ class ChatControllerIntegrationTests extends BaseIntegrationTest {
 
     private UUID getUserIdByEmail(String email) {
         return userRepository.findByEmail(email)
-                .map(user -> user.getId())
+                .map(UserEntity::getId)
                 .orElseThrow(() -> new RuntimeException("User not found: " + email));
     }
 }

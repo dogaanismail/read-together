@@ -12,13 +12,12 @@ import java.util.UUID;
 @UtilityClass
 public class ChatRequestFixtures {
 
-    // Chat Room Create Requests
     public static ChatRoomCreateRequest createChatRoomCreateRequest(
             String name,
             String description,
             ChatRoomType type,
             List<UUID> participantIds) {
-        
+
         return ChatRoomCreateRequest.builder()
                 .name(name)
                 .description(description)
@@ -29,6 +28,7 @@ public class ChatRequestFixtures {
     }
 
     public static ChatRoomCreateRequest createDefaultChatRoomCreateRequest() {
+
         return createChatRoomCreateRequest(
                 "Test Room",
                 "A test chat room",
@@ -41,6 +41,7 @@ public class ChatRequestFixtures {
     }
 
     public static ChatRoomCreateRequest createDirectChatCreateRequest() {
+
         return createChatRoomCreateRequest(
                 "Direct Chat",
                 "A direct chat between two users",
@@ -52,8 +53,10 @@ public class ChatRequestFixtures {
         );
     }
 
-    // Chat Message Send Requests (REST)
-    public static ChatMessageSendRequest createChatMessageSendRequest(UUID roomId, String content) {
+    public static ChatMessageSendRequest createChatMessageSendRequest(
+            UUID roomId,
+            String content) {
+
         return ChatMessageSendRequest.builder()
                 .chatRoomId(roomId)
                 .content(content)
@@ -65,7 +68,7 @@ public class ChatRequestFixtures {
             UUID roomId,
             String content,
             UUID replyToMessageId) {
-        
+
         return ChatMessageSendRequest.builder()
                 .chatRoomId(roomId)
                 .content(content)
@@ -74,8 +77,10 @@ public class ChatRequestFixtures {
                 .build();
     }
 
-    // WebSocket Requests
-    public static ChatMessageWebSocketRequest createChatMessageWebSocketRequest(UUID roomId, String content) {
+    public static ChatMessageWebSocketRequest createChatMessageWebSocketRequest(
+            UUID roomId,
+            String content) {
+
         return ChatMessageWebSocketRequest.builder()
                 .chatRoomId(roomId)
                 .content(content)
@@ -90,7 +95,7 @@ public class ChatRequestFixtures {
             String attachmentName,
             Long attachmentSize,
             String attachmentType) {
-        
+
         return ChatMessageWebSocketRequest.builder()
                 .chatRoomId(roomId)
                 .content(content)
@@ -102,27 +107,37 @@ public class ChatRequestFixtures {
                 .build();
     }
 
-    public static TypingWebSocketRequest createTypingWebSocketRequest(UUID roomId, boolean typing) {
+    public static TypingWebSocketRequest createTypingWebSocketRequest(
+            UUID roomId,
+            boolean typing) {
+
         TypingWebSocketRequest request = new TypingWebSocketRequest();
         request.setChatRoomId(roomId);
         request.setTyping(typing);
         return request;
     }
 
-    public static ReadWebSocketRequest createReadWebSocketRequest(UUID roomId, UUID messageId) {
+    public static ReadWebSocketRequest createReadWebSocketRequest(
+            UUID roomId,
+            UUID messageId) {
+
         ReadWebSocketRequest request = new ReadWebSocketRequest();
         request.setChatRoomId(roomId);
         request.setMessageId(messageId);
         return request;
     }
 
-    public static JoinLeaveWebSocketRequest createJoinWebSocketRequest(UUID roomId) {
+    public static JoinLeaveWebSocketRequest createJoinWebSocketRequest
+            (UUID roomId) {
+
         JoinLeaveWebSocketRequest request = new JoinLeaveWebSocketRequest();
         request.setChatRoomId(roomId);
         return request;
     }
 
-    public static JoinLeaveWebSocketRequest createLeaveWebSocketRequest(UUID roomId) {
+    public static JoinLeaveWebSocketRequest createLeaveWebSocketRequest(
+            UUID roomId) {
+
         JoinLeaveWebSocketRequest request = new JoinLeaveWebSocketRequest();
         request.setChatRoomId(roomId);
         return request;

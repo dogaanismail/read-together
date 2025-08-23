@@ -116,7 +116,7 @@ class ChatMessageEntityFactoryTest {
         assertThat(result.getAttachmentSize()).isNull();
         assertThat(result.getAttachmentType()).isNull();
         
-        // Verify timestamp is recent (within last 10 seconds)
+        // Verify the timestamp is recent (within the last 10 seconds)
         assertThat(result.getSentAt().toEpochMilli())
                 .isCloseTo(System.currentTimeMillis(), org.assertj.core.data.Offset.offset(10000L));
     }
