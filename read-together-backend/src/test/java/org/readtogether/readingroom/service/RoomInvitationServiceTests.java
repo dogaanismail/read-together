@@ -73,10 +73,12 @@ class RoomInvitationServiceTests {
     void shouldInviteByEmail() {
         // Given
         InviteToRoomRequest request = ReadingRoomRequestFixtures.createDefaultEmailInviteRequest();
+        ReadingRoomInvitationEntity invitation2 = ReadingRoomInvitationEntityFixtures.createEmailInvitation(
+                room, hostUser, "test2@example.com", Instant.now().plus(1, DAYS));
 
         when(roomRepository.findById(roomId)).thenReturn(Optional.of(room));
         when(userService.findUserEntityById(hostId)).thenReturn(hostUser);
-        when(invitationRepository.saveAll(any())).thenReturn(Collections.singletonList(invitation));
+        when(invitationRepository.saveAll(any())).thenReturn(Arrays.asList(invitation, invitation2));
 
         // When
         List<InvitationResponse> result = roomInvitationService.inviteToRoom(roomId, request, hostId);
@@ -95,11 +97,13 @@ class RoomInvitationServiceTests {
     void shouldInviteDirectUsers() {
         // Given
         InviteToRoomRequest request = ReadingRoomRequestFixtures.createDirectInviteRequest();
+        UserEntity secondInvitedUser = UserEntityFixtures.createSecondaryUserEntity();
+        ReadingRoomInvitationEntity invitation2 = ReadingRoomInvitationEntityFixtures.createDirectInvitation(
+                room, hostUser, secondInvitedUser, Instant.now().plus(1, DAYS));
 
         when(roomRepository.findById(roomId)).thenReturn(Optional.of(room));
-        when(userService.findUserEntityById(hostId)).thenReturn(hostUser);
         when(userService.findUserEntityById(any(UUID.class))).thenReturn(invitedUser);
-        when(invitationRepository.saveAll(any())).thenReturn(Collections.singletonList(invitation));
+        when(invitationRepository.saveAll(any())).thenReturn(Arrays.asList(invitation, invitation2));
 
         // When
         List<InvitationResponse> result = roomInvitationService.inviteToRoom(roomId, request, hostId);
@@ -109,8 +113,7 @@ class RoomInvitationServiceTests {
         assertThat(result.size()).isEqualTo(2); // 2 users in the request
 
         verify(roomRepository).findById(roomId);
-        verify(userService).findUserEntityById(hostId);
-        verify(userService, times(2)).findUserEntityById(any(UUID.class));
+        verify(userService, times(3)).findUserEntityById(any(UUID.class)); // 1 host + 2 invited users
         verify(invitationRepository).saveAll(any());
     }
 
@@ -119,10 +122,12 @@ class RoomInvitationServiceTests {
     void shouldCreateShareInvitation() {
         // Given
         InviteToRoomRequest request = ReadingRoomRequestFixtures.createShareLinkInviteRequest();
+        ReadingRoomInvitationEntity shareInvitation = ReadingRoomInvitationEntityFixtures.createShareInvitation(
+                room, hostUser, Instant.now().plus(1, DAYS));
 
         when(roomRepository.findById(roomId)).thenReturn(Optional.of(room));
         when(userService.findUserEntityById(hostId)).thenReturn(hostUser);
-        when(invitationRepository.save(any(ReadingRoomInvitationEntity.class))).thenReturn(invitation);
+        when(invitationRepository.saveAll(any())).thenReturn(Collections.singletonList(shareInvitation));
 
         // When
         List<InvitationResponse> result = roomInvitationService.inviteToRoom(roomId, request, hostId);
@@ -133,7 +138,7 @@ class RoomInvitationServiceTests {
 
         verify(roomRepository).findById(roomId);
         verify(userService).findUserEntityById(hostId);
-        verify(invitationRepository).save(any(ReadingRoomInvitationEntity.class));
+        verify(invitationRepository).saveAll(any());
     }
 
     @Test
@@ -307,21 +312,24 @@ class RoomInvitationServiceTests {
     @DisplayName("Should generate share link")
     void shouldGenerateShareLink() {
         // Given
+        ReadingRoomInvitationEntity shareInvitation = ReadingRoomInvitationEntityFixtures.createShareInvitation(
+                room, hostUser, Instant.now().plus(1, DAYS));
+        
         when(roomRepository.findById(roomId)).thenReturn(Optional.of(room));
-        when(userService.findUserEntityById(hostId)).thenReturn(hostUser);
-        when(invitationRepository.save(any(ReadingRoomInvitationEntity.class))).thenReturn(invitation);
+        when(userService.findUserEntityById(any(UUID.class))).thenReturn(hostUser);
+        when(invitationRepository.saveAll(any())).thenReturn(Collections.singletonList(shareInvitation));
 
         // When
         String result = roomInvitationService.generateShareLink(roomId, hostId);
 
         // Then
         assertThat(result).isNotNull();
-        assertThat(result).contains("http");
-        assertThat(result).contains("join");
+        assertThat(result).contains("/room/join");
+        assertThat(result).contains("token=");
 
-        verify(roomRepository).findById(roomId);
-        verify(userService).findUserEntityById(hostId);
-        verify(invitationRepository).save(any(ReadingRoomInvitationEntity.class));
+        verify(roomRepository, times(2)).findById(roomId); // Called twice: once in generateShareLink, once in inviteToRoom
+        verify(userService).findUserEntityById(any(UUID.class)); // Called once in inviteToRoom
+        verify(invitationRepository).saveAll(any());
     }
 
     @Test
