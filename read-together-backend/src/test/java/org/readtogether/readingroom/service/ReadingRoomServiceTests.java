@@ -9,9 +9,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.readtogether.readingroom.entity.ReadingRoomEntity;
 import org.readtogether.readingroom.entity.ReadingRoomParticipantEntity;
+import org.readtogether.readingroom.entity.ReadingRoomSettingsEntity;
 import org.readtogether.readingroom.fixtures.ReadingRoomEntityFixtures;
 import org.readtogether.readingroom.fixtures.ReadingRoomParticipantEntityFixtures;
 import org.readtogether.readingroom.fixtures.ReadingRoomRequestFixtures;
+import org.readtogether.readingroom.fixtures.ReadingRoomSettingsEntityFixtures;
 import org.readtogether.readingroom.model.request.CreateReadingRoomRequest;
 import org.readtogether.readingroom.model.response.ReadingRoomResponse;
 import org.readtogether.readingroom.repository.ReadingRoomParticipantRepository;
@@ -67,9 +69,12 @@ class ReadingRoomServiceTests {
         // Given
         CreateReadingRoomRequest request = ReadingRoomRequestFixtures.createDefaultCreateReadingRoomRequest();
         UUID hostId = hostUser.getId();
+        ReadingRoomSettingsEntity settings = ReadingRoomSettingsEntityFixtures.createDefaultSettingsEntity(room);
 
         when(userService.findUserEntityById(hostId)).thenReturn(hostUser);
         when(readingRoomRepository.save(any(ReadingRoomEntity.class))).thenReturn(room);
+        when(readingRoomRepository.findById(room.getId())).thenReturn(Optional.of(room)); // For joinRoom call
+        when(roomSettingsService.getSettingsEntity(room.getId())).thenReturn(settings); // For joinRoom call
         when(participantRepository.save(any(ReadingRoomParticipantEntity.class)))
                 .thenReturn(ReadingRoomParticipantEntityFixtures.createJoinedParticipant(room, hostUser));
         when(participantRepository.countActiveParticipantsByRoomId(eq(room.getId())))
@@ -80,12 +85,14 @@ class ReadingRoomServiceTests {
 
         // Then
         assertThat(result).isNotNull();
-        assertThat(result.getTitle()).isEqualTo(request.getTitle());
+        assertThat(result.getTitle()).isEqualTo("Default Reading Room"); // This comes from the mocked room fixture
         assertThat(result.getCurrentParticipants()).isEqualTo(1);
         
-        verify(userService).findUserEntityById(hostId);
+        verify(userService, times(2)).findUserEntityById(hostId); // Called twice: once in createRoom, once in joinRoom
         verify(readingRoomRepository).save(any(ReadingRoomEntity.class));
+        verify(readingRoomRepository).findById(room.getId()); // Called by joinRoom
         verify(roomSettingsService).createDefaultSettings(any(ReadingRoomEntity.class));
+        verify(roomSettingsService).getSettingsEntity(room.getId()); // Called by joinRoom
         verify(participantRepository).save(any(ReadingRoomParticipantEntity.class));
     }
 
@@ -95,9 +102,11 @@ class ReadingRoomServiceTests {
         // Given
         UUID roomId = room.getId();
         UUID userId = participantUser.getId();
+        ReadingRoomSettingsEntity settings = ReadingRoomSettingsEntityFixtures.createDefaultSettingsEntity(room);
 
         when(readingRoomRepository.findById(roomId)).thenReturn(Optional.of(room));
         when(userService.findUserEntityById(userId)).thenReturn(participantUser);
+        when(roomSettingsService.getSettingsEntity(roomId)).thenReturn(settings);
         when(participantRepository.findByReadingRoomIdAndUserId(roomId, userId))
                 .thenReturn(Optional.empty());
         when(participantRepository.countActiveParticipantsByRoomId(roomId))
@@ -115,6 +124,7 @@ class ReadingRoomServiceTests {
 
         verify(readingRoomRepository).findById(roomId);
         verify(userService).findUserEntityById(userId);
+        verify(roomSettingsService).getSettingsEntity(roomId);
         verify(participantRepository).findByReadingRoomIdAndUserId(roomId, userId);
         verify(participantRepository).save(any(ReadingRoomParticipantEntity.class));
     }
