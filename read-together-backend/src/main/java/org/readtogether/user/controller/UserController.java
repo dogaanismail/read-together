@@ -66,6 +66,7 @@ public class UserController {
     }
 
     @GetMapping("/user")
+    @PreAuthorize("hasAuthority('USER')")
     public CustomResponse<User> getUser(
             @RequestParam(name = "userId") UUID userId) {
 
