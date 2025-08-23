@@ -282,14 +282,16 @@ class RoomInvitationControllerIntegrationTests extends BaseIntegrationTest {
     }
 
     private UUID getUserIdByEmail(String email) throws Exception {
-        // Get user profile to extract user ID
+        // Get a user profile to extract user ID
         String token = loginAndGetAccessToken(email, "Password1!");
+
         MvcResult profileResult = mockMvc.perform(get("/api/v1/users/current-user")
                         .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
                 .andReturn();
 
         JsonNode profileNode = objectMapper.readTree(profileResult.getResponse().getContentAsString());
+
         return UUID.fromString(profileNode.path("response").path("id").asText());
     }
 }

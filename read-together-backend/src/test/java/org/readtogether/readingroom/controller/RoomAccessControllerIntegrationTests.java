@@ -63,7 +63,8 @@ class RoomAccessControllerIntegrationTests extends BaseIntegrationTest {
 
         JsonNode shareNode = objectMapper.readTree(shareResult.getResponse().getContentAsString());
         String shareLink = shareNode.path("shareLink").asText();
-        // Extract token from share link (assuming format like "https://domain.com/join?token=TOKEN")
+
+        // Extract token from a share link (assuming format like "https://domain.com/join?token=TOKEN")
         String shareToken = shareLink.substring(shareLink.lastIndexOf("=") + 1);
 
         // When: get room from invitation (public access - no auth required)

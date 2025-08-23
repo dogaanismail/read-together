@@ -153,7 +153,13 @@ class InvitationControllerIntegrationTests extends BaseIntegrationTest {
             String firstName,
             String lastName) throws Exception {
 
-        RegisterRequest register = RequestFixtures.createRegisterRequest(email, password, firstName, lastName, "user");
+        RegisterRequest register = RequestFixtures.createRegisterRequest(
+                email,
+                password,
+                firstName,
+                lastName,
+                "user"
+        );
 
         mockMvc.perform(post("/api/v1/users/register")
                         .contentType(MediaType.APPLICATION_JSON)
