@@ -26,6 +26,7 @@ public class BookSessionController {
             @RequestParam(required = false) Integer readingTimeSeconds,
             Authentication authentication) {
 
+        //TODO: We have to fix here, no exposing entity, have to use dto
         UUID userId = SecurityUtils.getCurrentUserId(authentication);
         BookSessionEntity response = bookSessionService.createBookSession(sessionId,
                 bookId,
@@ -46,6 +47,7 @@ public class BookSessionController {
             @RequestParam(required = false) Integer difficultyRating,
             @RequestParam(required = false) Integer comprehensionRating) {
 
+        //TODO: We have to fix here, no exposing entity, have to use dto
         BookSessionEntity response = bookSessionService.updateBookSession(sessionId,
                 pagesRead,
                 readingTimeSeconds,
@@ -60,6 +62,7 @@ public class BookSessionController {
     public ResponseEntity<List<BookSessionEntity>> getBookSessions(
             @PathVariable UUID bookId) {
 
+        //TODO: We have to fix here, no exposing entity, have to use dto
         List<BookSessionEntity> response = bookSessionService.getBookSessions(bookId);
         return ResponseEntity.ok(response);
     }
@@ -68,6 +71,7 @@ public class BookSessionController {
     public ResponseEntity<List<BookSessionEntity>> getUserSessions(
             Authentication authentication) {
 
+        //TODO: We have to fix here, no exposing entity, have to use dto
         UUID userId = SecurityUtils.getCurrentUserId(authentication);
         List<BookSessionEntity> response = bookSessionService.getUserSessions(userId);
 
@@ -90,6 +94,7 @@ public class BookSessionController {
             @RequestParam(defaultValue = "30") int days,
             @RequestHeader("User-ID") UUID userId) {
 
+        //TODO: We have to fix here, no exposing entity, have to use dto
         List<BookSessionEntity> response = bookSessionService.getRecentUserSessions(userId, days);
         return ResponseEntity.ok(response);
     }

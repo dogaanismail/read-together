@@ -6,7 +6,6 @@ import org.readtogether.library.model.request.BookCreateRequest;
 import org.readtogether.library.model.response.BookResponse;
 import org.readtogether.library.model.request.BookUpdateRequest;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -123,8 +122,8 @@ public class BookFactory {
                 .difficultyLevel(entity.getDifficultyLevel())
                 .externalId(entity.getExternalId())
                 .externalSource(entity.getExternalSource())
-                .createdAt(LocalDateTime.from(entity.getCreatedAt()))
-                .updatedAt(LocalDateTime.from(entity.getUpdatedAt()))
+                .createdAt(entity.getCreatedAt())
+                .updatedAt(entity.getUpdatedAt())
                 .build();
     }
 

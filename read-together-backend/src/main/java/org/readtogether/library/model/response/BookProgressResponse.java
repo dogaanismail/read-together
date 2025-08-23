@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.readtogether.library.common.enums.BookStatus;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.UUID;
 
 @Data
@@ -23,16 +23,16 @@ public class BookProgressResponse {
     private Integer progressPercentage;
     private Integer totalSessionsCompleted;
     private Long totalReadingTimeSeconds;
-    private LocalDateTime startedReadingAt;
-    private LocalDateTime lastReadAt;
-    private LocalDateTime completedAt;
+    private Instant startedReadingAt;
+    private Instant lastReadAt;
+    private Instant completedAt;
     private String notes;
     private String favoriteQuotes;
     private Integer personalRating;
     private Integer readingGoalPagesPerDay;
     private boolean isFavorite;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private Instant createdAt;
+    private Instant updatedAt;
 
     private BookResponse book;
 }
