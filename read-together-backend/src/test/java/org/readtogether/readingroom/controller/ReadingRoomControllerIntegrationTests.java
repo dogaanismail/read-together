@@ -101,7 +101,7 @@ class ReadingRoomControllerIntegrationTests extends BaseIntegrationTest {
         String participantPassword = "Password1!";
         String participantToken = registerAndLogin(participantEmail, participantPassword, "Participant", "User");
 
-        // When: join room
+        // When: join the room
         mockMvc.perform(post("/api/v1/rooms/{roomId}/join", roomId)
                         .header("Authorization", "Bearer " + participantToken))
                 .andExpect(status().isOk())
@@ -134,12 +134,12 @@ class ReadingRoomControllerIntegrationTests extends BaseIntegrationTest {
         String participantPassword = "Password1!";
         String participantToken = registerAndLogin(participantEmail, participantPassword, "Participant", "User");
 
-        // Join room first
+        // Join the room first
         mockMvc.perform(post("/api/v1/rooms/{roomId}/join", roomId)
                         .header("Authorization", "Bearer " + participantToken))
                 .andExpect(status().isOk());
 
-        // When: leave room
+        // When: leave the room
         mockMvc.perform(post("/api/v1/rooms/{roomId}/leave", roomId)
                         .header("Authorization", "Bearer " + participantToken))
                 .andExpect(status().isOk());
@@ -176,7 +176,7 @@ class ReadingRoomControllerIntegrationTests extends BaseIntegrationTest {
     @Test
     @DisplayName("GET /api/v1/rooms/my-rooms should return hosted rooms")
     void shouldGetMyHostedRooms() throws Exception {
-        // Given: create multiple rooms with same host
+        // Given: create multiple rooms with the same host
         String hostEmail = "host_my_rooms_" + System.currentTimeMillis() + "@test.local";
         String hostPassword = "Password1!";
         String hostToken = registerAndLogin(hostEmail, hostPassword, "Host", "User");
@@ -190,7 +190,7 @@ class ReadingRoomControllerIntegrationTests extends BaseIntegrationTest {
                         .content(objectMapper.writeValueAsString(createRequest1)))
                 .andExpect(status().isCreated());
 
-        // Create second room
+        // Create a second room
         CreateReadingRoomRequest createRequest2 = ReadingRoomRequestFixtures.createCreateReadingRoomRequest(
                 "My Room 2", "Second room", false, 8, null);
         mockMvc.perform(post("/api/v1/rooms")
@@ -229,7 +229,7 @@ class ReadingRoomControllerIntegrationTests extends BaseIntegrationTest {
         JsonNode roomNode = objectMapper.readTree(roomResult.getResponse().getContentAsString());
         String roomCode = roomNode.path("roomCode").asText();
 
-        // Register another user to access room by code
+        // Register another user to access the room by code
         String userEmail = "user_by_code_" + System.currentTimeMillis() + "@test.local";
         String userPassword = "Password1!";
         String userToken = registerAndLogin(userEmail, userPassword, "User", "Test");
@@ -258,7 +258,7 @@ class ReadingRoomControllerIntegrationTests extends BaseIntegrationTest {
                             .header("Authorization", "Bearer " + userToken))
                     .andExpect(status().isInternalServerError());
         } catch (Exception e) {
-            // This is expected due to service layer throwing RuntimeException without proper exception handling
+            // This is expected due to the service layer throwing RuntimeException without proper exception handling
             assert e.getCause() instanceof RuntimeException;
             assert e.getCause().getMessage().contains("Room not found");
         }
@@ -295,7 +295,7 @@ class ReadingRoomControllerIntegrationTests extends BaseIntegrationTest {
                             .header("Authorization", "Bearer " + participantToken))
                     .andExpect(status().isInternalServerError());
         } catch (Exception e) {
-            // This is expected due to service layer throwing RuntimeException without proper exception handling
+            // This is expected due to the service layer throwing RuntimeException without proper exception handling
             assert e.getCause() instanceof RuntimeException;
             assert e.getCause().getMessage().contains("Only the host can start");
         }
@@ -315,7 +315,7 @@ class ReadingRoomControllerIntegrationTests extends BaseIntegrationTest {
                             .header("Authorization", "Bearer " + userToken))
                     .andExpect(status().isInternalServerError());
         } catch (Exception e) {
-            // This is expected due to service layer throwing RuntimeException without proper exception handling
+            // This is expected due to the service layer throwing RuntimeException without proper exception handling
             assert e.getCause() instanceof RuntimeException;
             assert e.getCause().getMessage().contains("Room not found");
         }
@@ -363,15 +363,18 @@ class ReadingRoomControllerIntegrationTests extends BaseIntegrationTest {
                 .asText();
     }
 
-    private String registerAndLogin(String email, String password, String firstName, String lastName) throws Exception {
-        // Register user
+    private String registerAndLogin(
+            String email,
+            String password,
+            String firstName,
+            String lastName) throws Exception {
+
         RegisterRequest register = RequestFixtures.createRegisterRequest(email, password, firstName, lastName, "user");
         mockMvc.perform(post("/api/v1/users/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(register)))
                 .andExpect(status().isOk());
 
-        // Login and return token
         return loginAndGetAccessToken(email, password);
     }
 }
