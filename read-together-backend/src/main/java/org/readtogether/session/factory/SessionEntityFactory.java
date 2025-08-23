@@ -21,6 +21,7 @@ public class SessionEntityFactory {
                 .userId(userId)
                 .title(request.getTitle())
                 .description(request.getDescription())
+                .mediaUrl("") // Placeholder, will be set after upload
                 .mediaType(request.getMediaType())
                 .mimeType(file.getContentType())
                 .fileSizeBytes(file.getSize())
@@ -39,6 +40,7 @@ public class SessionEntityFactory {
                 .userId(userId)
                 .title(request.getTitle())
                 .description(request.getDescription())
+                .mediaUrl("") // Placeholder, will be set after upload  
                 .mediaType(request.getMediaType())
                 .mimeType(file.getContentType())
                 .fileSizeBytes(file.getSize())

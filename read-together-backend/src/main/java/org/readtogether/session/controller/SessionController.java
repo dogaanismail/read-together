@@ -25,7 +25,7 @@ public class SessionController {
     private final SessionService sessionService;
 
     @PostMapping
-    public CompletableFuture<ResponseEntity<SessionResponse>> createSession(
+    public CompletableFuture<ResponseEntity<SessionResponse>> createSessionAsync(
             @Valid @RequestPart("session") SessionCreateRequest request,
             @RequestPart("file") MultipartFile file,
             Authentication authentication) {
