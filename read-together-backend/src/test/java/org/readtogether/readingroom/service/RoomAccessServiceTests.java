@@ -27,6 +27,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
+import static org.readtogether.readingroom.common.enums.InvitationStatus.*;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("RoomAccessService Tests")
@@ -97,6 +98,11 @@ class RoomAccessServiceTests {
                 .readingRoomId(room.getId())
                 .build();
 
+        InvitationResponse acceptedInvitationResponse = InvitationResponse.builder()
+                .readingRoomId(room.getId())
+                .status(ACCEPTED)
+                .build();
+
         ReadingRoomResponse roomResponse = ReadingRoomResponse.builder()
                 .id(room.getId())
                 .title(room.getTitle())
@@ -106,7 +112,7 @@ class RoomAccessServiceTests {
         when(roomInvitationService.getInvitationByToken(invitationToken)).thenReturn(invitationResponse);
         when(roomSettingsService.validateRoomPassword(room.getId(), password)).thenReturn(true);
         when(roomInvitationService.acceptInvitation(invitationToken, userId))
-                .thenReturn(any(InvitationResponse.class));
+                .thenReturn(acceptedInvitationResponse);
         when(readingRoomService.joinRoom(room.getId(), userId)).thenReturn(roomResponse);
 
         // When
@@ -132,6 +138,11 @@ class RoomAccessServiceTests {
                 .readingRoomId(room.getId())
                 .build();
 
+        InvitationResponse acceptedInvitationResponse = InvitationResponse.builder()
+                .readingRoomId(room.getId())
+                .status(ACCEPTED)
+                .build();
+
         ReadingRoomResponse roomResponse = ReadingRoomResponse.builder()
                 .id(room.getId())
                 .title(room.getTitle())
@@ -140,7 +151,7 @@ class RoomAccessServiceTests {
 
         when(roomInvitationService.getInvitationByToken(invitationToken)).thenReturn(invitationResponse);
         when(roomInvitationService.acceptInvitation(invitationToken, userId))
-                .thenReturn(any(InvitationResponse.class));
+                .thenReturn(acceptedInvitationResponse);
         when(readingRoomService.joinRoom(room.getId(), userId)).thenReturn(roomResponse);
 
         // When
@@ -285,14 +296,18 @@ class RoomAccessServiceTests {
                 .build();
 
         when(readingRoomService.getRoomByCode(request.getRoomCode())).thenReturn(roomResponse);
-        when(roomSettingsService.validateRoomPassword(privateRoom.getId(), null)).thenReturn(false);
+        when(readingRoomService.joinRoom(privateRoom.getId(), userId)).thenReturn(roomResponse);
 
-        // When / Then
-        assertThatThrownBy(() -> roomAccessService.joinRoomByCode(request, userId))
-                .isInstanceOf(RuntimeException.class)
-                .hasMessageContaining("Invalid room password");
+        // When
+        ReadingRoomResponse result = roomAccessService.joinRoomByCode(request, userId);
 
-        verify(roomSettingsService).validateRoomPassword(privateRoom.getId(), null);
+        // Then
+        assertThat(result).isNotNull();
+        assertThat(result.getId()).isEqualTo(privateRoom.getId());
+
+        verify(readingRoomService).getRoomByCode(request.getRoomCode());
+        verify(readingRoomService).joinRoom(privateRoom.getId(), userId);
+        verify(roomSettingsService, never()).validateRoomPassword(any(), any()); // No validation when password is null
     }
 
     @Test
