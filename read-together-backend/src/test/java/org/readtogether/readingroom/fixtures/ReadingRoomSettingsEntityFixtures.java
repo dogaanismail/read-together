@@ -12,7 +12,9 @@ import static org.readtogether.readingroom.common.enums.TranscriptionLanguage.*;
 @UtilityClass
 public class ReadingRoomSettingsEntityFixtures {
 
-    public static ReadingRoomSettingsEntity createDefaultSettingsEntity(ReadingRoomEntity room) {
+    public static ReadingRoomSettingsEntity createDefaultSettingsEntity(
+            ReadingRoomEntity room) {
+
         return createSettingsEntity(
                 room,
                 true,
@@ -31,7 +33,9 @@ public class ReadingRoomSettingsEntityFixtures {
         );
     }
 
-    public static ReadingRoomSettingsEntity createPrivateSettingsEntity(ReadingRoomEntity room) {
+    public static ReadingRoomSettingsEntity createPrivateSettingsEntity(
+            ReadingRoomEntity room) {
+
         return createSettingsEntity(
                 room,
                 false,
@@ -50,7 +54,9 @@ public class ReadingRoomSettingsEntityFixtures {
         );
     }
 
-    public static ReadingRoomSettingsEntity createRestrictiveSettingsEntity(ReadingRoomEntity room) {
+    public static ReadingRoomSettingsEntity createRestrictiveSettingsEntity(
+            ReadingRoomEntity room) {
+
         return createSettingsEntity(
                 room,
                 false,
@@ -105,7 +111,10 @@ public class ReadingRoomSettingsEntityFixtures {
                 .build();
     }
 
-    public static ReadingRoomSettingsEntity createPasswordProtectedSettings(ReadingRoomEntity room, String hashedPassword) {
+    public static ReadingRoomSettingsEntity createPasswordProtectedSettings(
+            ReadingRoomEntity room,
+            String hashedPassword) {
+
         return createSettingsEntity(
                 room,
                 false,
@@ -124,7 +133,9 @@ public class ReadingRoomSettingsEntityFixtures {
         );
     }
 
-    public static ReadingRoomSettingsEntity createOpenSettings(ReadingRoomEntity room) {
+    public static ReadingRoomSettingsEntity createOpenSettings(
+            ReadingRoomEntity room) {
+
         return createSettingsEntity(
                 room,
                 true,

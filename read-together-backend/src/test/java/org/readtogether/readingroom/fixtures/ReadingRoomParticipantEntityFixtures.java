@@ -7,21 +7,26 @@ import org.readtogether.readingroom.entity.ReadingRoomEntity;
 import org.readtogether.readingroom.entity.ReadingRoomParticipantEntity;
 import org.readtogether.user.entity.UserEntity;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.UUID;
 
+import static java.time.temporal.ChronoUnit.HOURS;
+import static java.time.temporal.ChronoUnit.MINUTES;
 import static org.readtogether.readingroom.common.enums.ApprovalStatus.*;
 import static org.readtogether.readingroom.common.enums.ParticipantStatus.*;
 
 @UtilityClass
 public class ReadingRoomParticipantEntityFixtures {
 
-    public static ReadingRoomParticipantEntity createJoinedParticipant(ReadingRoomEntity room, UserEntity user) {
+    public static ReadingRoomParticipantEntity createJoinedParticipant(
+            ReadingRoomEntity room,
+            UserEntity user) {
+
         return createParticipantEntity(
                 room,
                 user,
                 JOINED,
-                LocalDateTime.now().minusMinutes(5),
+                Instant.now().minus(5, MINUTES),
                 null,
                 false,
                 true,
@@ -32,13 +37,16 @@ public class ReadingRoomParticipantEntityFixtures {
         );
     }
 
-    public static ReadingRoomParticipantEntity createLeftParticipant(ReadingRoomEntity room, UserEntity user) {
+    public static ReadingRoomParticipantEntity createLeftParticipant(
+            ReadingRoomEntity room,
+            UserEntity user) {
+
         return createParticipantEntity(
                 room,
                 user,
                 LEFT,
-                LocalDateTime.now().minusHours(1),
-                LocalDateTime.now().minusMinutes(10),
+                Instant.now().minus(1, HOURS),
+                Instant.now().minus(10, MINUTES),
                 false,
                 false,
                 false,
@@ -48,12 +56,15 @@ public class ReadingRoomParticipantEntityFixtures {
         );
     }
 
-    public static ReadingRoomParticipantEntity createPendingParticipant(ReadingRoomEntity room, UserEntity user) {
+    public static ReadingRoomParticipantEntity createPendingParticipant(
+            ReadingRoomEntity room,
+            UserEntity user) {
+
         return createParticipantEntity(
                 room,
                 user,
                 INVITED,
-                LocalDateTime.now().minusMinutes(2),
+                Instant.now().minus(2, MINUTES),
                 null,
                 false,
                 true,
@@ -64,12 +75,15 @@ public class ReadingRoomParticipantEntityFixtures {
         );
     }
 
-    public static ReadingRoomParticipantEntity createMutedParticipant(ReadingRoomEntity room, UserEntity user) {
+    public static ReadingRoomParticipantEntity createMutedParticipant(
+            ReadingRoomEntity room,
+            UserEntity user) {
+
         return createParticipantEntity(
                 room,
                 user,
                 JOINED,
-                LocalDateTime.now().minusMinutes(10),
+                Instant.now().minus(10, MINUTES),
                 null,
                 true,
                 false,
@@ -80,12 +94,15 @@ public class ReadingRoomParticipantEntityFixtures {
         );
     }
 
-    public static ReadingRoomParticipantEntity createSpeakingParticipant(ReadingRoomEntity room, UserEntity user) {
+    public static ReadingRoomParticipantEntity createSpeakingParticipant(
+            ReadingRoomEntity room,
+            UserEntity user) {
+
         return createParticipantEntity(
                 room,
                 user,
                 JOINED,
-                LocalDateTime.now().minusMinutes(3),
+                Instant.now().minus(3, MINUTES),
                 null,
                 false,
                 true,
@@ -96,12 +113,16 @@ public class ReadingRoomParticipantEntityFixtures {
         );
     }
 
-    public static ReadingRoomParticipantEntity createParticipantWithAutoMute(ReadingRoomEntity room, UserEntity user, boolean autoMuted) {
+    public static ReadingRoomParticipantEntity createParticipantWithAutoMute(
+            ReadingRoomEntity room,
+            UserEntity user,
+            boolean autoMuted) {
+
         return createParticipantEntity(
                 room,
                 user,
                 JOINED,
-                LocalDateTime.now(),
+                Instant.now(),
                 null,
                 autoMuted,
                 true,
@@ -116,14 +137,14 @@ public class ReadingRoomParticipantEntityFixtures {
             ReadingRoomEntity room,
             UserEntity user,
             ParticipantStatus status,
-            LocalDateTime joinedAt,
-            LocalDateTime leftAt,
+            Instant joinedAt,
+            Instant leftAt,
             boolean isMuted,
             boolean isVideoEnabled,
             boolean isSpeaking,
             ApprovalStatus approvalStatus,
             UUID approvedBy,
-            LocalDateTime approvedAt) {
+            Instant approvedAt) {
 
         return ReadingRoomParticipantEntity.builder()
                 .id(UUID.randomUUID())
@@ -141,9 +162,11 @@ public class ReadingRoomParticipantEntityFixtures {
                 .build();
     }
 
-    public static ReadingRoomParticipantEntity markParticipantLeft(ReadingRoomParticipantEntity participant) {
+    public static ReadingRoomParticipantEntity markParticipantLeft(
+            ReadingRoomParticipantEntity participant) {
+
         participant.setStatus(LEFT);
-        participant.setLeftAt(LocalDateTime.now());
+        participant.setLeftAt(Instant.now());
         participant.setSpeaking(false);
         return participant;
     }

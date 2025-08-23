@@ -2,13 +2,13 @@ package org.readtogether.readingroom.fixtures;
 
 import lombok.experimental.UtilityClass;
 import org.readtogether.readingroom.common.enums.InvitationType;
-import org.readtogether.readingroom.common.enums.TranscriptionLanguage;
 import org.readtogether.readingroom.model.request.CreateReadingRoomRequest;
 import org.readtogether.readingroom.model.request.InviteToRoomRequest;
 import org.readtogether.readingroom.model.request.JoinRoomRequest;
 import org.readtogether.readingroom.model.request.UpdateRoomSettingsRequest;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -20,6 +20,7 @@ import static org.readtogether.readingroom.common.enums.TranscriptionLanguage.*;
 public class ReadingRoomRequestFixtures {
 
     public static CreateReadingRoomRequest createDefaultCreateReadingRoomRequest() {
+
         return CreateReadingRoomRequest.builder()
                 .title("Test Reading Room")
                 .description("A room for testing purposes")
@@ -30,12 +31,13 @@ public class ReadingRoomRequestFixtures {
     }
 
     public static CreateReadingRoomRequest createPrivateCreateReadingRoomRequest() {
+
         return CreateReadingRoomRequest.builder()
                 .title("Private Reading Room")
                 .description("Private room for testing")
                 .maxParticipants(6)
                 .isPublic(false)
-                .scheduledStartTime(LocalDateTime.now().plusHours(2))
+                .scheduledStartTime(Instant.now().plus(2, ChronoUnit.HOURS))
                 .build();
     }
 
@@ -44,7 +46,7 @@ public class ReadingRoomRequestFixtures {
             String description,
             boolean isPublic,
             int maxParticipants,
-            LocalDateTime scheduledStartTime) {
+            Instant scheduledStartTime) {
 
         return CreateReadingRoomRequest.builder()
                 .title(title)
@@ -56,19 +58,24 @@ public class ReadingRoomRequestFixtures {
     }
 
     public static CreateReadingRoomRequest createMinimalCreateRequest() {
+
         return CreateReadingRoomRequest.builder()
                 .title("Minimal Room")
                 .build();
     }
 
     public static JoinRoomRequest createDefaultJoinRoomRequest() {
+
         return JoinRoomRequest.builder()
                 .roomCode("TEST001")
                 .password(null)
                 .build();
     }
 
-    public static JoinRoomRequest createJoinRoomRequest(String roomCode, String password) {
+    public static JoinRoomRequest createJoinRoomRequest(
+            String roomCode,
+            String password) {
+
         return JoinRoomRequest.builder()
                 .roomCode(roomCode)
                 .password(password)
@@ -76,6 +83,7 @@ public class ReadingRoomRequestFixtures {
     }
 
     public static JoinRoomRequest createPasswordProtectedJoinRequest() {
+
         return JoinRoomRequest.builder()
                 .roomCode("PRIV001")
                 .password("testPassword123")
@@ -83,6 +91,7 @@ public class ReadingRoomRequestFixtures {
     }
 
     public static InviteToRoomRequest createDefaultEmailInviteRequest() {
+
         return InviteToRoomRequest.builder()
                 .invitationType(EMAIL)
                 .invitedEmails(Arrays.asList("test1@example.com", "test2@example.com"))
@@ -92,6 +101,7 @@ public class ReadingRoomRequestFixtures {
     }
 
     public static InviteToRoomRequest createDirectInviteRequest() {
+
         return InviteToRoomRequest.builder()
                 .invitationType(DIRECT_INVITE)
                 .invitedUserIds(Arrays.asList(UUID.randomUUID(), UUID.randomUUID()))
@@ -101,6 +111,7 @@ public class ReadingRoomRequestFixtures {
     }
 
     public static InviteToRoomRequest createShareLinkInviteRequest() {
+
         return InviteToRoomRequest.builder()
                 .invitationType(LINK_SHARE)
                 .message("Share this link to join!")
@@ -110,6 +121,7 @@ public class ReadingRoomRequestFixtures {
     }
 
     public static InviteToRoomRequest createQRCodeInviteRequest() {
+
         return InviteToRoomRequest.builder()
                 .invitationType(QR_CODE)
                 .message("Scan QR code to join")
@@ -136,6 +148,7 @@ public class ReadingRoomRequestFixtures {
     }
 
     public static UpdateRoomSettingsRequest createDefaultUpdateRoomSettingsRequest() {
+
         return UpdateRoomSettingsRequest.builder()
                 .isPublic(true)
                 .requireHostApproval(false)
@@ -153,6 +166,7 @@ public class ReadingRoomRequestFixtures {
     }
 
     public static UpdateRoomSettingsRequest createPrivateUpdateRoomSettingsRequest() {
+
         return UpdateRoomSettingsRequest.builder()
                 .isPublic(false)
                 .password("newPassword123")
@@ -198,6 +212,7 @@ public class ReadingRoomRequestFixtures {
     }
 
     public static UpdateRoomSettingsRequest createRestrictiveSettingsRequest() {
+
         return UpdateRoomSettingsRequest.builder()
                 .isPublic(false)
                 .password("verySecurePassword")

@@ -73,10 +73,13 @@ public class S3StorageService implements StorageService {
             String key = S3UrlUtils.buildS3Key(folder, fileName);
             String validContentType = S3OperationUtils.getContentTypeOrDefault(contentType);
 
-            PutObjectRequest request = S3RequestFactory.createPutObjectRequest(
+            PutObjectRequest request = S3RequestFactory.createEncryptedPutObjectRequest(
                     s3Properties.getBucket(),
                     key,
-                    validContentType);
+                    validContentType,
+                    s3Properties.getServerSideEncryption(),
+                    s3Properties.getKmsKeyId(),
+                    s3Properties.isBucketKeyEnabled());
 
             s3Client.putObject(request, RequestBody.fromInputStream(inputStream, inputStream.available()));
 

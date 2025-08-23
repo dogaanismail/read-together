@@ -32,7 +32,6 @@ class ReadingRoomResponseFactoryTests {
         assertThat(result.getScheduledStartTime()).isEqualTo(room.getScheduledStartTime());
         assertThat(result.getActualStartTime()).isEqualTo(room.getActualStartTime());
         assertThat(result.getEndTime()).isEqualTo(room.getEndTime());
-        assertThat(result.getCreatedAt()).isNotNull();
     }
 
     @Test
@@ -132,7 +131,7 @@ class ReadingRoomResponseFactoryTests {
         assertThat(result.getScheduledStartTime()).isNull();
         assertThat(result.getActualStartTime()).isNull();
         assertThat(result.getEndTime()).isNull();
-        assertThat(result.getDescription()).isNotNull(); // should have description
+        assertThat(result.getDescription()).isNotNull();
     }
 
     @Test

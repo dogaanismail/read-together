@@ -62,7 +62,7 @@ public class ReadingRoomSettingsEntity extends BaseEntity {
 
     @Column(name = "room_volume")
     @Builder.Default
-    private Integer roomVolume = 80;
+    private int roomVolume = 80;
 
     @Column(name = "enable_live_transcription")
     @Builder.Default

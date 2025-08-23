@@ -10,8 +10,10 @@ import org.readtogether.readingroom.model.request.InviteToRoomRequest;
 import org.readtogether.user.entity.UserEntity;
 import org.readtogether.user.fixtures.UserEntityFixtures;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
+import static java.time.temporal.ChronoUnit.DAYS;
+import static java.time.temporal.ChronoUnit.HOURS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.readtogether.readingroom.common.enums.InvitationStatus.*;
@@ -27,7 +29,7 @@ class ReadingRoomInvitationEntityFactoryTests {
         UserEntity inviter = UserEntityFixtures.createDefaultUserEntity();
         String email = "test@example.com";
         String message = "Join our reading room!";
-        LocalDateTime expiresAt = LocalDateTime.now().plusDays(1);
+        Instant expiresAt = Instant.now().plus(1, DAYS);
 
         // When
         ReadingRoomInvitationEntity result = ReadingRoomInvitationEntityFactory.createEmailInvitation(
@@ -37,7 +39,7 @@ class ReadingRoomInvitationEntityFactoryTests {
         assertThat(result.getReadingRoom()).isEqualTo(room);
         assertThat(result.getInvitedBy()).isEqualTo(inviter);
         assertThat(result.getInvitedEmail()).isEqualTo(email);
-        assertThat(result.getInvitedUser()).isNull(); // email invitations don't have invited user
+        assertThat(result.getInvitedUser()).isNull();
         assertThat(result.getInvitationType()).isEqualTo(EMAIL);
         assertThat(result.getStatus()).isEqualTo(PENDING);
         assertThat(result.getExpiresAt()).isEqualTo(expiresAt);
@@ -55,7 +57,7 @@ class ReadingRoomInvitationEntityFactoryTests {
         UserEntity inviter = UserEntityFixtures.createDefaultUserEntity();
         UserEntity invitedUser = UserEntityFixtures.createSecondaryUserEntity();
         String message = "Direct invitation";
-        LocalDateTime expiresAt = LocalDateTime.now().plusDays(2);
+        Instant expiresAt = Instant.now().plus(2, DAYS);
 
         // When
         ReadingRoomInvitationEntity result = ReadingRoomInvitationEntityFactory.createDirectInvitation(
@@ -65,7 +67,7 @@ class ReadingRoomInvitationEntityFactoryTests {
         assertThat(result.getReadingRoom()).isEqualTo(room);
         assertThat(result.getInvitedBy()).isEqualTo(inviter);
         assertThat(result.getInvitedUser()).isEqualTo(invitedUser);
-        assertThat(result.getInvitedEmail()).isEqualTo(invitedUser.getEmail()); // copies from user
+        assertThat(result.getInvitedEmail()).isEqualTo(invitedUser.getEmail());
         assertThat(result.getInvitationType()).isEqualTo(DIRECT_INVITE);
         assertThat(result.getStatus()).isEqualTo(PENDING);
         assertThat(result.getExpiresAt()).isEqualTo(expiresAt);
@@ -80,7 +82,7 @@ class ReadingRoomInvitationEntityFactoryTests {
         ReadingRoomEntity room = ReadingRoomEntityFixtures.createActiveRoomEntity();
         UserEntity inviter = UserEntityFixtures.createDefaultUserEntity();
         String message = "Share this link!";
-        LocalDateTime expiresAt = LocalDateTime.now().plusDays(3);
+        Instant expiresAt = Instant.now().plus(3, DAYS);
 
         // When
         ReadingRoomInvitationEntity result = ReadingRoomInvitationEntityFactory.createShareLinkInvitation(
@@ -105,7 +107,7 @@ class ReadingRoomInvitationEntityFactoryTests {
         ReadingRoomEntity room = ReadingRoomEntityFixtures.createDefaultRoomEntity();
         UserEntity inviter = UserEntityFixtures.createSecondaryUserEntity();
         String message = "Scan QR code";
-        LocalDateTime expiresAt = LocalDateTime.now().plusHours(12);
+        Instant expiresAt = Instant.now().plus(12, HOURS);
 
         // When
         ReadingRoomInvitationEntity result = ReadingRoomInvitationEntityFactory.createQRCodeInvitation(
@@ -130,7 +132,7 @@ class ReadingRoomInvitationEntityFactoryTests {
         ReadingRoomEntity room = ReadingRoomEntityFixtures.createDefaultRoomEntity();
         UserEntity inviter = UserEntityFixtures.createDefaultUserEntity();
         InviteToRoomRequest request = ReadingRoomRequestFixtures.createShareLinkInviteRequest();
-        LocalDateTime expiresAt = LocalDateTime.now().plusDays(1);
+        Instant expiresAt = Instant.now().plus(1, DAYS);
 
         // When
         ReadingRoomInvitationEntity result = ReadingRoomInvitationEntityFactory.createShareInvitation(
@@ -151,7 +153,7 @@ class ReadingRoomInvitationEntityFactoryTests {
         ReadingRoomEntity room = ReadingRoomEntityFixtures.createPrivateRoomEntity();
         UserEntity inviter = UserEntityFixtures.createSecondaryUserEntity();
         InviteToRoomRequest request = ReadingRoomRequestFixtures.createQRCodeInviteRequest();
-        LocalDateTime expiresAt = LocalDateTime.now().plusHours(6);
+        Instant expiresAt = Instant.now().plus(6, HOURS);
 
         // When
         ReadingRoomInvitationEntity result = ReadingRoomInvitationEntityFactory.createShareInvitation(
@@ -171,8 +173,8 @@ class ReadingRoomInvitationEntityFactoryTests {
         // Given
         ReadingRoomEntity room = ReadingRoomEntityFixtures.createDefaultRoomEntity();
         UserEntity inviter = UserEntityFixtures.createDefaultUserEntity();
-        InviteToRoomRequest request = ReadingRoomRequestFixtures.createDirectInviteRequest(); // DIRECT_INVITE not supported for share
-        LocalDateTime expiresAt = LocalDateTime.now().plusDays(1);
+        InviteToRoomRequest request = ReadingRoomRequestFixtures.createDirectInviteRequest();
+        Instant expiresAt = Instant.now().plus(1, DAYS);
 
         // When / Then
         assertThatThrownBy(() -> ReadingRoomInvitationEntityFactory.createShareInvitation(
@@ -188,15 +190,23 @@ class ReadingRoomInvitationEntityFactoryTests {
         ReadingRoomEntity room = ReadingRoomEntityFixtures.createDefaultRoomEntity();
         UserEntity inviter = UserEntityFixtures.createDefaultUserEntity();
         UserEntity acceptingUser = UserEntityFixtures.createSecondaryUserEntity();
+
         ReadingRoomInvitationEntity invitation = ReadingRoomInvitationEntityFactory.createDirectInvitation(
-                room, inviter, acceptingUser, "Test invitation", LocalDateTime.now().plusDays(1));
+                room,
+                inviter,
+                acceptingUser,
+                "Test invitation",
+                Instant.now().plus(1, DAYS)
+        );
 
         // When
         ReadingRoomInvitationEntity result = ReadingRoomInvitationEntityFactory.createAcceptInvitationEntity(
-                invitation, acceptingUser);
+                invitation,
+                acceptingUser
+        );
 
         // Then
-        assertThat(result).isSameAs(invitation); // modifies existing entity
+        assertThat(result).isSameAs(invitation);
         assertThat(result.getStatus()).isEqualTo(ACCEPTED);
         assertThat(result.getAcceptedAt()).isNotNull();
         assertThat(result.getDeclinedAt()).isNull();
@@ -210,10 +220,15 @@ class ReadingRoomInvitationEntityFactoryTests {
         ReadingRoomEntity room = ReadingRoomEntityFixtures.createDefaultRoomEntity();
         UserEntity inviter = UserEntityFixtures.createDefaultUserEntity();
         UserEntity acceptingUser = UserEntityFixtures.createSecondaryUserEntity();
+
         ReadingRoomInvitationEntity emailInvitation = ReadingRoomInvitationEntityFactory.createEmailInvitation(
-                room, inviter, "test@example.com", "Email invitation", LocalDateTime.now().plusDays(1));
-        
-        // Email invitations start with null invited user
+                room,
+                inviter,
+                "test@example.com",
+                "Email invitation",
+                Instant.now().plus(1, DAYS)
+        );
+
         assertThat(emailInvitation.getInvitedUser()).isNull();
 
         // When
@@ -233,14 +248,20 @@ class ReadingRoomInvitationEntityFactoryTests {
         ReadingRoomEntity room = ReadingRoomEntityFixtures.createPrivateRoomEntity();
         UserEntity inviter = UserEntityFixtures.createDefaultUserEntity();
         UserEntity invitedUser = UserEntityFixtures.createSecondaryUserEntity();
+
         ReadingRoomInvitationEntity invitation = ReadingRoomInvitationEntityFactory.createDirectInvitation(
-                room, inviter, invitedUser, "Invitation to decline", LocalDateTime.now().plusDays(1));
+                room,
+                inviter,
+                invitedUser,
+                "Invitation to decline",
+                Instant.now().plus(1, HOURS)
+        );
 
         // When
         ReadingRoomInvitationEntity result = ReadingRoomInvitationEntityFactory.createDeclineInvitationEntity(invitation);
 
         // Then
-        assertThat(result).isSameAs(invitation); // modifies existing entity
+        assertThat(result).isSameAs(invitation);
         assertThat(result.getStatus()).isEqualTo(DECLINED);
         assertThat(result.getDeclinedAt()).isNotNull();
         assertThat(result.getAcceptedAt()).isNull();
@@ -254,7 +275,7 @@ class ReadingRoomInvitationEntityFactoryTests {
         UserEntity inviter = UserEntityFixtures.createDefaultUserEntity();
         String email = "test@example.com";
         String message = "Test message";
-        LocalDateTime expiresAt = LocalDateTime.now().plusDays(1);
+        Instant expiresAt = Instant.now().plus(1, DAYS);
 
         // When
         ReadingRoomInvitationEntity invitation1 = ReadingRoomInvitationEntityFactory.createEmailInvitation(
@@ -275,13 +296,14 @@ class ReadingRoomInvitationEntityFactoryTests {
         ReadingRoomEntity room = ReadingRoomEntityFixtures.createDefaultRoomEntity();
         UserEntity inviter = UserEntityFixtures.createDefaultUserEntity();
         UserEntity acceptingUser = UserEntityFixtures.createSecondaryUserEntity();
+
         String originalMessage = "Original message";
-        LocalDateTime originalExpiry = LocalDateTime.now().plusDays(1);
+        Instant originalExpiry = Instant.now().plus(1, DAYS);
         String originalToken = "original-token";
-        
+
         ReadingRoomInvitationEntity invitation = ReadingRoomInvitationEntityFactory.createShareLinkInvitation(
                 room, inviter, originalMessage, originalExpiry);
-        invitation.setInvitationToken(originalToken); // set known token for testing
+        invitation.setInvitationToken(originalToken);
 
         // When
         ReadingRoomInvitationEntity result = ReadingRoomInvitationEntityFactory.createAcceptInvitationEntity(

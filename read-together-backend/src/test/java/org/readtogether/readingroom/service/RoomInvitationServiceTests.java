@@ -20,16 +20,13 @@ import org.readtogether.user.entity.UserEntity;
 import org.readtogether.user.fixtures.UserEntityFixtures;
 import org.readtogether.user.service.UserService;
 
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.time.Instant;
+import java.util.*;
 
+import static java.time.temporal.ChronoUnit.DAYS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 import static org.readtogether.readingroom.common.enums.InvitationStatus.*;
 import static org.readtogether.readingroom.common.enums.InvitationType.*;
@@ -64,8 +61,8 @@ class RoomInvitationServiceTests {
         hostUser = UserEntityFixtures.createDefaultUserEntity();
         invitedUser = UserEntityFixtures.createSecondaryUserEntity();
         invitation = ReadingRoomInvitationEntityFixtures.createDirectInvitation(
-                room, hostUser, invitedUser, LocalDateTime.now().plusDays(1));
-        
+                room, hostUser, invitedUser, Instant.now().plus(1, DAYS));
+
         roomId = room.getId();
         hostId = hostUser.getId();
         invitedUserId = invitedUser.getId();
@@ -79,7 +76,7 @@ class RoomInvitationServiceTests {
 
         when(roomRepository.findById(roomId)).thenReturn(Optional.of(room));
         when(userService.findUserEntityById(hostId)).thenReturn(hostUser);
-        when(invitationRepository.saveAll(any())).thenReturn(Arrays.asList(invitation));
+        when(invitationRepository.saveAll(any())).thenReturn(Collections.singletonList(invitation));
 
         // When
         List<InvitationResponse> result = roomInvitationService.inviteToRoom(roomId, request, hostId);
@@ -102,7 +99,7 @@ class RoomInvitationServiceTests {
         when(roomRepository.findById(roomId)).thenReturn(Optional.of(room));
         when(userService.findUserEntityById(hostId)).thenReturn(hostUser);
         when(userService.findUserEntityById(any(UUID.class))).thenReturn(invitedUser);
-        when(invitationRepository.saveAll(any())).thenReturn(Arrays.asList(invitation));
+        when(invitationRepository.saveAll(any())).thenReturn(Collections.singletonList(invitation));
 
         // When
         List<InvitationResponse> result = roomInvitationService.inviteToRoom(roomId, request, hostId);
@@ -132,7 +129,7 @@ class RoomInvitationServiceTests {
 
         // Then
         assertThat(result).hasSize(1); // one share invitation created
-        assertThat(result.get(0).getInvitationType()).isEqualTo(LINK_SHARE);
+        assertThat(result.getFirst().getInvitationType()).isEqualTo(LINK_SHARE);
 
         verify(roomRepository).findById(roomId);
         verify(userService).findUserEntityById(hostId);
@@ -237,7 +234,7 @@ class RoomInvitationServiceTests {
         // When / Then
         assertThatThrownBy(() -> roomInvitationService.acceptInvitation(invalidToken, invitedUserId))
                 .isInstanceOf(RuntimeException.class)
-                .hasMessageContaining("Invitation not found");
+                .hasMessageContaining("Invalid invitation token");
 
         verify(userService, never()).findUserEntityById(any());
         verify(invitationRepository, never()).save(any());
@@ -247,7 +244,7 @@ class RoomInvitationServiceTests {
     @DisplayName("Should get room invitations by host")
     void shouldGetRoomInvitationsByHost() {
         // Given
-        List<ReadingRoomInvitationEntity> invitations = Arrays.asList(invitation);
+        List<ReadingRoomInvitationEntity> invitations = Collections.singletonList(invitation);
 
         when(roomRepository.findById(roomId)).thenReturn(Optional.of(room));
         when(invitationRepository.findByReadingRoomId(roomId))
@@ -258,7 +255,7 @@ class RoomInvitationServiceTests {
 
         // Then
         assertThat(result).hasSize(1);
-        assertThat(result.get(0).getReadingRoomId()).isEqualTo(roomId);
+        assertThat(result.getFirst().getReadingRoomId()).isEqualTo(roomId);
 
         verify(roomRepository).findById(roomId);
         verify(invitationRepository).findByReadingRoomId(roomId);
@@ -275,7 +272,7 @@ class RoomInvitationServiceTests {
         // When / Then
         assertThatThrownBy(() -> roomInvitationService.getRoomInvitations(roomId, nonHostId))
                 .isInstanceOf(RuntimeException.class)
-                .hasMessageContaining("Only the host can view invitations");
+                .hasMessageContaining("Only the host can view room invitations");
 
         verify(invitationRepository, never()).findByReadingRoomId(any());
     }
@@ -285,8 +282,8 @@ class RoomInvitationServiceTests {
     void shouldGetUserPendingInvitationsByUserIdAndEmail() {
         // Given
         String email = invitedUser.getEmail();
-        List<ReadingRoomInvitationEntity> userInvitations = Arrays.asList(invitation);
-        List<ReadingRoomInvitationEntity> emailInvitations = Arrays.asList();
+        List<ReadingRoomInvitationEntity> userInvitations = Collections.singletonList(invitation);
+        List<ReadingRoomInvitationEntity> emailInvitations = List.of();
 
         when(userService.findUserEntityById(invitedUserId)).thenReturn(invitedUser);
         when(invitationRepository.findPendingInvitationsByUserId(invitedUserId))
@@ -299,7 +296,7 @@ class RoomInvitationServiceTests {
 
         // Then
         assertThat(result).hasSize(1);
-        assertThat(result.get(0).getStatus()).isEqualTo(PENDING);
+        assertThat(result.getFirst().getStatus()).isEqualTo(PENDING);
 
         verify(userService).findUserEntityById(invitedUserId);
         verify(invitationRepository).findPendingInvitationsByUserId(invitedUserId);
@@ -376,7 +373,7 @@ class RoomInvitationServiceTests {
         // When / Then
         assertThatThrownBy(() -> roomInvitationService.inviteToRoom(roomId, request, nonHostId))
                 .isInstanceOf(RuntimeException.class)
-                .hasMessageContaining("Only the host can send invitations");
+                .hasMessageContaining("You don't have permission to invite people to this room");
 
         verify(invitationRepository, never()).save(any());
     }
@@ -395,7 +392,7 @@ class RoomInvitationServiceTests {
         // When / Then
         assertThatThrownBy(() -> roomInvitationService.acceptInvitation(invitationToken, invitedUserId))
                 .isInstanceOf(RuntimeException.class)
-                .hasMessageContaining("Invitation is no longer pending");
+                .hasMessageContaining("Invitation is no longer valid");
 
         verify(invitationRepository, never()).save(any());
     }

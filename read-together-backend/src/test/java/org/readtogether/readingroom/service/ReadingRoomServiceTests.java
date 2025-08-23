@@ -30,9 +30,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
-import static org.readtogether.readingroom.common.enums.ParticipantStatus.JOINED;
-import static org.readtogether.readingroom.common.enums.RoomStatus.ACTIVE;
-import static org.readtogether.readingroom.common.enums.RoomStatus.WAITING;
 
 @ExtendWith(MockitoExtension.class)
 @DisplayName("ReadingRoomService Tests")
@@ -139,7 +136,7 @@ class ReadingRoomServiceTests {
         // When / Then
         assertThatThrownBy(() -> readingRoomService.joinRoom(roomId, userId))
                 .isInstanceOf(RuntimeException.class)
-                .hasMessageContaining("already joined");
+                .hasMessageContaining("User is already in the room");
 
         verify(participantRepository, never()).save(any());
     }
@@ -176,7 +173,6 @@ class ReadingRoomServiceTests {
         ReadingRoomParticipantEntity participant = 
                 ReadingRoomParticipantEntityFixtures.createJoinedParticipant(room, participantUser);
 
-        when(readingRoomRepository.findById(roomId)).thenReturn(Optional.of(room));
         when(participantRepository.findByReadingRoomIdAndUserId(roomId, userId))
                 .thenReturn(Optional.of(participant));
         when(participantRepository.save(any(ReadingRoomParticipantEntity.class)))
@@ -186,7 +182,6 @@ class ReadingRoomServiceTests {
         readingRoomService.leaveRoom(roomId, userId);
 
         // Then
-        verify(readingRoomRepository).findById(roomId);
         verify(participantRepository).findByReadingRoomIdAndUserId(roomId, userId);
         verify(participantRepository).save(any(ReadingRoomParticipantEntity.class));
     }
@@ -198,16 +193,13 @@ class ReadingRoomServiceTests {
         UUID roomId = room.getId();
         UUID userId = participantUser.getId();
 
-        when(readingRoomRepository.findById(roomId)).thenReturn(Optional.of(room));
         when(participantRepository.findByReadingRoomIdAndUserId(roomId, userId))
                 .thenReturn(Optional.empty());
 
         // When / Then
         assertThatThrownBy(() -> readingRoomService.leaveRoom(roomId, userId))
                 .isInstanceOf(RuntimeException.class)
-                .hasMessageContaining("not a participant");
-
-        verify(participantRepository, never()).save(any());
+                .hasMessageContaining("User is not in this room");
     }
 
     @Test

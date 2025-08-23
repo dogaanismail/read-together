@@ -164,7 +164,7 @@ class RoomSettingsResponseFactoryTests {
         RoomSettingsResponse result = RoomSettingsResponseFactory.createResponse(settings);
 
         // Then
-        assertThat(result.getHasPassword()).isFalse(); // empty string should be considered as no password
+        assertThat(result.getHasPassword()).isFalse();
     }
 
     @Test

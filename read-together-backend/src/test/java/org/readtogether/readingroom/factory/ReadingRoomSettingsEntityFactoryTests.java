@@ -22,7 +22,7 @@ class ReadingRoomSettingsEntityFactoryTests {
 
         // Then
         assertThat(result.getReadingRoom()).isEqualTo(room);
-        assertThat(result.isPublic()).isEqualTo(room.isPublic()); // inherits from room
+        assertThat(result.isPublic()).isEqualTo(room.isPublic());
         assertThat(result.isRequireHostApproval()).isFalse();
         assertThat(result.isEnableVideo()).isTrue();
         assertThat(result.isEnableAudio()).isTrue();
@@ -52,8 +52,7 @@ class ReadingRoomSettingsEntityFactoryTests {
         // Then
         assertThat(publicSettings.isPublic()).isTrue();
         assertThat(privateSettings.isPublic()).isFalse();
-        
-        // Both should have same other defaults
+
         assertThat(publicSettings.isEnableVideo()).isEqualTo(privateSettings.isEnableVideo());
         assertThat(publicSettings.isEnableAudio()).isEqualTo(privateSettings.isEnableAudio());
         assertThat(publicSettings.getRoomVolume()).isEqualTo(privateSettings.getRoomVolume());

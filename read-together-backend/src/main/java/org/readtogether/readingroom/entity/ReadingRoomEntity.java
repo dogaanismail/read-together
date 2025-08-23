@@ -7,7 +7,7 @@ import org.readtogether.common.entity.BaseEntity;
 import org.readtogether.readingroom.common.enums.RoomStatus;
 import org.readtogether.user.entity.UserEntity;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -52,13 +52,13 @@ public class ReadingRoomEntity extends BaseEntity {
     private RoomStatus status = WAITING;
 
     @Column(name = "scheduled_start_time")
-    private LocalDateTime scheduledStartTime;
+    private Instant scheduledStartTime;
 
     @Column(name = "actual_start_time")
-    private LocalDateTime actualStartTime;
+    private Instant actualStartTime;
 
     @Column(name = "end_time")
-    private LocalDateTime endTime;
+    private Instant endTime;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "host_id", nullable = false)
@@ -68,7 +68,7 @@ public class ReadingRoomEntity extends BaseEntity {
     @Builder.Default
     private List<ReadingRoomParticipantEntity> participants = new ArrayList<>();
 
-    @OneToOne(mappedBy = "readingRoom", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "readingRoom", cascade = CascadeType.ALL)
     private ReadingRoomSettingsEntity settings;
 
 }

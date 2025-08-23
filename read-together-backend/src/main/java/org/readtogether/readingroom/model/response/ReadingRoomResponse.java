@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.readtogether.readingroom.common.enums.RoomStatus;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -23,11 +24,11 @@ public class ReadingRoomResponse {
     private Boolean isPublic;
     private String roomCode;
     private RoomStatus status;
-    private LocalDateTime scheduledStartTime;
-    private LocalDateTime actualStartTime;
-    private LocalDateTime endTime;
+    private Instant scheduledStartTime;
+    private Instant actualStartTime;
+    private Instant endTime;
     private HostInfo host;
-    private LocalDateTime createdAt;
+    private Instant createdAt;
 
     @Data
     @Builder

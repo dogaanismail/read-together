@@ -8,8 +8,10 @@ import org.readtogether.readingroom.fixtures.ReadingRoomInvitationEntityFixtures
 import org.readtogether.readingroom.model.response.InvitationResponse;
 import org.readtogether.user.fixtures.UserEntityFixtures;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
+import static java.time.temporal.ChronoUnit.DAYS;
+import static java.time.temporal.ChronoUnit.HOURS;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class InvitationResponseFactoryTests {
@@ -24,7 +26,7 @@ class InvitationResponseFactoryTests {
                 ReadingRoomEntityFixtures.createDefaultRoomEntity(),
                 UserEntityFixtures.createDefaultUserEntity(),
                 "test@example.com",
-                LocalDateTime.now().plusDays(1)
+                Instant.now().plus(1, DAYS)
         );
 
         // When
@@ -52,7 +54,7 @@ class InvitationResponseFactoryTests {
                 ReadingRoomEntityFixtures.createDefaultRoomEntity(),
                 UserEntityFixtures.createDefaultUserEntity(),
                 UserEntityFixtures.createSecondaryUserEntity(),
-                LocalDateTime.now().plusDays(2)
+                Instant.now().plus(2, DAYS)
         );
 
         // When
@@ -74,7 +76,7 @@ class InvitationResponseFactoryTests {
         ReadingRoomInvitationEntity invitation = ReadingRoomInvitationEntityFixtures.createShareInvitation(
                 ReadingRoomEntityFixtures.createDefaultRoomEntity(),
                 UserEntityFixtures.createDefaultUserEntity(),
-                LocalDateTime.now().plusDays(3)
+                Instant.now().plus(3, DAYS)
         );
 
         // When
@@ -95,7 +97,7 @@ class InvitationResponseFactoryTests {
         ReadingRoomInvitationEntity invitation = ReadingRoomInvitationEntityFixtures.createShareInvitation(
                 ReadingRoomEntityFixtures.createDefaultRoomEntity(),
                 UserEntityFixtures.createDefaultUserEntity(),
-                LocalDateTime.now().plusDays(1)
+                Instant.now().plus(1, DAYS)
         );
 
         // When
@@ -163,7 +165,7 @@ class InvitationResponseFactoryTests {
 
         // Then
         assertThat(result.getIsExpired()).isTrue();
-        assertThat(result.getExpiresAt()).isBefore(LocalDateTime.now());
+        assertThat(result.getExpiresAt()).isBefore(Instant.now());
         assertThat(result.getInvitedEmail()).isEqualTo("expired@example.com");
     }
 
@@ -175,7 +177,7 @@ class InvitationResponseFactoryTests {
                 ReadingRoomEntityFixtures.createDefaultRoomEntity(),
                 UserEntityFixtures.createDefaultUserEntity(),
                 "email@example.com",
-                LocalDateTime.now().plusDays(1)
+                Instant.now().plus(1, DAYS)
         );
         // Email invitations have null invitedUser
 
@@ -194,7 +196,7 @@ class InvitationResponseFactoryTests {
         ReadingRoomInvitationEntity invitation = ReadingRoomInvitationEntityFixtures.createQRCodeInvitation(
                 ReadingRoomEntityFixtures.createPrivateRoomEntity(),
                 UserEntityFixtures.createSecondaryUserEntity(),
-                LocalDateTime.now().plusHours(12)
+                Instant.now().plus(12, HOURS)
         );
 
         // When
@@ -216,7 +218,7 @@ class InvitationResponseFactoryTests {
         ReadingRoomInvitationEntity invitation = ReadingRoomInvitationEntityFixtures.createShareInvitation(
                 ReadingRoomEntityFixtures.createDefaultRoomEntity(),
                 UserEntityFixtures.createDefaultUserEntity(),
-                LocalDateTime.now().plusDays(1)
+                Instant.now().plus(1, DAYS)
         );
         String baseUrl1 = "https://app.readtogether.com";
         String baseUrl2 = "https://staging.readtogether.com";

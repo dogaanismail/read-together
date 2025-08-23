@@ -6,10 +6,12 @@ import org.readtogether.readingroom.entity.ReadingRoomEntity;
 import org.readtogether.user.entity.UserEntity;
 import org.readtogether.user.fixtures.UserEntityFixtures;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import static java.time.temporal.ChronoUnit.HOURS;
+import static java.time.temporal.ChronoUnit.MINUTES;
 import static org.readtogether.readingroom.common.enums.RoomStatus.*;
 
 @UtilityClass
@@ -19,6 +21,7 @@ public class ReadingRoomEntityFixtures {
     public static final UUID SECONDARY_ROOM_ID = UUID.fromString("550e8400-e29b-41d4-a716-446655440101");
 
     public static ReadingRoomEntity createDefaultRoomEntity() {
+
         return createRoomEntity(
                 DEFAULT_ROOM_ID,
                 UserEntityFixtures.createDefaultUserEntity(),
@@ -33,6 +36,7 @@ public class ReadingRoomEntityFixtures {
     }
 
     public static ReadingRoomEntity createSecondaryRoomEntity() {
+
         return createRoomEntity(
                 SECONDARY_ROOM_ID,
                 UserEntityFixtures.createSecondaryUserEntity(),
@@ -42,7 +46,7 @@ public class ReadingRoomEntityFixtures {
                 8,
                 ACTIVE,
                 "ROOM002",
-                LocalDateTime.now().plusHours(2)
+                Instant.now().plus(2, HOURS)
         );
     }
 
@@ -55,7 +59,7 @@ public class ReadingRoomEntityFixtures {
             int maxParticipants,
             RoomStatus status,
             String roomCode,
-            LocalDateTime scheduledStartTime) {
+            Instant scheduledStartTime) {
 
         return ReadingRoomEntity.builder()
                 .id(id)
@@ -72,6 +76,7 @@ public class ReadingRoomEntityFixtures {
     }
 
     public static ReadingRoomEntity createActiveRoomEntity() {
+
         return createRoomEntity(
                 UUID.randomUUID(),
                 UserEntityFixtures.createDefaultUserEntity(),
@@ -81,11 +86,12 @@ public class ReadingRoomEntityFixtures {
                 10,
                 ACTIVE,
                 "ACTIVE01",
-                LocalDateTime.now().minusMinutes(30)
+                Instant.now().minus(30, MINUTES)
         );
     }
 
     public static ReadingRoomEntity createPrivateRoomEntity() {
+
         return createRoomEntity(
                 UUID.randomUUID(),
                 UserEntityFixtures.createDefaultUserEntity(),
@@ -95,11 +101,12 @@ public class ReadingRoomEntityFixtures {
                 6,
                 WAITING,
                 "PRIV001",
-                LocalDateTime.now().plusHours(1)
+                Instant.now().plus(1, HOURS)
         );
     }
 
     public static ReadingRoomEntity createCompletedRoomEntity() {
+
         return createRoomEntity(
                 UUID.randomUUID(),
                 UserEntityFixtures.createDefaultUserEntity(),
@@ -109,12 +116,13 @@ public class ReadingRoomEntityFixtures {
                 12,
                 COMPLETED,
                 "COMP001",
-                LocalDateTime.now().minusHours(2)
+                Instant.now().minus(2, HOURS)
         );
     }
 
     public static ReadingRoomEntity createFullRoomEntity() {
-        ReadingRoomEntity room = createRoomEntity(
+
+        return createRoomEntity(
                 UUID.randomUUID(),
                 UserEntityFixtures.createDefaultUserEntity(),
                 "Full Reading Room",
@@ -123,9 +131,7 @@ public class ReadingRoomEntityFixtures {
                 2, // Small capacity for testing
                 WAITING,
                 "FULL001",
-                LocalDateTime.now().plusMinutes(30)
+                Instant.now().plus(30, MINUTES)
         );
-        
-        return room;
     }
 }

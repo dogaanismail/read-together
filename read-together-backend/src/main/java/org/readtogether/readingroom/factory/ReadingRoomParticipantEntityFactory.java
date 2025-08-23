@@ -5,7 +5,7 @@ import org.readtogether.readingroom.entity.ReadingRoomEntity;
 import org.readtogether.readingroom.entity.ReadingRoomParticipantEntity;
 import org.readtogether.user.entity.UserEntity;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 import static org.readtogether.readingroom.common.enums.ApprovalStatus.APPROVED;
 import static org.readtogether.readingroom.common.enums.ParticipantStatus.JOINED;
@@ -23,7 +23,7 @@ public class ReadingRoomParticipantEntityFactory {
                 .readingRoom(readingRoom)
                 .user(user)
                 .status(JOINED)
-                .joinedAt(LocalDateTime.now())
+                .joinedAt(Instant.now())
                 .isMuted(autoMuteNewJoiners)
                 .isVideoEnabled(true)
                 .isSpeaking(false)
@@ -34,7 +34,7 @@ public class ReadingRoomParticipantEntityFactory {
     public ReadingRoomParticipantEntity participantLeft(ReadingRoomParticipantEntity participant) {
 
         participant.setStatus(LEFT);
-        participant.setLeftAt(LocalDateTime.now());
+        participant.setLeftAt(Instant.now());
         return participant;
     }
 }

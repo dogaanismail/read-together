@@ -18,7 +18,8 @@ import org.readtogether.readingroom.model.response.ReadingRoomResponse;
 import org.readtogether.user.entity.UserEntity;
 import org.readtogether.user.fixtures.UserEntityFixtures;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -56,7 +57,7 @@ class RoomAccessServiceTests {
         privateRoom = ReadingRoomEntityFixtures.createPrivateRoomEntity();
         user = UserEntityFixtures.createDefaultUserEntity();
         invitation = ReadingRoomInvitationEntityFixtures.createDirectInvitation(
-                room, UserEntityFixtures.createSecondaryUserEntity(), user, LocalDateTime.now().plusDays(1));
+                room, UserEntityFixtures.createSecondaryUserEntity(), user, Instant.now().plus(1, ChronoUnit.DAYS));
         invitationToken = invitation.getInvitationToken();
         userId = user.getId();
     }
@@ -91,11 +92,11 @@ class RoomAccessServiceTests {
         // Given
         String password = "correctPassword";
         JoinRoomRequest joinRequest = ReadingRoomRequestFixtures.createJoinRoomRequest("ROOM001", password);
-        
+
         InvitationResponse invitationResponse = InvitationResponse.builder()
                 .readingRoomId(room.getId())
                 .build();
-        
+
         ReadingRoomResponse roomResponse = ReadingRoomResponse.builder()
                 .id(room.getId())
                 .title(room.getTitle())
@@ -130,7 +131,7 @@ class RoomAccessServiceTests {
         InvitationResponse invitationResponse = InvitationResponse.builder()
                 .readingRoomId(room.getId())
                 .build();
-        
+
         ReadingRoomResponse roomResponse = ReadingRoomResponse.builder()
                 .id(room.getId())
                 .title(room.getTitle())
@@ -162,7 +163,7 @@ class RoomAccessServiceTests {
         // Given
         String wrongPassword = "wrongPassword";
         JoinRoomRequest joinRequest = ReadingRoomRequestFixtures.createJoinRoomRequest("ROOM001", wrongPassword);
-        
+
         InvitationResponse invitationResponse = InvitationResponse.builder()
                 .readingRoomId(room.getId())
                 .build();
@@ -189,7 +190,7 @@ class RoomAccessServiceTests {
         JoinRoomRequest request = ReadingRoomRequestFixtures.createPasswordProtectedJoinRequest();
         String roomCode = request.getRoomCode();
         String password = request.getPassword();
-        
+
         ReadingRoomResponse roomResponse = ReadingRoomResponse.builder()
                 .id(privateRoom.getId())
                 .roomCode(roomCode)
@@ -219,7 +220,7 @@ class RoomAccessServiceTests {
         // Given
         JoinRoomRequest request = ReadingRoomRequestFixtures.createDefaultJoinRoomRequest();
         String roomCode = request.getRoomCode();
-        
+
         ReadingRoomResponse roomResponse = ReadingRoomResponse.builder()
                 .id(room.getId())
                 .roomCode(roomCode)
@@ -249,7 +250,7 @@ class RoomAccessServiceTests {
     void shouldThrowWhenInvalidPasswordByCode() {
         // Given
         JoinRoomRequest request = ReadingRoomRequestFixtures.createJoinRoomRequest("PRIV001", "wrongPassword");
-        
+
         ReadingRoomResponse roomResponse = ReadingRoomResponse.builder()
                 .id(privateRoom.getId())
                 .roomCode(request.getRoomCode())
@@ -275,7 +276,7 @@ class RoomAccessServiceTests {
     void shouldHandleEmptyPasswordForPrivateRoom() {
         // Given
         JoinRoomRequest request = ReadingRoomRequestFixtures.createJoinRoomRequest("PRIV001", null);
-        
+
         ReadingRoomResponse roomResponse = ReadingRoomResponse.builder()
                 .id(privateRoom.getId())
                 .roomCode(request.getRoomCode())
@@ -299,7 +300,7 @@ class RoomAccessServiceTests {
     void shouldHandleBlankPasswordForPrivateRoom() {
         // Given
         JoinRoomRequest request = ReadingRoomRequestFixtures.createJoinRoomRequest("PRIV001", "   ");
-        
+
         ReadingRoomResponse roomResponse = ReadingRoomResponse.builder()
                 .id(privateRoom.getId())
                 .roomCode(request.getRoomCode())
@@ -324,7 +325,7 @@ class RoomAccessServiceTests {
         // Given
         String correctPassword = "correctPassword123";
         JoinRoomRequest request = ReadingRoomRequestFixtures.createJoinRoomRequest("PRIV001", correctPassword);
-        
+
         ReadingRoomResponse roomResponse = ReadingRoomResponse.builder()
                 .id(privateRoom.getId())
                 .roomCode(request.getRoomCode())
@@ -354,7 +355,7 @@ class RoomAccessServiceTests {
     void shouldPropagateRoomServiceExceptions() {
         // Given
         JoinRoomRequest request = ReadingRoomRequestFixtures.createDefaultJoinRoomRequest();
-        
+
         ReadingRoomResponse roomResponse = ReadingRoomResponse.builder()
                 .id(room.getId())
                 .roomCode(request.getRoomCode())

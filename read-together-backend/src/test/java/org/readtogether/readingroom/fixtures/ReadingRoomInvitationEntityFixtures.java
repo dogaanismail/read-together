@@ -7,9 +7,10 @@ import org.readtogether.readingroom.entity.ReadingRoomEntity;
 import org.readtogether.readingroom.entity.ReadingRoomInvitationEntity;
 import org.readtogether.user.entity.UserEntity;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.UUID;
 
+import static java.time.temporal.ChronoUnit.*;
 import static org.readtogether.readingroom.common.enums.InvitationStatus.*;
 import static org.readtogether.readingroom.common.enums.InvitationType.*;
 
@@ -20,7 +21,7 @@ public class ReadingRoomInvitationEntityFixtures {
             ReadingRoomEntity room,
             UserEntity inviter,
             String email,
-            LocalDateTime expiresAt) {
+            Instant expiresAt) {
 
         return createInvitationEntity(
                 room,
@@ -41,7 +42,7 @@ public class ReadingRoomInvitationEntityFixtures {
             ReadingRoomEntity room,
             UserEntity inviter,
             UserEntity invitedUser,
-            LocalDateTime expiresAt) {
+            Instant expiresAt) {
 
         return createInvitationEntity(
                 room,
@@ -61,7 +62,7 @@ public class ReadingRoomInvitationEntityFixtures {
     public static ReadingRoomInvitationEntity createShareInvitation(
             ReadingRoomEntity room,
             UserEntity inviter,
-            LocalDateTime expiresAt) {
+            Instant expiresAt) {
 
         return createInvitationEntity(
                 room,
@@ -81,7 +82,7 @@ public class ReadingRoomInvitationEntityFixtures {
     public static ReadingRoomInvitationEntity createQRCodeInvitation(
             ReadingRoomEntity room,
             UserEntity inviter,
-            LocalDateTime expiresAt) {
+            Instant expiresAt) {
 
         return createInvitationEntity(
                 room,
@@ -111,8 +112,8 @@ public class ReadingRoomInvitationEntityFixtures {
                 DIRECT_INVITE,
                 ACCEPTED,
                 "accepted-token-" + UUID.randomUUID(),
-                LocalDateTime.now().plusDays(1),
-                LocalDateTime.now().minusMinutes(5),
+                Instant.now().plus(1, HOURS),
+                Instant.now().minus(5, MINUTES),
                 null,
                 "Accepted invitation"
         );
@@ -131,7 +132,7 @@ public class ReadingRoomInvitationEntityFixtures {
                 EMAIL,
                 EXPIRED,
                 "expired-token-" + UUID.randomUUID(),
-                LocalDateTime.now().minusDays(1),
+                Instant.now().minus(1, DAYS),
                 null,
                 null,
                 "Expired invitation"
@@ -151,9 +152,9 @@ public class ReadingRoomInvitationEntityFixtures {
                 DIRECT_INVITE,
                 DECLINED,
                 "declined-token-" + UUID.randomUUID(),
-                LocalDateTime.now().plusDays(1),
+                Instant.now().plus(1, DAYS),
                 null,
-                LocalDateTime.now().minusMinutes(10),
+                Instant.now().minus(10, MINUTES),
                 "Declined invitation"
         );
     }
@@ -166,9 +167,9 @@ public class ReadingRoomInvitationEntityFixtures {
             InvitationType invitationType,
             InvitationStatus status,
             String invitationToken,
-            LocalDateTime expiresAt,
-            LocalDateTime acceptedAt,
-            LocalDateTime declinedAt,
+            Instant expiresAt,
+            Instant acceptedAt,
+            Instant declinedAt,
             String message) {
 
         return ReadingRoomInvitationEntity.builder()
@@ -202,7 +203,7 @@ public class ReadingRoomInvitationEntityFixtures {
                 type,
                 PENDING,
                 token,
-                LocalDateTime.now().plusHours(expirationHours),
+                Instant.now().plus(expirationHours, HOURS),
                 null,
                 null,
                 "Custom test invitation"

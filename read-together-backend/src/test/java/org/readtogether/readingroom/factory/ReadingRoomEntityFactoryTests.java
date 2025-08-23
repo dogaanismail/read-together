@@ -8,8 +8,9 @@ import org.readtogether.readingroom.model.request.CreateReadingRoomRequest;
 import org.readtogether.user.entity.UserEntity;
 import org.readtogether.user.fixtures.UserEntityFixtures;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
+import static java.time.temporal.ChronoUnit.HOURS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.readtogether.readingroom.common.enums.RoomStatus.ACTIVE;
 
@@ -49,11 +50,11 @@ class ReadingRoomEntityFactoryTests {
 
         // Then
         assertThat(result.getTitle()).isEqualTo("Minimal Room");
-        assertThat(result.getDescription()).isNull(); // description not set in minimal request
-        assertThat(result.getMaxParticipants()).isEqualTo(12); // default value
-        assertThat(result.isPublic()).isTrue(); // default value
-        assertThat(result.getScheduledStartTime()).isNull(); // not set
-        assertThat(result.getStatus()).isEqualTo(ACTIVE); // factory default
+        assertThat(result.getDescription()).isNull();
+        assertThat(result.getMaxParticipants()).isEqualTo(12);
+        assertThat(result.isPublic()).isTrue();
+        assertThat(result.getScheduledStartTime()).isNull();
+        assertThat(result.getStatus()).isEqualTo(ACTIVE);
         assertThat(result.getRoomCode()).isNotNull();
     }
 
@@ -80,7 +81,7 @@ class ReadingRoomEntityFactoryTests {
     @DisplayName("Should create room with custom values")
     void shouldCreateRoomWithCustomValues() {
         // Given
-        LocalDateTime scheduledTime = LocalDateTime.now().plusHours(3);
+        Instant scheduledTime = Instant.now().plus(3, HOURS);
         CreateReadingRoomRequest request = ReadingRoomRequestFixtures.createCreateReadingRoomRequest(
                 "Custom Room",
                 "Custom description",

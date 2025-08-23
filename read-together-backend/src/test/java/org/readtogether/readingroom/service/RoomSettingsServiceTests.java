@@ -45,7 +45,6 @@ class RoomSettingsServiceTests {
     private RoomSettingsService roomSettingsService;
 
     private ReadingRoomEntity room;
-    private ReadingRoomEntity privateRoom;
     private ReadingRoomSettingsEntity settings;
     private UUID hostId;
     private UUID nonHostId;
@@ -53,7 +52,6 @@ class RoomSettingsServiceTests {
     @BeforeEach
     void setUp() {
         room = ReadingRoomEntityFixtures.createDefaultRoomEntity();
-        privateRoom = ReadingRoomEntityFixtures.createPrivateRoomEntity();
         settings = ReadingRoomSettingsEntityFixtures.createDefaultSettingsEntity(room);
         hostId = room.getHost().getId();
         nonHostId = UserEntityFixtures.createSecondaryUserEntity().getId();
@@ -152,7 +150,7 @@ class RoomSettingsServiceTests {
         UUID roomId = room.getId();
 
         when(settingsRepository.findByReadingRoomId(roomId)).thenReturn(Optional.of(settings));
-        // settings has no password (null)
+        // settings have no password (null)
 
         // When
         boolean resultNull = roomSettingsService.validateRoomPassword(roomId, "anyPassword");

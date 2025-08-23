@@ -71,7 +71,7 @@ class ReadingRoomParticipantEntityFactoryTests {
         ReadingRoomParticipantEntity participant = ReadingRoomParticipantEntityFactory.createParticipant(
                 room, user, false);
         
-        // Simulate participant speaking before leaving
+        // Simulate a participant speaking before leaving
         participant.setSpeaking(true);
 
         // When
@@ -103,7 +103,7 @@ class ReadingRoomParticipantEntityFactoryTests {
         ReadingRoomParticipantEntity result = ReadingRoomParticipantEntityFactory.participantLeft(participant);
 
         // Then
-        assertThat(result).isSameAs(participant); // same instance
+        assertThat(result).isSameAs(participant);
         assertThat(result.getReadingRoom()).isEqualTo(room);
         assertThat(result.getUser()).isEqualTo(user);
         assertThat(result.isMuted()).isEqualTo(originalMuted);
