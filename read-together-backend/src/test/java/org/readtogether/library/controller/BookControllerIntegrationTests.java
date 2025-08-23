@@ -156,8 +156,6 @@ class BookControllerIntegrationTests extends BaseIntegrationTest {
 
     @Test
     @DisplayName("GET /api/v1/library/books/public should return public books")
-    @Disabled("Currently public books are not implemented")
-        //TODO: Implement public books
     void shouldReturnPublicBooks() throws Exception {
         // Given: register and login user
         String email = "public.book.creator@test.local";

@@ -1,5 +1,6 @@
 package org.readtogether.library.controller;
 
+import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.readtogether.common.utils.SecurityUtils;
@@ -102,7 +103,7 @@ public class BookController {
     }
 
     @GetMapping("/public")
-    @PreAuthorize("permitAll()")
+    @PermitAll
     public ResponseEntity<List<BookResponse>> getPublicBooks() {
 
         List<BookResponse> response = bookService.getPublicBooks();
@@ -110,7 +111,7 @@ public class BookController {
     }
 
     @GetMapping("/public/paged")
-    @PreAuthorize("hasAuthority('USER')")
+    @PermitAll
     public ResponseEntity<Page<BookResponse>> getPublicBooksPaged(
             Pageable pageable) {
 
@@ -131,7 +132,7 @@ public class BookController {
     }
 
     @GetMapping("/search/public")
-    @PreAuthorize("hasAuthority('USER')")
+    @PermitAll
     public ResponseEntity<List<BookResponse>> searchPublicBooks(
             @RequestParam String query) {
 
@@ -151,7 +152,7 @@ public class BookController {
     }
 
     @GetMapping("/public/count")
-    @PreAuthorize("hasAuthority('USER')")
+    @PermitAll
     public ResponseEntity<Long> getPublicBooksCount() {
 
         long count = bookService.getPublicBooksCount();

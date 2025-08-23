@@ -89,8 +89,7 @@ class SessionControllerIntegrationTests extends BaseIntegrationTest {
         // When / Then
         mockMvc.perform(get("/api/v1/sessions/public")
                         .param("page", "0")
-                        .param("size", "10")
-                        .header("Authorization", "Bearer " + accessToken))
+                        .param("size", "10"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.content").isArray())
                 .andExpect(jsonPath("$.pageable.pageNumber").value(0));

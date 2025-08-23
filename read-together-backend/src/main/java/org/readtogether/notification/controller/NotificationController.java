@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +25,7 @@ public class NotificationController {
     private final NotificationService notificationService;
 
     @GetMapping
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<Page<NotificationResponse>> getNotifications(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
@@ -42,6 +44,7 @@ public class NotificationController {
     }
 
     @GetMapping("/unread-count")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<Map<String, Long>> getUnreadCount(Authentication authentication) {
 
         UUID userId = SecurityUtils.getCurrentUserId(authentication);
@@ -51,6 +54,7 @@ public class NotificationController {
     }
 
     @PutMapping("/{notificationId}/read")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<Void> markAsRead(
             @PathVariable UUID notificationId,
             Authentication authentication) {
@@ -64,6 +68,7 @@ public class NotificationController {
     }
 
     @PutMapping("/mark-all-read")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<Map<String, Integer>> markAllAsRead(Authentication authentication) {
 
         UUID userId = SecurityUtils.getCurrentUserId(authentication);

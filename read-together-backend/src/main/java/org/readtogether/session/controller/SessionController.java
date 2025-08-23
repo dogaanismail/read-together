@@ -9,12 +9,14 @@ import org.readtogether.session.model.request.SessionUpdateRequest;
 import org.readtogether.session.service.SessionService;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import jakarta.annotation.security.PermitAll;
 
 @Slf4j
 @RestController
@@ -25,6 +27,7 @@ public class SessionController {
     private final SessionService sessionService;
 
     @PostMapping
+    @PreAuthorize("hasAuthority('USER')")
     public CompletableFuture<ResponseEntity<SessionResponse>> createSessionAsync(
             @Valid @RequestPart("session") SessionCreateRequest request,
             @RequestPart("file") MultipartFile file,
@@ -39,6 +42,7 @@ public class SessionController {
     }
 
     @PostMapping("/sync")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<SessionResponse> createSessionSync(
             @Valid @RequestPart("session") SessionCreateRequest request,
             @RequestPart("file") MultipartFile file,
@@ -54,6 +58,7 @@ public class SessionController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<Page<SessionResponse>> getUserSessions(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
@@ -64,6 +69,7 @@ public class SessionController {
     }
 
     @GetMapping("/public")
+    @PermitAll
     public ResponseEntity<Page<SessionResponse>> getPublicSessions(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size) {
@@ -73,6 +79,7 @@ public class SessionController {
     }
 
     @GetMapping("/feed")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<Page<SessionResponse>> getFeed(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
@@ -84,6 +91,7 @@ public class SessionController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<SessionResponse> getSession(@PathVariable UUID id) {
 
         return sessionService.getSessionById(id)
@@ -92,6 +100,7 @@ public class SessionController {
     }
 
     @GetMapping("/my/{id}")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<SessionResponse> getUserSession(
             @PathVariable UUID id,
             Authentication authentication) {
@@ -102,6 +111,7 @@ public class SessionController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<SessionResponse> updateSession(
             @PathVariable UUID id,
             @Valid @RequestBody SessionUpdateRequest request,
@@ -116,6 +126,7 @@ public class SessionController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<Void> deleteSession(
             @PathVariable UUID id,
             Authentication authentication) {
