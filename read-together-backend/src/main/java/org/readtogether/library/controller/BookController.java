@@ -26,6 +26,7 @@ public class BookController {
     private final BookService bookService;
 
     @PostMapping
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<BookResponse> createBook(
             @Valid @RequestBody BookCreateRequest request,
             Authentication authentication) {
@@ -39,6 +40,7 @@ public class BookController {
     }
 
     @PutMapping("/{bookId}")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<BookResponse> updateBook(
             @PathVariable UUID bookId,
             @Valid @RequestBody BookUpdateRequest request,
@@ -51,6 +53,7 @@ public class BookController {
     }
 
     @DeleteMapping("/{bookId}")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<Void> deleteBook(
             @PathVariable UUID bookId,
             Authentication authentication) {
@@ -64,6 +67,7 @@ public class BookController {
     }
 
     @GetMapping("/{bookId}")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<BookResponse> getBook(
             @PathVariable UUID bookId,
             Authentication authentication) {
@@ -75,6 +79,7 @@ public class BookController {
     }
 
     @GetMapping("/my-books")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<List<BookResponse>> getUserBooks(
             Authentication authentication) {
 
@@ -85,6 +90,7 @@ public class BookController {
     }
 
     @GetMapping("/my-books/paged")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<Page<BookResponse>> getUserBooksPaged(
             Authentication authentication,
             Pageable pageable) {
@@ -104,6 +110,7 @@ public class BookController {
     }
 
     @GetMapping("/public/paged")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<Page<BookResponse>> getPublicBooksPaged(
             Pageable pageable) {
 
@@ -112,6 +119,7 @@ public class BookController {
     }
 
     @GetMapping("/search/my-books")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<List<BookResponse>> searchUserBooks(
             @RequestParam String query,
             Authentication authentication) {
@@ -123,6 +131,7 @@ public class BookController {
     }
 
     @GetMapping("/search/public")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<List<BookResponse>> searchPublicBooks(
             @RequestParam String query) {
 
@@ -131,6 +140,7 @@ public class BookController {
     }
 
     @GetMapping("/my-books/count")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<Long> getUserBooksCount(
             Authentication authentication) {
 
@@ -141,6 +151,7 @@ public class BookController {
     }
 
     @GetMapping("/public/count")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<Long> getPublicBooksCount() {
 
         long count = bookService.getPublicBooksCount();
