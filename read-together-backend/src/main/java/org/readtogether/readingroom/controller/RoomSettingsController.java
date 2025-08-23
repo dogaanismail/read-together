@@ -39,6 +39,7 @@ public class RoomSettingsController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     @Operation(summary = "Get room settings")
     public ResponseEntity<RoomSettingsResponse> getRoomSettings(
             @Parameter(description = "Room ID") @PathVariable UUID roomId) {
@@ -48,6 +49,7 @@ public class RoomSettingsController {
     }
 
     @PostMapping("/validate-password")
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     @Operation(summary = "Validate room password")
     public ResponseEntity<Boolean> validateRoomPassword(
             @Parameter(description = "Room ID") @PathVariable UUID roomId,

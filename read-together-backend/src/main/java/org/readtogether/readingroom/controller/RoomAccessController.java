@@ -3,6 +3,7 @@ package org.readtogether.readingroom.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.annotation.security.PermitAll;
 import lombok.RequiredArgsConstructor;
 import org.readtogether.common.utils.AuthenticationUtils;
 import org.readtogether.readingroom.model.request.JoinRoomRequest;
@@ -25,6 +26,7 @@ public class RoomAccessController {
     private final RoomAccessService roomAccessService;
 
     @GetMapping("/join")
+    @PermitAll
     @Operation(summary = "Get room information from invitation token (public access)")
     public ResponseEntity<InvitationResponse> getRoomFromInvitation(
             @Parameter(description = "Invitation token") @RequestParam String token) {

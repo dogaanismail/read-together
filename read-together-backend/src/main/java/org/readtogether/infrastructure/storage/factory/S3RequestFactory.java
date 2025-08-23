@@ -21,6 +21,40 @@ public class S3RequestFactory {
                 .build();
     }
 
+    public static PutObjectRequest createEncryptedPutObjectRequest(
+            String bucket,
+            String key,
+            String contentType,
+            String serverSideEncryption,
+            String kmsKeyId,
+            Boolean bucketKeyEnabled) {
+
+        PutObjectRequest.Builder builder = PutObjectRequest.builder()
+                .bucket(bucket)
+                .key(key)
+                .contentType(contentType);
+
+        if (serverSideEncryption != null) {
+            if ("aws:kms".equalsIgnoreCase(serverSideEncryption)) {
+                builder.serverSideEncryption(ServerSideEncryption.AWS_KMS);
+                if (kmsKeyId != null && !kmsKeyId.isEmpty()) {
+                    builder.ssekmsKeyId(kmsKeyId);
+                }
+                if (bucketKeyEnabled != null) {
+                    builder.bucketKeyEnabled(bucketKeyEnabled);
+                }
+            } else {
+                // Default to AES256 when the value is not as:kms
+                builder.serverSideEncryption(ServerSideEncryption.AES256);
+            }
+        } else {
+            // Safe default
+            builder.serverSideEncryption(ServerSideEncryption.AES256);
+        }
+
+        return builder.build();
+    }
+
     public static DeleteObjectRequest createDeleteObjectRequest(
             String bucket,
             String key) {

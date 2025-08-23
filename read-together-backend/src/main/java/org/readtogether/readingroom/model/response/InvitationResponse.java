@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.readtogether.readingroom.common.enums.InvitationStatus;
 import org.readtogether.readingroom.common.enums.InvitationType;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -26,13 +27,13 @@ public class InvitationResponse {
     private String invitationToken;
     private InvitationType invitationType;
     private InvitationStatus status;
-    private LocalDateTime expiresAt;
-    private LocalDateTime acceptedAt;
-    private LocalDateTime declinedAt;
+    private Instant expiresAt;
+    private Instant acceptedAt;
+    private Instant declinedAt;
     private String message;
     private String shareLink;
     private String qrCodeUrl;
-    private LocalDateTime createdAt;
+    private Instant createdAt;
     private Boolean isExpired;
 
     @Data

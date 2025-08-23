@@ -8,7 +8,8 @@ import org.springframework.util.StringUtils;
 @UtilityClass
 public class RoomSettingsResponseFactory {
 
-    public RoomSettingsResponse createResponse(ReadingRoomSettingsEntity settings) {
+    public RoomSettingsResponse createResponse(
+            ReadingRoomSettingsEntity settings) {
 
         return RoomSettingsResponse.builder()
                 .id(settings.getId())

@@ -9,6 +9,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Data
@@ -32,5 +33,5 @@ public class CreateReadingRoomRequest {
     @Builder.Default
     private boolean isPublic = true;
 
-    private LocalDateTime scheduledStartTime;
+    private Instant scheduledStartTime;
 }

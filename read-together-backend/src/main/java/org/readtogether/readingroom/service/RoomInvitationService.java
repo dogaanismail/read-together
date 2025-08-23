@@ -18,7 +18,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -53,7 +55,7 @@ public class RoomInvitationService {
         }
 
         List<ReadingRoomInvitationEntity> invitations = new ArrayList<>();
-        LocalDateTime expiresAt = LocalDateTime.now().plusHours(request.getExpirationHours());
+        Instant expiresAt = Instant.now().plus(request.getExpirationHours(), ChronoUnit.HOURS);
 
         switch (request.getInvitationType()) {
             case EMAIL -> invitations.addAll(createEmailInvitations(room, inviter, request, expiresAt));
@@ -185,7 +187,7 @@ public class RoomInvitationService {
             ReadingRoomEntity room,
             UserEntity inviter,
             InviteToRoomRequest request,
-            LocalDateTime expiresAt) {
+            Instant expiresAt) {
 
         if (request.getInvitedEmails() == null || request.getInvitedEmails().isEmpty()) {
             throw new RuntimeException("Email addresses are required for email invitations");
@@ -201,7 +203,7 @@ public class RoomInvitationService {
             ReadingRoomEntity room,
             UserEntity inviter,
             InviteToRoomRequest request,
-            LocalDateTime expiresAt) {
+            Instant expiresAt) {
 
         if (request.getInvitedUserIds() == null || request.getInvitedUserIds().isEmpty()) {
             throw new RuntimeException("User IDs are required for direct invitations");

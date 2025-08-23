@@ -20,6 +20,13 @@ public class StorageProperties {
         private String accessKey;
         private String secretKey;
         private String endpoint; // For S3-compatible services
+        // Encryption settings
+        // Values: "AES256" for SSE-S3 or "aws:kms" for SSE-KMS. Default to AES256 for safety.
+        private String serverSideEncryption = "AES256";
+        // Provide when using SSE-KMS
+        private String kmsKeyId;
+        // Use S3 Bucket Keys for AWS-KMS to reduce cost
+        private boolean bucketKeyEnabled = true;
     }
 
     @Data

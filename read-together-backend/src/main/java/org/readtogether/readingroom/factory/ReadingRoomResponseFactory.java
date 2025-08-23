@@ -27,7 +27,7 @@ public class ReadingRoomResponseFactory {
                 .actualStartTime(room.getActualStartTime())
                 .endTime(room.getEndTime())
                 .host(createHostInfo(room))
-                .createdAt(LocalDateTime.from(room.getCreatedAt()))
+                .createdAt(room.getCreatedAt())
                 .build();
     }
 

@@ -34,7 +34,7 @@ public class InvitationResponseFactory {
                 .message(invitation.getMessage())
                 .shareLink(shareLink)
                 .qrCodeUrl(qrCodeUrl)
-                .createdAt(LocalDateTime.from(invitation.getCreatedAt()))
+                .createdAt(invitation.getCreatedAt())
                 .isExpired(invitation.isExpired())
                 .build();
     }

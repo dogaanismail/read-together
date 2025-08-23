@@ -8,7 +8,7 @@ import org.readtogether.readingroom.common.enums.ApprovalStatus;
 import org.readtogether.readingroom.common.enums.ParticipantStatus;
 import org.readtogether.user.entity.UserEntity;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.UUID;
 
 import static org.readtogether.readingroom.common.enums.ApprovalStatus.APPROVED;
@@ -43,10 +43,10 @@ public class ReadingRoomParticipantEntity extends BaseEntity {
     private ParticipantStatus status = JOINED;
 
     @Column(name = "joined_at")
-    private LocalDateTime joinedAt;
+    private Instant joinedAt;
 
     @Column(name = "left_at")
-    private LocalDateTime leftAt;
+    private Instant leftAt;
 
     @Column(name = "is_muted")
     @Builder.Default
@@ -69,5 +69,6 @@ public class ReadingRoomParticipantEntity extends BaseEntity {
     private UUID approvedBy;
 
     @Column(name = "approved_at")
-    private LocalDateTime approvedAt;
+    private Instant approvedAt;
+
 }

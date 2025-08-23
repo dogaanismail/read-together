@@ -7,6 +7,7 @@ import org.readtogether.readingroom.model.request.InviteToRoomRequest;
 import org.readtogether.readingroom.utils.ReadingRoomUtils;
 import org.readtogether.user.entity.UserEntity;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 
 import static org.readtogether.readingroom.common.enums.InvitationStatus.*;
@@ -20,7 +21,7 @@ public class ReadingRoomInvitationEntityFactory {
             ReadingRoomEntity room,
             UserEntity inviter,
             InviteToRoomRequest request,
-            LocalDateTime expiresAt) {
+            Instant expiresAt) {
 
         return switch (request.getInvitationType()) {
             case LINK_SHARE -> createShareLinkInvitation(
@@ -36,7 +37,7 @@ public class ReadingRoomInvitationEntityFactory {
             UserEntity inviter,
             String invitedEmail,
             String message,
-            LocalDateTime expiresAt) {
+            Instant expiresAt) {
 
         return ReadingRoomInvitationEntity.builder()
                 .readingRoom(readingRoom)
@@ -55,7 +56,7 @@ public class ReadingRoomInvitationEntityFactory {
             UserEntity inviter,
             UserEntity invitedUser,
             String message,
-            LocalDateTime expiresAt) {
+            Instant expiresAt) {
 
         return ReadingRoomInvitationEntity.builder()
                 .readingRoom(readingRoom)
@@ -74,7 +75,7 @@ public class ReadingRoomInvitationEntityFactory {
             ReadingRoomEntity readingRoom,
             UserEntity inviter,
             String message,
-            LocalDateTime expiresAt) {
+            Instant expiresAt) {
 
         return ReadingRoomInvitationEntity.builder()
                 .readingRoom(readingRoom)
@@ -91,7 +92,7 @@ public class ReadingRoomInvitationEntityFactory {
             ReadingRoomEntity readingRoom,
             UserEntity inviter,
             String message,
-            LocalDateTime expiresAt) {
+            Instant expiresAt) {
 
         return ReadingRoomInvitationEntity.builder()
                 .readingRoom(readingRoom)
@@ -109,7 +110,7 @@ public class ReadingRoomInvitationEntityFactory {
             UserEntity acceptingUser) {
 
         invitation.setStatus(ACCEPTED);
-        invitation.setAcceptedAt(LocalDateTime.now());
+        invitation.setAcceptedAt(Instant.now());
 
         if (invitation.getInvitedUser() == null && acceptingUser != null) {
             invitation.setInvitedUser(acceptingUser);
@@ -118,10 +119,11 @@ public class ReadingRoomInvitationEntityFactory {
         return invitation;
     }
 
-    public ReadingRoomInvitationEntity createDeclineInvitationEntity(ReadingRoomInvitationEntity invitation) {
+    public ReadingRoomInvitationEntity createDeclineInvitationEntity(
+            ReadingRoomInvitationEntity invitation) {
 
         invitation.setStatus(DECLINED);
-        invitation.setDeclinedAt(LocalDateTime.now());
+        invitation.setDeclinedAt(Instant.now());
         return invitation;
     }
 }

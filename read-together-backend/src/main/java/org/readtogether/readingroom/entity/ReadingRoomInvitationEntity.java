@@ -8,7 +8,7 @@ import org.readtogether.readingroom.common.enums.InvitationStatus;
 import org.readtogether.readingroom.common.enums.InvitationType;
 import org.readtogether.user.entity.UserEntity;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.UUID;
 
 import static org.readtogether.readingroom.common.enums.InvitationStatus.PENDING;
@@ -56,18 +56,18 @@ public class ReadingRoomInvitationEntity extends BaseEntity {
     private InvitationStatus status = PENDING;
 
     @Column(name = "expires_at")
-    private LocalDateTime expiresAt;
+    private Instant expiresAt;
 
     @Column(name = "accepted_at")
-    private LocalDateTime acceptedAt;
+    private Instant acceptedAt;
 
     @Column(name = "declined_at")
-    private LocalDateTime declinedAt;
+    private Instant declinedAt;
 
     @Column(name = "message")
     private String message;
 
     public boolean isExpired() {
-        return expiresAt != null && LocalDateTime.now().isAfter(expiresAt);
+        return expiresAt != null && Instant.now().isAfter(expiresAt);
     }
 }

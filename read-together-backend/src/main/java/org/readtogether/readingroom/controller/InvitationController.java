@@ -34,6 +34,7 @@ public class InvitationController {
     }
 
     @GetMapping("/{invitationToken}")
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     @Operation(summary = "Get invitation details by token")
     public ResponseEntity<InvitationResponse> getInvitationByToken(
             @Parameter(description = "Invitation token") @PathVariable String invitationToken) {
