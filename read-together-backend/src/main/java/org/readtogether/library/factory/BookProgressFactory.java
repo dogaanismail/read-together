@@ -6,7 +6,6 @@ import org.readtogether.library.entity.BookProgressEntity;
 import org.readtogether.library.model.response.BookProgressResponse;
 import org.readtogether.library.model.request.BookProgressUpdateRequest;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -86,8 +85,8 @@ public class BookProgressFactory {
                 .personalRating(entity.getPersonalRating())
                 .readingGoalPagesPerDay(entity.getReadingGoalPagesPerDay())
                 .isFavorite(entity.isFavorite())
-                .createdAt(LocalDateTime.from(entity.getCreatedAt()))
-                .updatedAt(LocalDateTime.from(entity.getUpdatedAt()));
+                .createdAt(entity.getCreatedAt())
+                .updatedAt(entity.getUpdatedAt());
 
         return builder.build();
     }
