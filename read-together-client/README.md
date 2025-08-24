@@ -1,73 +1,66 @@
-# Welcome to your Lovable project
+# Read Together Client
 
-## Project info
+This is the frontend for the "Read Together" application, a platform designed to bring people together to read books in a shared virtual environment.
 
-**URL**: https://lovable.dev/projects/fd321966-cd5b-4678-96be-79a58a472e01
+## Features
 
-## How can I edit this code?
+Based on the project structure, here are some of the core features:
 
-There are several ways of editing your application.
+- **User Authentication**: Secure login and registration system (`LoginPage.tsx`, `RegisterPage.tsx`).
+- **Reading Rooms**: Users can create, join, and manage virtual reading rooms (`CreateRoomModal.tsx`, `JoinRoomModal.tsx`, `ReadingRoom.tsx`).
+- **Real-time Interaction**: In-room chat functionality (`Chat.tsx`) and audio/video capabilities (`AudioVideoPlayer.tsx`).
+- **Personal Library**: A personal space for users to manage their books (`BookLibrary.tsx`).
+- **User Profiles**: Customizable user profiles with public and private views (`Profile.tsx`, `EditProfile.tsx`, `PublicProfile.tsx`).
+- **Activity Tracking**: Features to monitor reading progress, such as activity graphs, streaks, and goals (`ReadingActivityGraph.tsx`, `ReadingStreaks.tsx`, `ReadingGoals.tsx`).
+- **Social Features**: Invite others to reading rooms and view session cards (`InvitePeopleModal.tsx`, `SessionCard.tsx`).
+- **Notifications**: A notification system to keep users updated (`NotificationDropdown.tsx`, `NotificationBadge.tsx`).
 
-**Use Lovable!**
+## Project Structure
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/fd321966-cd5b-4678-96be-79a58a472e01) and start prompting.
+The frontend codebase is organized into the following main directories:
 
-Changes made via Lovabsdfsdfdsfle will be committed automatically to this repo.
+- **`src/pages`**: Contains the top-level components for each page of the application, such as `DashboardPage.tsx`, `ReadingRoom.tsx`, and `Profile.tsx`.
 
-**Use your preferred IDE**
+- **`src/components`**: Holds reusable components that are used across different pages.
+  - **`src/components/ui`**: A collection of generic, reusable UI elements like buttons, cards, and dialogs, likely from a component library like Shadcn/UI.
+  - Other components in this directory are more feature-specific, such as `BookLibrary.tsx` or `ReadingActivityGraph.tsx`.
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+- **`src/contexts`**: Provides React Context for managing global state, such as `AuthContext.tsx` for authentication and `ThemeContext.tsx` for theme management.
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+- **`src/hooks`**: Contains custom React hooks that encapsulate and reuse stateful logic, like `useNotifications.tsx` and `useSpeechRecognition.tsx`.
 
-Follow these steps:
+- **`src/lib`**: A library of helper functions, utilities, and API communication logic.
+  - **`src/lib/api`**: Functions for making requests to the backend API.
+  - `utils.ts`: General utility functions.
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+## Getting Started
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+To get the project up and running on your local machine, follow these steps:
 
-# Step 3: Install the necessary dependencies.
-npm i
+1.  **Clone the repository:**
+    ```bash
+    git clone <repository-url>
+    cd read-together-client
+    ```
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+2.  **Install dependencies:**
+    This project uses `bun` as the package manager.
+    ```bash
+    bun install
+    ```
 
-**Edit a file directly in GitHub**
+3.  **Run the development server:**
+    ```bash
+    bun dev
+    ```
+    This will start the application on a local development server, typically at `http://localhost:5173`.
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## Technologies Used
 
-**Use GitHub Codespaces**
+- **Framework**: [React](https://reactjs.org/)
+- **Build Tool**: [Vite](https://vitejs.dev/)
+- **Language**: [TypeScript](https://www.typescriptlang.org/)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+- **UI Components**: Shadcn/UI (inferred from `components.json` and `src/components/ui`)
+- **Package Manager**: [Bun](https://bun.sh/)
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/fd321966-cd5b-4678-96be-79a58a472e01) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
