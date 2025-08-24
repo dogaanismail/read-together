@@ -72,25 +72,28 @@ class TokenServiceTests {
 
     @Test
     @DisplayName("Should throw on expired token")
-    void shouldThrowOnExpiredToken() {
-        // Given - create an expired token using JJWT directly with past expiration date
+    void shouldThrowOnExpiredToken() throws Exception {
+        // Given - create a truly expired token by manipulating the clock
         String userId = UUID.randomUUID().toString();
-        Date pastDate = new Date(System.currentTimeMillis() - 1000 * 60 * 60); // 1 hour ago
         
-        String expiredToken = Jwts.builder()
+        // Create token with very short expiration (1 second)
+        String shortLivedToken = Jwts.builder()
                 .header()
                 .type("Bearer")
                 .and()
                 .id(UUID.randomUUID().toString())
-                .issuedAt(new Date(System.currentTimeMillis() - 1000 * 60 * 120)) // 2 hours ago
-                .expiration(pastDate) // Expired 1 hour ago
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + 1000)) // 1 second from now
                 .signWith(privateKey)
                 .claim(TokenClaims.USER_ID.getValue(), userId)
                 .claim(TokenClaims.USER_TYPE.getValue(), UserType.USER.name())
                 .compact();
 
+        // Wait for token to expire
+        Thread.sleep(1100); // Wait 1.1 seconds for expiration
+
         // When / Then
-        assertThatThrownBy(() -> tokenService.verifyAndValidate(expiredToken))
+        assertThatThrownBy(() -> tokenService.verifyAndValidate(shortLivedToken))
                 .isInstanceOf(ResponseStatusException.class)
                 .hasMessageContaining("Token has expired");
     }
