@@ -43,6 +43,7 @@ public class SecurityConfig {
                 .exceptionHandling(customizer -> customizer.authenticationEntryPoint(customErrorAuthenticationEntryPoint))
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(customizer -> customizer
+                        .requestMatchers(GET, "/api/v1/auth/**").permitAll()
                         .requestMatchers(POST, "/api/v1/users/**").permitAll()
                         .requestMatchers(GET, "/api/v1/sessions/public").permitAll()
                         .requestMatchers(GET, "/api/v1/library/books/public").permitAll()

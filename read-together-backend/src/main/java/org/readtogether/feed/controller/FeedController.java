@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -88,6 +89,7 @@ public class FeedController {
     }
 
     @PostMapping("/{id}/like")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<Void> likeFeedItem(
             @PathVariable UUID id, 
             Authentication authentication) {
@@ -108,6 +110,7 @@ public class FeedController {
     }
 
     @DeleteMapping("/{id}/like")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<Void> unlikeFeedItem(
             @PathVariable UUID id, 
             Authentication authentication) {
@@ -144,6 +147,7 @@ public class FeedController {
     }
 
     @PostMapping("/{id}/comments")
+    @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<FeedCommentResponse> createComment(
             @PathVariable UUID id,
             @Valid @RequestBody CreateCommentRequest request,
