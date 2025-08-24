@@ -3,6 +3,7 @@ package org.readtogether.security.service;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -42,16 +43,12 @@ class TokenServiceTests {
     private InvalidTokenService invalidTokenService;
 
     private TokenService tokenService;
-    private KeyPair keyPair;
-    private PublicKey publicKey;
-    private PrivateKey privateKey;
+    private final KeyPair keyPair = KeyFixtures.generateTestRsaKeyPair();
+    private final PublicKey publicKey = keyPair.getPublic();
+    private final PrivateKey privateKey = keyPair.getPrivate();
 
     @BeforeEach
     void setUp() {
-        keyPair = KeyFixtures.generateTestRsaKeyPair();
-        publicKey = keyPair.getPublic();
-        privateKey = keyPair.getPrivate();
-        
         when(tokenConfigurationParameter.getAccessTokenExpireMinute()).thenReturn(30);
         when(tokenConfigurationParameter.getRefreshTokenExpireDay()).thenReturn(7);
         
@@ -63,10 +60,6 @@ class TokenServiceTests {
     void shouldVerifyAndValidateValidToken() {
         // Given
         String userId = UUID.randomUUID().toString();
-        Date futureDate = new Date(System.currentTimeMillis() + 1000 * 60 * 60); // 1 hour from now
-        String validToken = TokenFixtures.createValidAccessToken(userId, Set.of(UserType.USER), futureDate);
-        
-        // We need to create token with our test keys for this to work
         Map<String, Object> claims = Map.of(
                 TokenClaims.USER_ID.getValue(), userId,
                 TokenClaims.USER_TYPE.getValue(), UserType.USER.name()
@@ -80,8 +73,21 @@ class TokenServiceTests {
     @Test
     @DisplayName("Should throw on expired token")
     void shouldThrowOnExpiredToken() {
-        // Given
-        String expiredToken = TokenFixtures.createExpiredToken();
+        // Given - create an expired token using JJWT directly with past expiration date
+        String userId = UUID.randomUUID().toString();
+        Date pastDate = new Date(System.currentTimeMillis() - 1000 * 60 * 60); // 1 hour ago
+        
+        String expiredToken = Jwts.builder()
+                .header()
+                .type("Bearer")
+                .and()
+                .id(UUID.randomUUID().toString())
+                .issuedAt(new Date(System.currentTimeMillis() - 1000 * 60 * 120)) // 2 hours ago
+                .expiration(pastDate) // Expired 1 hour ago
+                .signWith(privateKey)
+                .claim(TokenClaims.USER_ID.getValue(), userId)
+                .claim(TokenClaims.USER_TYPE.getValue(), UserType.USER.name())
+                .compact();
 
         // When / Then
         assertThatThrownBy(() -> tokenService.verifyAndValidate(expiredToken))
@@ -92,11 +98,21 @@ class TokenServiceTests {
     @Test
     @DisplayName("Should throw on invalid signature")
     void shouldThrowOnInvalidSignature() {
-        // Given
-        String invalidSignatureToken = TokenFixtures.createInvalidSignatureToken();
+        // Given - create a token with a different key pair
+        KeyPair differentKeyPair = KeyFixtures.generateTestRsaKeyPair();
+        String userId = UUID.randomUUID().toString();
+        Map<String, Object> claims = Map.of(
+                TokenClaims.USER_ID.getValue(), userId,
+                TokenClaims.USER_TYPE.getValue(), UserType.USER.name()
+        );
+        
+        // Create a TokenService with different keys
+        TokenService differentKeyTokenService = new TokenService(tokenConfigurationParameter, invalidTokenService, 
+                differentKeyPair.getPublic(), differentKeyPair.getPrivate());
+        Token tokenWithDifferentSignature = differentKeyTokenService.generateToken(claims);
 
-        // When / Then
-        assertThatThrownBy(() -> tokenService.verifyAndValidate(invalidSignatureToken))
+        // When / Then - verify with original service that has different keys
+        assertThatThrownBy(() -> tokenService.verifyAndValidate(tokenWithDifferentSignature.getAccessToken()))
                 .isInstanceOf(ResponseStatusException.class)
                 .hasMessageContaining("Invalid JWT token");
     }

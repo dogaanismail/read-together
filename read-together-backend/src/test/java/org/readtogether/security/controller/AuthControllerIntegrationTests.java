@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.readtogether.common.BaseIntegrationTest;
+import org.readtogether.security.fixtures.KeyFixtures;
 import org.readtogether.security.fixtures.TokenFixtures;
 import org.readtogether.security.fixtures.TokenRequestFixtures;
 import org.readtogether.security.model.request.TokenRefreshRequest;
@@ -18,6 +19,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+
+import java.security.PrivateKey;
 
 import java.util.Optional;
 
@@ -41,6 +44,8 @@ class AuthControllerIntegrationTests extends BaseIntegrationTest {
 
     @Autowired
     private UserRepository userRepository;
+    
+    private final PrivateKey testPrivateKey = KeyFixtures.generateTestRsaKeyPair().getPrivate();
 
     @Test
     @DisplayName("POST /api/v1/auth/validate-token should return 200 for valid token")
@@ -72,7 +77,7 @@ class AuthControllerIntegrationTests extends BaseIntegrationTest {
     @DisplayName("POST /api/v1/auth/validate-token should return 401 for expired token")
     void shouldReturn401ForExpiredToken() throws Exception {
         // Given
-        String expiredToken = TokenFixtures.createExpiredToken();
+        String expiredToken = TokenFixtures.createExpiredToken(testPrivateKey);
 
         // When / Then
         mockMvc.perform(post("/api/v1/auth/validate-token")
@@ -112,7 +117,7 @@ class AuthControllerIntegrationTests extends BaseIntegrationTest {
     @DisplayName("POST /api/v1/auth/refresh-token should return 401 for expired refresh token")
     void shouldReturn401ForExpiredRefreshToken() throws Exception {
         // Given
-        String expiredRefreshToken = TokenFixtures.createExpiredToken();
+        String expiredRefreshToken = TokenFixtures.createExpiredToken(testPrivateKey);
         TokenRefreshRequest request = TokenRequestFixtures.createTokenRefreshRequest(expiredRefreshToken);
 
         // When / Then
