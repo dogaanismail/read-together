@@ -47,25 +47,31 @@ class SecurityConfigIntegrationTests extends BaseIntegrationTest {
     @Test
     @DisplayName("Should permit GET /api/v1/sessions/public endpoint")
     void shouldPermitPublicSessionsEndpoint() throws Exception {
-        // When / Then - should allow access without authentication (404 because endpoint doesn't exist is expected)
+        // When / Then - should allow access without authentication (200 means endpoint exists and works)
         mockMvc.perform(get("/api/v1/sessions/public"))
-                .andExpect(status().is4xxClientError()); // Could be 404 or 405, but not 401
+                .andExpect(status().isOk()); // Endpoint exists and returns data without auth
     }
 
     @Test
     @DisplayName("Should permit GET /api/v1/library/books/public endpoint")
     void shouldPermitPublicLibraryBooksEndpoint() throws Exception {
-        // When / Then - should allow access without authentication (404 because endpoint doesn't exist is expected)
+        // When / Then - should allow access without authentication (200 means endpoint exists and works)
         mockMvc.perform(get("/api/v1/library/books/public"))
-                .andExpect(status().is4xxClientError()); // Could be 404 or 405, but not 401
+                .andExpect(status().isOk()); // Endpoint exists and returns data without auth
     }
 
     @Test
     @DisplayName("Should permit GET /api/v1/room/join endpoint")
     void shouldPermitRoomJoinEndpoint() throws Exception {
-        // When / Then - should allow access without authentication (404 because endpoint doesn't exist is expected)
+        // When / Then - should allow access without authentication
+        // This endpoint may not exist, so we expect it to not return 401 (which would indicate auth failure)
         mockMvc.perform(get("/api/v1/room/join"))
-                .andExpect(status().is4xxClientError()); // Could be 404 or 405, but not 401
+                .andExpect(result -> {
+                    int status = result.getResponse().getStatus();
+                    if (status == 401) {
+                        throw new AssertionError("Expected any status except 401, but got 401");
+                    }
+                }); // Any status except 401 is fine (means it passed security)
     }
 
     @Test
@@ -128,7 +134,7 @@ class SecurityConfigIntegrationTests extends BaseIntegrationTest {
                 .andExpect(status().isUnauthorized())
                 .andExpect(jsonPath("$.httpStatus").value("UNAUTHORIZED"))
                 .andExpect(jsonPath("$.header").value("AUTH ERROR"))
-                .andExpect(jsonPath("$.isSuccess").value(false));
+                .andExpect(jsonPath("$.success").value(false));
     }
 
     @Test
