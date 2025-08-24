@@ -17,7 +17,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.server.ResponseStatusException;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -95,7 +94,7 @@ class CustomBearerTokenAuthenticationFilterTests {
         // Given
         when(request.getHeader(HttpHeaders.AUTHORIZATION)).thenReturn("Bearer ");
         
-        // Since "Bearer " is technically a valid bearer token prefix, it will call getAuthentication
+        // Since "Bearer" is technically a valid bearer token prefix, it will call getAuthentication
         // with an empty string token, which should trigger our exception handling
         when(tokenService.getAuthentication(""))
                 .thenThrow(new ResponseStatusException(org.springframework.http.HttpStatus.UNAUTHORIZED, "Empty token"));
@@ -171,7 +170,7 @@ class CustomBearerTokenAuthenticationFilterTests {
         verify(tokenService).getAuthentication(token1);
         assertThat(SecurityContextHolder.getContext().getAuthentication()).isEqualTo(authentication1);
 
-        // Clear context for next request
+        // Clear context for the next request
         SecurityContextHolder.clearContext();
 
         // Given - Second request

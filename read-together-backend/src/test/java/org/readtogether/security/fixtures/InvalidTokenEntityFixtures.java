@@ -8,7 +8,11 @@ import java.time.Instant;
 @UtilityClass
 public class InvalidTokenEntityFixtures {
 
-    public static InvalidTokenEntity createInvalidTokenEntity(String tokenId, String reason, Instant createdAt) {
+    public static InvalidTokenEntity createInvalidTokenEntity(
+            String tokenId,
+            String reason,
+            Instant createdAt) {
+
         return InvalidTokenEntity.builder()
                 .tokenId(tokenId)
                 .createdAt(createdAt)
@@ -17,8 +21,10 @@ public class InvalidTokenEntityFixtures {
                 .updatedBy("test-user")
                 .build();
     }
-    
-    public static InvalidTokenEntity createInvalidTokenEntity(String tokenId) {
+
+    public static InvalidTokenEntity createInvalidTokenEntity(
+            String tokenId) {
+
         Instant now = Instant.now();
         return InvalidTokenEntity.builder()
                 .tokenId(tokenId)
@@ -28,8 +34,9 @@ public class InvalidTokenEntityFixtures {
                 .updatedBy("test-user")
                 .build();
     }
-    
+
     public static InvalidTokenEntity createDefaultInvalidTokenEntity() {
+
         Instant now = Instant.now();
         return InvalidTokenEntity.builder()
                 .tokenId("test-token-id-" + System.currentTimeMillis())

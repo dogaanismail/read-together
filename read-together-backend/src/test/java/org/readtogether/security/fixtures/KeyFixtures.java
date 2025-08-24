@@ -21,6 +21,7 @@ public class KeyFixtures {
     }
 
     public static String getTestPublicKeyPem() {
+
         return "-----BEGIN PUBLIC KEY-----\n" +
                 "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAwU2xJYJNGbVdOOhm9uX4\n" +
                 "6s8fFcE2sOZUjPh+8LQl2tGd8IVw8YV3OBF5nQ+K1L4jF2Q4nYG8UQ+4XFo4k1ZS\n" +
@@ -32,6 +33,7 @@ public class KeyFixtures {
     }
 
     public static String getTestPrivateKeyPem() {
+
         return "-----BEGIN PRIVATE KEY-----\n" +
                 "MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDBTbElgk0ZtV04\n" +
                 "6Gb25fjqzx8VwTaw5lSM+H7wtCXa0Z3whXDxhXc4EXmdD4rUviMXZDidgbxRD7hc\n" +
@@ -67,12 +69,14 @@ public class KeyFixtures {
     }
 
     public static String getInvalidPublicKeyPem() {
+
         return "-----BEGIN PUBLIC KEY-----\n" +
                 "INVALID_KEY_CONTENT\n" +
                 "-----END PUBLIC KEY-----";
     }
 
     public static String getInvalidPrivateKeyPem() {
+
         return "-----BEGIN PRIVATE KEY-----\n" +
                 "INVALID_KEY_CONTENT\n" +
                 "-----END PRIVATE KEY-----";

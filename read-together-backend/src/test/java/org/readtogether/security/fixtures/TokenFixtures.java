@@ -16,7 +16,10 @@ import static org.readtogether.security.common.enums.TokenType.BEARER;
 @UtilityClass
 public class TokenFixtures {
 
-    public static String createValidAccessToken(String userId, Set<UserType> roles, Date expiresAt) {
+    public static String createValidAccessToken(
+            String userId,
+            Set<UserType> roles, Date expiresAt) {
+
         KeyPair keyPair = generateTestRsaKeyPair();
         
         Map<String, Object> claims = new HashMap<>();
@@ -36,6 +39,7 @@ public class TokenFixtures {
     }
     
     public static String createExpiredToken() {
+
         KeyPair keyPair = generateTestRsaKeyPair();
         Date expiredDate = new Date(System.currentTimeMillis() - 1000 * 60 * 60); // 1 hour ago
         
@@ -60,6 +64,7 @@ public class TokenFixtures {
     }
     
     public static String createInvalidSignatureToken() {
+
         KeyPair keyPair1 = generateTestRsaKeyPair();
         KeyPair keyPair2 = generateTestRsaKeyPair(); // Different key pair
         
@@ -80,7 +85,9 @@ public class TokenFixtures {
                 .compact();
     }
     
-    public static String createRefreshToken(String userId) {
+    public static String createRefreshToken(
+            String userId) {
+
         KeyPair keyPair = generateTestRsaKeyPair();
         Date expiresAt = new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 7); // 7 days
         

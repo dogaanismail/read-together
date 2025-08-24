@@ -17,7 +17,10 @@ import java.util.Set;
 @UtilityClass
 public class SecurityContextFixtures {
 
-    public static Authentication buildAuthentication(String userId, Set<UserType> authorities) {
+    public static Authentication buildAuthentication(
+            String userId,
+            Set<UserType> authorities) {
+
         List<SimpleGrantedAuthority> grantedAuthorities = authorities.stream()
                 .map(userType -> new SimpleGrantedAuthority(userType.name()))
                 .toList();
@@ -38,26 +41,36 @@ public class SecurityContextFixtures {
         );
     }
 
-    public static Authentication buildUserAuthentication(String userId) {
+    public static Authentication buildUserAuthentication(
+            String userId) {
+
         return buildAuthentication(userId, Set.of(UserType.USER));
     }
 
-    public static Authentication buildAdminAuthentication(String userId) {
+    public static Authentication buildAdminAuthentication(
+            String userId) {
+
         return buildAuthentication(userId, Set.of(UserType.ADMIN));
     }
 
-    public static SecurityContext buildSecurityContext(Authentication authentication) {
+    public static SecurityContext buildSecurityContext(
+            Authentication authentication) {
+
         SecurityContext context = SecurityContextHolder.createEmptyContext();
         context.setAuthentication(authentication);
         return context;
     }
 
-    public static SecurityContext buildUserSecurityContext(String userId) {
+    public static SecurityContext buildUserSecurityContext(
+            String userId) {
+
         Authentication auth = buildUserAuthentication(userId);
         return buildSecurityContext(auth);
     }
 
-    public static SecurityContext buildAdminSecurityContext(String userId) {
+    public static SecurityContext buildAdminSecurityContext(
+            String userId) {
+
         Authentication auth = buildAdminAuthentication(userId);
         return buildSecurityContext(auth);
     }

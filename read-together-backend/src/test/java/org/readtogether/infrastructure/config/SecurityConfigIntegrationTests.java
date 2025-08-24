@@ -163,7 +163,7 @@ class SecurityConfigIntegrationTests extends BaseIntegrationTest {
     @Test
     @DisplayName("Should handle invalid authorization header gracefully")
     void shouldHandleInvalidAuthorizationHeaderGracefully() throws Exception {
-        // When / Then - The filter should catch JWT exceptions and the endpoint should still return 401
+        // When / Then - The filter should catch JWT exceptions, and the endpoint should still return 401
         // The CustomBearerTokenAuthenticationFilter handles exceptions by not setting authentication
         // which leads to a 401 from the entry point
         mockMvc.perform(get("/api/v1/users/current-user")
@@ -176,7 +176,7 @@ class SecurityConfigIntegrationTests extends BaseIntegrationTest {
     @Test
     @DisplayName("Should handle non-Bearer authorization header gracefully")
     void shouldHandleNonBearerAuthorizationHeaderGracefully() throws Exception {
-        // When / Then - should return 401 with non-Bearer token
+        // When / Then - should return 401 with a non-Bearer token
         mockMvc.perform(get("/api/v1/users/current-user")
                         .header("Authorization", "Basic dXNlcjpwYXNzd29yZA=="))
                 .andExpect(status().isUnauthorized())

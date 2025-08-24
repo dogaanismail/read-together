@@ -9,7 +9,6 @@ import org.readtogether.security.fixtures.TokenFixtures;
 import org.readtogether.security.fixtures.TokenRequestFixtures;
 import org.readtogether.security.model.request.TokenRefreshRequest;
 import org.readtogether.security.service.TokenService;
-import org.readtogether.user.entity.UserEntity;
 import org.readtogether.user.fixtures.RequestFixtures;
 import org.readtogether.user.model.request.LoginRequest;
 import org.readtogether.user.model.request.RegisterRequest;
@@ -18,8 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -181,12 +178,18 @@ class AuthControllerIntegrationTests extends BaseIntegrationTest {
                 .andExpect(status().isBadRequest()); // Missing required parameter
     }
 
-    private String registerAndLoginUser(String email, String password) throws Exception {
+    private String registerAndLoginUser(
+            String email,
+            String password) throws Exception {
+
         JsonNode loginResponse = registerAndLoginUserGetResponse(email, password);
         return loginResponse.path("response").path("accessToken").asText();
     }
 
-    private JsonNode registerAndLoginUserGetResponse(String email, String password) throws Exception {
+    private JsonNode registerAndLoginUserGetResponse(
+            String email,
+            String password) throws Exception {
+
         // Register user
         RegisterRequest register = RequestFixtures.createRegisterRequest(
                 email,
