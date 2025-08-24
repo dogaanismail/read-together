@@ -33,14 +33,20 @@ public class CustomBearerTokenAuthenticationFilter extends OncePerRequestFilter 
 
         String authorizationHeader = httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION);
         if (Token.isBearerToken(authorizationHeader)) {
+            try {
+                String jwtToken = Token.getJwt(authorizationHeader);
+                UsernamePasswordAuthenticationToken authentication = tokenService
+                        .getAuthentication(jwtToken);
 
-            String jwtToken = Token.getJwt(authorizationHeader);
-            UsernamePasswordAuthenticationToken authentication = tokenService
-                    .getAuthentication(jwtToken);
-
-            SecurityContextHolder
-                    .getContext()
-                    .setAuthentication(authentication);
+                SecurityContextHolder
+                        .getContext()
+                        .setAuthentication(authentication);
+            } catch (Exception e) {
+                log.debug("Failed to authenticate JWT token: {}", e.getMessage());
+                // Do not set authentication in SecurityContext, let it remain null
+                // This will cause the request to be processed as unauthenticated
+                // and handled by the AuthenticationEntryPoint
+            }
         }
 
         filterChain.doFilter(httpServletRequest, httpServletResponse);

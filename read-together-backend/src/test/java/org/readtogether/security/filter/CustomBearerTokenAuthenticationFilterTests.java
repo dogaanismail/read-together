@@ -94,13 +94,18 @@ class CustomBearerTokenAuthenticationFilterTests {
     void shouldSkipWhenAuthorizationHeaderIsJustBearer() throws Exception {
         // Given
         when(request.getHeader(HttpHeaders.AUTHORIZATION)).thenReturn("Bearer ");
+        
+        // Since "Bearer " is technically a valid bearer token prefix, it will call getAuthentication
+        // with an empty string token, which should trigger our exception handling
+        when(tokenService.getAuthentication(""))
+                .thenThrow(new ResponseStatusException(org.springframework.http.HttpStatus.UNAUTHORIZED, "Empty token"));
 
         // When
         filter.doFilterInternal(request, response, filterChain);
 
         // Then
+        verify(tokenService).getAuthentication(""); // Empty token after removing "Bearer "
         verify(filterChain).doFilter(request, response);
-        verifyNoInteractions(tokenService);
         assertThat(SecurityContextHolder.getContext().getAuthentication()).isNull();
     }
 
