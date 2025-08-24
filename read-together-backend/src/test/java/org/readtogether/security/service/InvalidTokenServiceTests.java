@@ -47,6 +47,7 @@ class InvalidTokenServiceTests {
         invalidTokenService.invalidateTokens(tokenIds);
 
         // Then
+        @SuppressWarnings("unchecked")
         ArgumentCaptor<Set<InvalidTokenEntity>> captor = ArgumentCaptor.forClass(Set.class);
         verify(invalidTokenRepository).saveAll(captor.capture());
 
@@ -72,6 +73,7 @@ class InvalidTokenServiceTests {
         invalidTokenService.invalidateTokens(tokenIds);
 
         // Then
+        @SuppressWarnings("unchecked")
         ArgumentCaptor<Set<InvalidTokenEntity>> captor = ArgumentCaptor.forClass(Set.class);
         verify(invalidTokenRepository).saveAll(captor.capture());
 
@@ -142,6 +144,7 @@ class InvalidTokenServiceTests {
         invalidTokenService.invalidateTokens(emptyTokenIds);
 
         // Then
+        @SuppressWarnings("unchecked")
         ArgumentCaptor<Set<InvalidTokenEntity>> captor = ArgumentCaptor.forClass(Set.class);
         verify(invalidTokenRepository).saveAll(captor.capture());
 

@@ -48,6 +48,7 @@ class RefreshTokenServiceTests {
 
     @Test
     @DisplayName("Should refresh with valid refresh token")
+    @SuppressWarnings("unchecked")
     void shouldRefreshWithValidRefreshToken() {
         // Given
         String userId = UUID.randomUUID().toString();

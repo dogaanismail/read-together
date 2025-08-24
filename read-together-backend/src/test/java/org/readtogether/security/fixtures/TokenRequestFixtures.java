@@ -13,18 +13,16 @@ public class TokenRequestFixtures {
                 .refreshToken(refreshToken)
                 .build();
     }
-
+    
     public static TokenRefreshRequest createTokenRefreshRequestWithValidToken() {
-
-        String refreshToken = TokenFixtures.createRefreshToken("test-user-id");
+        String refreshToken = TokenFixtures.createRefreshToken("test-user-id", KeyFixtures.generateTestRsaKeyPair().getPrivate());
         return TokenRefreshRequest.builder()
                 .refreshToken(refreshToken)
                 .build();
     }
-
+    
     public static TokenRefreshRequest createTokenRefreshRequestWithExpiredToken() {
-
-        String expiredToken = TokenFixtures.createExpiredToken();
+        String expiredToken = TokenFixtures.createExpiredToken(KeyFixtures.generateTestRsaKeyPair().getPrivate());
         return TokenRefreshRequest.builder()
                 .refreshToken(expiredToken)
                 .build();
