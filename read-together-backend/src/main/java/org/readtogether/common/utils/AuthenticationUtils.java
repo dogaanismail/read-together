@@ -1,5 +1,6 @@
 package org.readtogether.common.utils;
 
+import lombok.experimental.UtilityClass;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.jwt.Jwt;
 
@@ -7,11 +8,8 @@ import java.util.UUID;
 
 import static org.readtogether.security.common.enums.TokenClaims.USER_ID;
 
+@UtilityClass
 public final class AuthenticationUtils {
-
-    private AuthenticationUtils() {
-        // Utility class - prevent instantiation
-    }
 
     public static UUID extractUserIdFromAuth(Authentication authentication) {
         if (authentication == null) {

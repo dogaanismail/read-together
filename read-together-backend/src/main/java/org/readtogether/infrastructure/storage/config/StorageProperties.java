@@ -19,9 +19,8 @@ public class StorageProperties {
         private String region = "us-east-1";
         private String accessKey;
         private String secretKey;
-        private String endpoint; // For S3-compatible services
-        // Encryption settings
-        // Values: "AES256" for SSE-S3 or "aws:kms" for SSE-KMS. Default to AES256 for safety.
+        private String endpoint;
+
         private String serverSideEncryption = "AES256";
         // Provide when using SSE-KMS
         private String kmsKeyId;

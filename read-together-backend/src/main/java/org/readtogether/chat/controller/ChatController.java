@@ -133,6 +133,7 @@ public class ChatController {
     @GetMapping("/files/{fileName}")
     @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<Resource> downloadFile(@PathVariable String fileName) {
+
         log.info("Downloading file: {}", fileName);
         
         try {

@@ -8,6 +8,8 @@ import java.util.UUID;
 @Getter
 @Setter
 public class TypingWebSocketRequest {
+
     private UUID chatRoomId;
+
     private boolean typing;
 }

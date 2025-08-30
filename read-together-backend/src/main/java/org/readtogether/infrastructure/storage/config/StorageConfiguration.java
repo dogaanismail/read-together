@@ -26,6 +26,7 @@ public class StorageConfiguration {
     @Bean
     @Primary
     public StorageService storageService() {
+
         String provider = storageProperties.getProvider().toLowerCase();
 
         log.info("Initializing storage service with provider: {}", provider);

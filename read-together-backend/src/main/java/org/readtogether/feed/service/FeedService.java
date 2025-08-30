@@ -27,7 +27,8 @@ public class FeedService {
     private final FeedLikeService feedLikeService;
 
     @Transactional(readOnly = true)
-    public Page<FeedItemResponse> getFeed(Pageable pageable) {
+    public Page<FeedItemResponse> getFeed(
+            Pageable pageable) {
 
         return feedRepository.findByIsPublicTrueOrderByCreatedAtDesc(pageable)
                 .map(FeedItemResponseFactory::createFromEntity);
@@ -72,7 +73,8 @@ public class FeedService {
     }
 
     @Transactional(readOnly = true)
-    public Page<FeedItemResponse> getTrendingFeed(Pageable pageable) {
+    public Page<FeedItemResponse> getTrendingFeed(
+            Pageable pageable) {
 
         Instant since = Instant.now().minus(7, ChronoUnit.DAYS);
         return feedRepository.findTrendingItems(since, 5L, pageable)
@@ -80,7 +82,8 @@ public class FeedService {
     }
 
     @Transactional
-    public FeedItemEntity createSessionFeedItem(SessionEntity session) {
+    public FeedItemEntity createSessionFeedItem(
+            SessionEntity session) {
 
         FeedItemEntity feedItem = FeedItemEntityFactory.createFromSession(session);
         return feedRepository.save(feedItem);
@@ -109,7 +112,8 @@ public class FeedService {
     }
 
     @Transactional
-    public void incrementViewCount(UUID feedItemId) {
+    public void incrementViewCount(
+            UUID feedItemId) {
 
         feedRepository.incrementViewCount(feedItemId);
     }
@@ -119,7 +123,8 @@ public class FeedService {
      */
     @Deprecated
     @Transactional
-    public void likeFeedItem(UUID feedItemId) {
+    public void likeFeedItem(
+            UUID feedItemId) {
 
         feedRepository.incrementLikeCount(feedItemId);
     }
@@ -129,28 +134,39 @@ public class FeedService {
      */
     @Deprecated
     @Transactional
-    public void unlikeFeedItem(UUID feedItemId) {
+    public void unlikeFeedItem(
+            UUID feedItemId) {
 
         feedRepository.decrementLikeCount(feedItemId);
     }
 
     @Transactional
-    public boolean likeFeedItem(UUID feedItemId, UUID userId) {
+    public boolean likeFeedItem(
+            UUID feedItemId,
+            UUID userId) {
+
         return feedLikeService.likeFeedItem(feedItemId, userId);
     }
 
     @Transactional
-    public boolean unlikeFeedItem(UUID feedItemId, UUID userId) {
+    public boolean unlikeFeedItem(
+            UUID feedItemId,
+            UUID userId) {
+
         return feedLikeService.unlikeFeedItem(feedItemId, userId);
     }
 
     @Transactional(readOnly = true)
-    public boolean isLikedByUser(UUID feedItemId, UUID userId) {
+    public boolean isLikedByUser(
+            UUID feedItemId,
+            UUID userId) {
+
         return feedLikeService.isLikedByUser(feedItemId, userId);
     }
 
     @Transactional
-    public void createFeedItemFromSession(SessionEntity session) {
+    public void createFeedItemFromSession(
+            SessionEntity session) {
 
         log.info("Creating feed item for session: {}", session.getId());
 

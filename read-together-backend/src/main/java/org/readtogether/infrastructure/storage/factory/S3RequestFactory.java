@@ -36,10 +36,13 @@ public class S3RequestFactory {
 
         if (serverSideEncryption != null) {
             if ("aws:kms".equalsIgnoreCase(serverSideEncryption)) {
+
                 builder.serverSideEncryption(ServerSideEncryption.AWS_KMS);
+
                 if (kmsKeyId != null && !kmsKeyId.isEmpty()) {
                     builder.ssekmsKeyId(kmsKeyId);
                 }
+
                 if (bucketKeyEnabled != null) {
                     builder.bucketKeyEnabled(bucketKeyEnabled);
                 }

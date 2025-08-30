@@ -40,7 +40,8 @@ public class ChatRoomEntityFactory {
                 .build();
     }
 
-    private static ChatRoomType mapToEntityType(ChatRoomType requestType) {
+    private static ChatRoomType mapToEntityType(
+            ChatRoomType requestType) {
 
         return switch (requestType) {
             case DIRECT -> DIRECT;

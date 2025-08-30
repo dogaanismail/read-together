@@ -23,7 +23,8 @@ public class LocalStorageService implements StorageService {
     private final StorageProperties.LocalProperties localProperties;
     private final Path basePath;
 
-    public LocalStorageService(StorageProperties storageProperties) {
+    public LocalStorageService(
+            StorageProperties storageProperties) {
 
         this.localProperties = storageProperties.getLocal();
         this.basePath = Paths.get(localProperties.getBasePath());

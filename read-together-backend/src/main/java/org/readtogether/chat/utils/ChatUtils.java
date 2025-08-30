@@ -13,7 +13,8 @@ public class ChatUtils {
     private static final DateTimeFormatter TIME_FORMATTER =
             DateTimeFormatter.ofPattern("HH:mm").withZone(ZoneId.systemDefault());
 
-    public static String formatMessageTime(Instant timestamp) {
+    public static String formatMessageTime(
+            Instant timestamp) {
 
         if (timestamp == null) {
             return "";
@@ -29,14 +30,18 @@ public class ChatUtils {
         return "Direct chat between " + user1Name + " and " + user2Name;
     }
 
-    public static boolean isValidChatRoomName(String name) {
+    public static boolean isValidChatRoomName(
+            String name) {
 
         return name != null && !name.trim().isEmpty() && name.length() <= 255;
     }
 
-    public static boolean isValidMessageContent(String content) {
+    public static boolean isValidMessageContent(
+            String content) {
 
-        return content != null && !content.trim().isEmpty() && content.length() <= 4000;
+        return content != null &&
+                !content.trim().isEmpty() &&
+                content.length() <= 4000;
     }
 
     public static String truncateContent(

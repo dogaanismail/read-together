@@ -5,7 +5,11 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class EngagementUtils {
 
-    public static String formatEngagement(long viewCount, long likeCount, long commentCount) {
+    public static String formatEngagement(
+            long viewCount,
+            long likeCount,
+            long commentCount) {
+
         long total = viewCount + likeCount + commentCount;
         if (total < 1000) {
             return String.valueOf(total);
@@ -16,7 +20,9 @@ public class EngagementUtils {
         }
     }
 
-    public static String formatEngagement(long totalEngagement) {
+    public static String formatEngagement(
+            long totalEngagement) {
+
         if (totalEngagement < 1000) {
             return String.valueOf(totalEngagement);
         } else if (totalEngagement < 1000000) {

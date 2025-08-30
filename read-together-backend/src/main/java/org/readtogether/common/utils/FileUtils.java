@@ -8,16 +8,16 @@ import java.util.Map;
 public class FileUtils {
 
     private static final Map<String, String> CONTENT_TYPE_MAP = Map.of(
-        "mp3", "audio/mpeg",
-        "wav", "audio/wav",
-        "mp4", "video/mp4",
-        "avi", "video/avi",
-        "mov", "video/quicktime",
-        "webm", "video/webm",
-        "jpg", "image/jpeg",
-        "jpeg", "image/jpeg",
-        "png", "image/png",
-        "gif", "image/gif"
+            "mp3", "audio/mpeg",
+            "wav", "audio/wav",
+            "mp4", "video/mp4",
+            "avi", "video/avi",
+            "mov", "video/quicktime",
+            "webm", "video/webm",
+            "jpg", "image/jpeg",
+            "jpeg", "image/jpeg",
+            "png", "image/png",
+            "gif", "image/gif"
     );
 
     public static String determineContentType(String filename) {
@@ -53,21 +53,21 @@ public class FileUtils {
 
         String extension = extractFileExtension(filename);
         return extension.equals("jpg") || extension.equals("jpeg") ||
-               extension.equals("png") || extension.equals("gif");
+                extension.equals("png") || extension.equals("gif");
     }
 
     public static boolean isAudioFile(String filename) {
 
         String extension = extractFileExtension(filename);
         return extension.equals("mp3") || extension.equals("wav") ||
-               extension.equals("mp4");
+                extension.equals("mp4");
     }
 
     public static boolean isVideoFile(String filename) {
 
         String extension = extractFileExtension(filename);
         return extension.equals("mp4") || extension.equals("avi") ||
-               extension.equals("mov") || extension.equals("webm");
+                extension.equals("mov") || extension.equals("webm");
     }
 
     public static long bytesToMB(long bytes) {

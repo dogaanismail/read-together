@@ -8,5 +8,7 @@ import java.util.UUID;
 @Getter
 @Setter
 public class JoinLeaveWebSocketRequest {
+
     private UUID chatRoomId;
+
 }

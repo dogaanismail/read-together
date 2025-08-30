@@ -24,7 +24,10 @@ public class ChatMessageWebSocketRequest {
     private UUID replyToMessageId;
 
     private String attachmentUrl;
+
     private String attachmentName;
+
     private Long attachmentSize;
+
     private String attachmentType;
 }

@@ -40,14 +40,18 @@ public class ChatMapperUtils {
                 .build();
     }
 
-    public static ChatRoomType mapToResponseType(ChatRoomType entityType) {
+    public static ChatRoomType mapToResponseType(
+            ChatRoomType entityType) {
+
         return switch (entityType) {
             case DIRECT -> DIRECT;
             case GROUP -> GROUP;
         };
     }
 
-    public static ParticipantRole mapToResponseRole(ParticipantRole entityRole) {
+    public static ParticipantRole mapToResponseRole(
+            ParticipantRole entityRole) {
+
         return switch (entityRole) {
             case ADMIN -> ADMIN;
             case MODERATOR -> MODERATOR;

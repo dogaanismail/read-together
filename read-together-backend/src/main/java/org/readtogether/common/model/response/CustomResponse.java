@@ -32,6 +32,7 @@ public class CustomResponse<T> {
             .build();
 
     public static <T> CustomResponse<T> successOf(final T response) {
+
         return CustomResponse.<T>builder()
                 .httpStatus(HttpStatus.OK)
                 .isSuccess(true)
@@ -40,6 +41,7 @@ public class CustomResponse<T> {
     }
 
     public static <T> CustomResponse<T> failOf(final T response) {
+
         return CustomResponse.<T>builder()
                 .httpStatus(HttpStatus.BAD_REQUEST)
                 .isSuccess(false)

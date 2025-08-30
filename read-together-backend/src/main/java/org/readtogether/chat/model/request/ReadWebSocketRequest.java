@@ -8,6 +8,8 @@ import java.util.UUID;
 @Getter
 @Setter
 public class ReadWebSocketRequest {
+
     private UUID chatRoomId;
+
     private UUID messageId;
 }
