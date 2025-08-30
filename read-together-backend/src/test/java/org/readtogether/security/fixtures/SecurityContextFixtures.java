@@ -25,7 +25,6 @@ public class SecurityContextFixtures {
                 .map(userType -> new SimpleGrantedAuthority(userType.name()))
                 .toList();
 
-        // Create a minimal JWT for the principal
         Jwt jwt = new Jwt(
                 "test-token",
                 Instant.now(),

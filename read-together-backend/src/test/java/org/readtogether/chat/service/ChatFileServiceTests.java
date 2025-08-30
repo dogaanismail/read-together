@@ -47,8 +47,11 @@ class ChatFileServiceTests {
     private ChatFileService chatFileService;
 
     private MockedStatic<ChatFileStorageUtils> fileStorageUtilsMock;
+
     private MockedStatic<ChatFileUtils> fileUtilsMock;
+
     private ChatMessageSendRequest testRequest;
+
     private ChatMessageResponse testResponse;
 
     @BeforeEach

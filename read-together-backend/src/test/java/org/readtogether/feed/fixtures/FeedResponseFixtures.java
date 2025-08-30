@@ -10,6 +10,7 @@ import java.util.UUID;
 public class FeedResponseFixtures {
 
     public static FeedCommentResponse createDefaultFeedCommentResponse() {
+
         return createFeedCommentResponse(
                 UUID.randomUUID(),
                 FeedEntityFixtures.DEFAULT_FEED_ITEM_ID,

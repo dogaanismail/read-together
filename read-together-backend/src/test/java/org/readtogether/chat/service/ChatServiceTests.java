@@ -63,8 +63,11 @@ class ChatServiceTests {
     private ChatService chatService;
 
     private UserEntity testUser;
+
     private ChatRoomEntity testRoom;
+
     private ChatParticipantEntity testParticipant;
+
     private ChatMessageEntity testMessage;
 
     @BeforeEach

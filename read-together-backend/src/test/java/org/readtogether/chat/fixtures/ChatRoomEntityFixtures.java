@@ -14,6 +14,7 @@ public class ChatRoomEntityFixtures {
     public static final UUID DEFAULT_CREATOR_ID = UUID.fromString("550e8400-e29b-41d4-a716-446655440000");
 
     public static ChatRoomEntity createDefaultRoom() {
+
         return createRoom(
                 DEFAULT_ROOM_ID,
                 "Test Chat Room",
@@ -24,6 +25,7 @@ public class ChatRoomEntityFixtures {
     }
 
     public static ChatRoomEntity createDirectChatRoom() {
+
         return createRoom(
                 SECONDARY_ROOM_ID,
                 "Direct Chat",

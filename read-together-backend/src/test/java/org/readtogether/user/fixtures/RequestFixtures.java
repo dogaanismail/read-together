@@ -66,7 +66,9 @@ public class RequestFixtures {
                 .build();
     }
 
-    public static LoginRequest createLoginRequest(String email, String password) {
+    public static LoginRequest createLoginRequest(
+            String email,
+            String password) {
 
         return LoginRequest.builder()
                 .email(email)

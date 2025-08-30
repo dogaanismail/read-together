@@ -13,6 +13,7 @@ public class NotificationPreferenceEntityFixtures {
     public static final UUID SECONDARY_USER_ID = UUID.fromString("550e8400-e29b-41d4-a716-446655440001");
 
     public static NotificationPreferenceEntity createDefaultPreferencesEntity() {
+
         return createDefaultPreferencesEntity(DEFAULT_USER_ID);
     }
 
