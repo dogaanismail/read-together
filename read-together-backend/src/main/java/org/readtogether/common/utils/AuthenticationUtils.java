@@ -11,7 +11,9 @@ import static org.readtogether.security.common.enums.TokenClaims.USER_ID;
 @UtilityClass
 public final class AuthenticationUtils {
 
-    public static UUID extractUserIdFromAuth(Authentication authentication) {
+    public static UUID extractUserIdFromAuth(
+            Authentication authentication) {
+
         if (authentication == null) {
             throw new IllegalArgumentException("Authentication cannot be null");
         }
@@ -19,6 +21,7 @@ public final class AuthenticationUtils {
         try {
             // Extract user ID from JWT token claims
             if (authentication.getPrincipal() instanceof Jwt jwt) {
+
                 Object userIdClaim = jwt.getClaim(USER_ID.getValue());
                 if (userIdClaim != null) {
                     return UUID.fromString(userIdClaim.toString());

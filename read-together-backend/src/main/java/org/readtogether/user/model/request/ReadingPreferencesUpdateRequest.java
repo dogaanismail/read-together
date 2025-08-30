@@ -17,10 +17,16 @@ import org.readtogether.user.entity.ReadingPreferencesEntity;
 public class ReadingPreferencesUpdateRequest {
 
     private ReadingPreferencesEntity.Language defaultLanguage;
+
     private ReadingSpeed readingSpeed;
+
     private Boolean subtitlesEnabled;
+
     private Boolean autoplay;
+
     private VideoQuality videoQuality;
+
     private FontSize fontSize;
+
     private Theme theme;
 }

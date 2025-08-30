@@ -5,8 +5,6 @@ import org.readtogether.readingroom.entity.ReadingRoomInvitationEntity;
 import org.readtogether.readingroom.model.response.InvitationResponse;
 import org.readtogether.readingroom.utils.ReadingRoomUtils;
 
-import java.time.LocalDateTime;
-
 @UtilityClass
 public class InvitationResponseFactory {
 
@@ -39,7 +37,8 @@ public class InvitationResponseFactory {
                 .build();
     }
 
-    private InvitationResponse.InviterInfo createInviterInfo(ReadingRoomInvitationEntity invitation) {
+    private InvitationResponse.InviterInfo createInviterInfo(
+            ReadingRoomInvitationEntity invitation) {
 
         return InvitationResponse.InviterInfo.builder()
                 .id(invitation.getInvitedBy().getId())
@@ -49,7 +48,8 @@ public class InvitationResponseFactory {
                 .build();
     }
 
-    private InvitationResponse.InvitedUserInfo createInvitedUserInfo(ReadingRoomInvitationEntity invitation) {
+    private InvitationResponse.InvitedUserInfo createInvitedUserInfo(
+            ReadingRoomInvitationEntity invitation) {
 
         if (invitation.getInvitedUser() == null) {
             return null;

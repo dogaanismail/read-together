@@ -33,11 +33,14 @@ public class TokenService {
     private final PublicKey publicKey;
     private final PrivateKey privateKey;
 
-    public void verifyAndValidate(Set<String> jwts) {
+    public void verifyAndValidate(
+            Set<String> jwts) {
+
         jwts.forEach(this::verifyAndValidate);
     }
 
-    public Token generateToken(Map<String, Object> claims) {
+    public Token generateToken(
+            Map<String, Object> claims) {
 
         long currentTimeMillis = System.currentTimeMillis();
 
@@ -117,7 +120,8 @@ public class TokenService {
                 .build();
     }
 
-    public UsernamePasswordAuthenticationToken getAuthentication(String token) {
+    public UsernamePasswordAuthenticationToken getAuthentication(
+            String token) {
 
         Jws<Claims> claimsJws = Jwts.parser()
                 .verifyWith(publicKey)
@@ -149,7 +153,8 @@ public class TokenService {
                 authorities);
     }
 
-    public void verifyAndValidate(String jwt) {
+    public void verifyAndValidate(
+            String jwt) {
 
         try {
             JwtParser jwtParser = Jwts.parser()
@@ -174,7 +179,8 @@ public class TokenService {
         }
     }
 
-    public Claims getPayload(String jwt) {
+    public Claims getPayload(
+            String jwt) {
 
         return Jwts.parser()
                 .verifyWith(publicKey)
@@ -183,7 +189,8 @@ public class TokenService {
                 .getPayload();
     }
 
-    public String getId(String jwt) {
+    public String getId(
+            String jwt) {
 
         return Jwts.parser()
                 .verifyWith(publicKey)

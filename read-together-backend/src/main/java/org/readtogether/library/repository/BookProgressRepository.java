@@ -12,22 +12,26 @@ import java.util.UUID;
 
 public interface BookProgressRepository extends JpaRepository<BookProgressEntity, UUID> {
 
-    Optional<BookProgressEntity> findByUserIdAndBookId(UUID userId, UUID bookId);
+    Optional<BookProgressEntity> findByUserIdAndBookId(
+            UUID userId,
+            UUID bookId);
 
-    List<BookProgressEntity> findByUserIdOrderByLastReadAtDesc(UUID userId);
+    List<BookProgressEntity> findByUserIdOrderByLastReadAtDesc(
+            UUID userId);
 
-    List<BookProgressEntity> findByUserIdAndIsFavoriteTrueOrderByLastReadAtDesc(UUID userId);
+    List<BookProgressEntity> findByUserIdAndIsFavoriteTrueOrderByLastReadAtDesc(
+            UUID userId);
 
     @Query("SELECT bp FROM book_progress bp WHERE bp.userId = :userId AND bp.status = 'IN_PROGRESS' " +
-           "ORDER BY bp.lastReadAt DESC")
+            "ORDER BY bp.lastReadAt DESC")
     List<BookProgressEntity> findCurrentlyReadingByUserId(@Param("userId") UUID userId);
 
     @Query("SELECT bp FROM book_progress bp WHERE bp.userId = :userId AND bp.status = 'COMPLETED' " +
-           "ORDER BY bp.completedAt DESC")
+            "ORDER BY bp.completedAt DESC")
     List<BookProgressEntity> findCompletedBooksByUserId(@Param("userId") UUID userId);
 
     @Query("SELECT bp FROM book_progress bp WHERE bp.userId = :userId AND " +
-           "bp.lastReadAt >= :sinceDate ORDER BY bp.lastReadAt DESC")
+            "bp.lastReadAt >= :sinceDate ORDER BY bp.lastReadAt DESC")
     List<BookProgressEntity> findRecentlyReadBooks(@Param("userId") UUID userId,
                                                    @Param("sinceDate") Instant sinceDate);
 
@@ -43,5 +47,7 @@ public interface BookProgressRepository extends JpaRepository<BookProgressEntity
     @Query("SELECT AVG(bp.progressPercentage) FROM book_progress bp WHERE bp.userId = :userId AND bp.status = 'IN_PROGRESS'")
     Double getAverageProgressByUserId(@Param("userId") UUID userId);
 
-    void deleteByUserIdAndBookId(UUID userId, UUID bookId);
+    void deleteByUserIdAndBookId(
+            UUID userId,
+            UUID bookId);
 }

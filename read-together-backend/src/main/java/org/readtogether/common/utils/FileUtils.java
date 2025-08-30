@@ -20,7 +20,8 @@ public class FileUtils {
             "gif", "image/gif"
     );
 
-    public static String determineContentType(String filename) {
+    public static String determineContentType(
+            String filename) {
 
         if (filename == null || !filename.contains(".")) {
             return "application/octet-stream";
@@ -30,7 +31,8 @@ public class FileUtils {
         return CONTENT_TYPE_MAP.getOrDefault(extension, "application/octet-stream");
     }
 
-    public static String extractFileExtension(String filename) {
+    public static String extractFileExtension(
+            String filename) {
 
         if (filename == null || !filename.contains(".")) {
             return "";
@@ -39,7 +41,8 @@ public class FileUtils {
         return filename.substring(filename.lastIndexOf(".") + 1).toLowerCase();
     }
 
-    public static String extractFileName(String fullPath) {
+    public static String extractFileName(
+            String fullPath) {
 
         if (fullPath == null) {
             return "";
@@ -49,33 +52,38 @@ public class FileUtils {
         return lastSlash >= 0 ? fullPath.substring(lastSlash + 1) : fullPath;
     }
 
-    public static boolean isImageFile(String filename) {
+    public static boolean isImageFile(
+            String filename) {
 
         String extension = extractFileExtension(filename);
         return extension.equals("jpg") || extension.equals("jpeg") ||
                 extension.equals("png") || extension.equals("gif");
     }
 
-    public static boolean isAudioFile(String filename) {
+    public static boolean isAudioFile(
+            String filename) {
 
         String extension = extractFileExtension(filename);
         return extension.equals("mp3") || extension.equals("wav") ||
                 extension.equals("mp4");
     }
 
-    public static boolean isVideoFile(String filename) {
+    public static boolean isVideoFile(
+            String filename) {
 
         String extension = extractFileExtension(filename);
         return extension.equals("mp4") || extension.equals("avi") ||
                 extension.equals("mov") || extension.equals("webm");
     }
 
-    public static long bytesToMB(long bytes) {
+    public static long bytesToMB(
+            long bytes) {
 
         return bytes / (1024 * 1024);
     }
 
-    public static String formatFileSize(long bytes) {
+    public static String formatFileSize(
+            long bytes) {
 
         if (bytes < 1024) {
             return bytes + " B";

@@ -19,7 +19,8 @@ public class RoomAccessService {
     private final RoomInvitationService invitationService;
     private final RoomSettingsService settingsService;
 
-    public InvitationResponse getRoomFromInvitation(String token) {
+    public InvitationResponse getRoomFromInvitation(
+            String token) {
 
         log.info("Getting room information from invitation token: {}", token);
         return invitationService.getInvitationByToken(token);

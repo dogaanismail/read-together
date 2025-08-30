@@ -9,7 +9,8 @@ import static org.readtogether.readingroom.common.enums.TranscriptionLanguage.EN
 @UtilityClass
 public class ReadingRoomSettingsEntityFactory {
 
-    public ReadingRoomSettingsEntity createDefaultSettings(ReadingRoomEntity readingRoom) {
+    public ReadingRoomSettingsEntity createDefaultSettings(
+            ReadingRoomEntity readingRoom) {
 
         return ReadingRoomSettingsEntity.builder()
                 .readingRoom(readingRoom)

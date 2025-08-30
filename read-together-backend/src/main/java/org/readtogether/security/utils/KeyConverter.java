@@ -14,7 +14,9 @@ import java.security.PublicKey;
 @UtilityClass
 public class KeyConverter {
 
-    public static PublicKey convertPublicKey(String publicPemKey) {
+    public static PublicKey convertPublicKey(
+            final String publicPemKey) {
+
         try (
                 StringReader keyReader = new StringReader(publicPemKey);
                 PEMParser pemParser = new PEMParser(keyReader)
@@ -29,7 +31,8 @@ public class KeyConverter {
         }
     }
 
-    public static PrivateKey convertPrivateKey(final String privatePemKey) {
+    public static PrivateKey convertPrivateKey(
+            final String privatePemKey) {
 
         try (
                 StringReader keyReader = new StringReader(privatePemKey);

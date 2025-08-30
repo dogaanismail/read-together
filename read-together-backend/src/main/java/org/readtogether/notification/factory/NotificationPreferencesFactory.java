@@ -11,7 +11,8 @@ import static java.lang.Boolean.TRUE;
 @UtilityClass
 public class NotificationPreferencesFactory {
 
-    public static NotificationPreferenceEntity createDefaultPreferences(UUID userId) {
+    public static NotificationPreferenceEntity createDefaultPreferences(
+            UUID userId) {
 
         return NotificationPreferenceEntity.builder()
                 .userId(userId)

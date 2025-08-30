@@ -31,7 +31,8 @@ public class ReadingRoomParticipantEntityFactory {
                 .build();
     }
 
-    public ReadingRoomParticipantEntity participantLeft(ReadingRoomParticipantEntity participant) {
+    public ReadingRoomParticipantEntity participantLeft(
+            ReadingRoomParticipantEntity participant) {
 
         participant.setStatus(LEFT);
         participant.setLeftAt(Instant.now());

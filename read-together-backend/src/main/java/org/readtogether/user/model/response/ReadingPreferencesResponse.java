@@ -11,11 +11,17 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ReadingPreferencesResponse {
 
-    private String defaultLanguage;   // lowercase, e.g., "english"
-    private String readingSpeed;      // lowercase, e.g., "normal"
+    private String defaultLanguage;
+
+    private String readingSpeed;
+
     private boolean subtitlesEnabled;
+
     private boolean autoplay;
-    private String quality;           // lowercase, e.g., "high" (frontend key is 'quality')
-    private String fontSize;          // lowercase with hyphen, e.g., "extra-large"
-    private String theme;             // lowercase, e.g., "light"
+
+    private String quality;
+
+    private String fontSize;
+
+    private String theme;
 }

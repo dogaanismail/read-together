@@ -16,22 +16,30 @@ import java.util.UUID;
 @Repository
 public interface SessionRepository extends JpaRepository<SessionEntity, UUID> {
 
-    Page<SessionEntity> findByUserIdOrderByCreatedAtDesc(UUID userId, Pageable pageable);
+    Page<SessionEntity> findByUserIdOrderByCreatedAtDesc(
+            UUID userId,
+            Pageable pageable);
 
     Page<SessionEntity> findByIsPublicTrueAndProcessingStatusOrderByCreatedAtDesc(
-            ProcessingStatus status, Pageable pageable);
+            ProcessingStatus status,
+            Pageable pageable);
 
     Page<SessionEntity> findByMediaTypeAndIsPublicTrueAndProcessingStatusOrderByCreatedAtDesc(
-            MediaType mediaType, ProcessingStatus status, Pageable pageable);
+            MediaType mediaType,
+            ProcessingStatus status,
+            Pageable pageable);
 
     @Query("SELECT s FROM sessions s WHERE " +
             "(LOWER(s.title) LIKE LOWER(CONCAT('%', :query, '%')) OR " +
             "LOWER(s.description) LIKE LOWER(CONCAT('%', :query, '%'))) AND " +
             "s.isPublic = true AND s.processingStatus = :status " +
             "ORDER BY s.createdAt DESC")
-    Page<SessionEntity> searchPublicSessions(@Param("query") String query,
-                                             @Param("status") ProcessingStatus status,
-                                             Pageable pageable);
+    Page<SessionEntity> searchPublicSessions(
+            @Param("query") String query,
+            @Param("status") ProcessingStatus status,
+            Pageable pageable);
 
-    Optional<SessionEntity> findByIdAndUserId(UUID id, UUID userId);
+    Optional<SessionEntity> findByIdAndUserId(
+            UUID id,
+            UUID userId);
 }

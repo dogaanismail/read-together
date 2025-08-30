@@ -11,5 +11,4 @@ import java.util.UUID;
 public interface PrivacySettingsRepository extends JpaRepository<PrivacySettingsEntity, UUID> {
 
     Optional<PrivacySettingsEntity> findByUserId(UUID userId);
-
 }

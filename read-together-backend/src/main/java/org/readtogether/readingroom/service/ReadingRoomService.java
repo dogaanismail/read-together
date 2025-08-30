@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -129,7 +128,8 @@ public class ReadingRoomService {
                 .toList();
     }
 
-    public List<ReadingRoomResponse> getUserHostedRooms(UUID userId) {
+    public List<ReadingRoomResponse> getUserHostedRooms(
+            UUID userId) {
 
         return readingRoomRepository.findByHostId(userId)
                 .stream()
@@ -137,20 +137,23 @@ public class ReadingRoomService {
                 .toList();
     }
 
-    public ReadingRoomResponse getRoomByCode(String roomCode) {
+    public ReadingRoomResponse getRoomByCode(
+            String roomCode) {
 
         ReadingRoomEntity room = readingRoomRepository.findByRoomCode(roomCode)
                 .orElseThrow(() -> new RuntimeException("Room not found with code: " + roomCode));
         return createRoomResponse(room);
     }
 
-    private ReadingRoomEntity findRoomById(UUID roomId) {
+    private ReadingRoomEntity findRoomById(
+            UUID roomId) {
 
         return readingRoomRepository.findById(roomId)
                 .orElseThrow(() -> new RuntimeException("Room not found with id: " + roomId));
     }
 
-    private ReadingRoomResponse createRoomResponse(ReadingRoomEntity room) {
+    private ReadingRoomResponse createRoomResponse(
+            ReadingRoomEntity room) {
 
         Integer currentParticipants = participantRepository.countActiveParticipantsByRoomId(room.getId());
         return ReadingRoomResponseFactory.createResponse(room, currentParticipants);

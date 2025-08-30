@@ -17,7 +17,8 @@ import static org.readtogether.user.common.enums.UserType.ANONYMOUS;
 @UtilityClass
 public class SecurityUtils {
 
-    public static UUID getCurrentUserId(Authentication authentication) {
+    public static UUID getCurrentUserId(
+            Authentication authentication) {
 
         Jwt jwt = (Jwt) authentication.getPrincipal();
         return UUID.fromString(jwt.getClaimAsString(USER_ID.getValue()));

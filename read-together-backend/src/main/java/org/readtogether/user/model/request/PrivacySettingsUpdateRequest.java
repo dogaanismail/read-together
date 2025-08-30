@@ -13,9 +13,14 @@ import org.readtogether.user.common.enums.ProfileVisibility;
 public class PrivacySettingsUpdateRequest {
 
     private ProfileVisibility profileVisibility;
+
     private Boolean showEmail;
+
     private Boolean showOnlineStatus;
+
     private Boolean allowMessages;
+
     private Boolean showReadingSessions;
+
     private Boolean searchable;
 }

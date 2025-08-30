@@ -9,7 +9,8 @@ import org.readtogether.session.model.response.SessionResponse;
 @UtilityClass
 public class SessionResponseFactory {
 
-    public static SessionResponse createFromEntity(SessionEntity session) {
+    public static SessionResponse createFromEntity(
+            SessionEntity session) {
 
         SessionResponse response = new SessionResponse();
         response.setId(session.getId());

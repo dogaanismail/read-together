@@ -10,24 +10,39 @@ import java.util.UUID;
 public class FeedItemResponse {
 
     private UUID id;
+
     private UUID userId;
+
     private String username;
+
     private String userProfilePicture;
+
     private FeedItemType itemType;
+
     private UUID referenceId;
+
     private String title;
+
     private String description;
+
     private String mediaUrl;
+
     private String thumbnailUrl;
+
     private boolean isPublic;
+
     private long viewCount;
+
     private long likeCount;
+
     private long commentCount;
+
     private String metadata;
+
     private Instant createdAt;
 
     // Computed fields
     private String timeAgo;
-    private boolean isLiked; // Will be set based on current user
+    private boolean isLiked; // Will be set based on the current user
     private String formattedEngagement;
 }

@@ -15,7 +15,9 @@ import java.util.UUID;
 @Repository
 public interface NotificationRepository extends JpaRepository<NotificationEntity, UUID> {
 
-    Page<NotificationEntity> findByUserIdOrderByCreatedAtDesc(UUID userId, Pageable pageable);
+    Page<NotificationEntity> findByUserIdOrderByCreatedAtDesc(
+            UUID userId,
+            Pageable pageable);
 
     @Query("SELECT COUNT(n) FROM notifications n WHERE n.userId = :userId AND n.isRead = false")
     long countUnreadByUserId(@Param("userId") UUID userId);

@@ -14,7 +14,8 @@ import static org.readtogether.user.common.enums.VideoQuality.HIGH;
 @UtilityClass
 public class ReadingPreferencesFactory {
 
-    public static ReadingPreferencesEntity createDefaultPreferences(UUID userId) {
+    public static ReadingPreferencesEntity createDefaultPreferences(
+            UUID userId) {
 
         return ReadingPreferencesEntity.builder()
                 .userId(userId)

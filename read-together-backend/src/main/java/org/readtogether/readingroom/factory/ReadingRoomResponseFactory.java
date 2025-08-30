@@ -5,8 +5,6 @@ import org.readtogether.readingroom.common.enums.RoomStatus;
 import org.readtogether.readingroom.entity.ReadingRoomEntity;
 import org.readtogether.readingroom.model.response.ReadingRoomResponse;
 
-import java.time.LocalDateTime;
-
 @UtilityClass
 public class ReadingRoomResponseFactory {
 
@@ -31,7 +29,8 @@ public class ReadingRoomResponseFactory {
                 .build();
     }
 
-    private ReadingRoomResponse.HostInfo createHostInfo(ReadingRoomEntity room) {
+    private ReadingRoomResponse.HostInfo createHostInfo(
+            ReadingRoomEntity room) {
 
         return ReadingRoomResponse.HostInfo.builder()
                 .id(room.getHost().getId())

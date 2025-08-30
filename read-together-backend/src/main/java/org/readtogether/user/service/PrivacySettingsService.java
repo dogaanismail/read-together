@@ -67,28 +67,32 @@ public class PrivacySettingsService {
         return PrivacySettingsUtils.canSendMessage(settings, isFollowing, isOwner);
     }
 
-    public boolean shouldShowEmail(UUID userId) {
+    public boolean shouldShowEmail(
+            UUID userId) {
 
         PrivacySettingsEntity settings = privacySettingsRepository.findByUserId(userId)
                 .orElse(PrivacySettingsFactory.createDefaultSettings(userId));
         return settings.isShowEmail();
     }
 
-    public boolean shouldShowOnlineStatus(UUID userId) {
+    public boolean shouldShowOnlineStatus(
+            UUID userId) {
 
         PrivacySettingsEntity settings = privacySettingsRepository.findByUserId(userId)
                 .orElse(PrivacySettingsFactory.createDefaultSettings(userId));
         return settings.isShowOnlineStatus();
     }
 
-    public boolean shouldShowReadingSessions(UUID userId) {
+    public boolean shouldShowReadingSessions(
+            UUID userId) {
 
         PrivacySettingsEntity settings = privacySettingsRepository.findByUserId(userId)
                 .orElse(PrivacySettingsFactory.createDefaultSettings(userId));
         return settings.isShowReadingSessions();
     }
 
-    public boolean isSearchable(UUID userId) {
+    public boolean isSearchable(
+            UUID userId) {
 
         PrivacySettingsEntity settings = privacySettingsRepository.findByUserId(userId)
                 .orElse(PrivacySettingsFactory.createDefaultSettings(userId));

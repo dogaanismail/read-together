@@ -19,7 +19,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -71,7 +70,9 @@ public class RoomInvitationService {
     }
 
     @Transactional
-    public InvitationResponse acceptInvitation(String invitationToken, UUID userId) {
+    public InvitationResponse acceptInvitation(
+            String invitationToken,
+            UUID userId) {
 
         log.info("User {} accepting invitation with token {}", userId, invitationToken);
 
@@ -131,7 +132,8 @@ public class RoomInvitationService {
                 .toList();
     }
 
-    public List<InvitationResponse> getUserPendingInvitations(UUID userId) {
+    public List<InvitationResponse> getUserPendingInvitations(
+            UUID userId) {
 
         UserEntity user = userService.findUserEntityById(userId);
 
@@ -144,7 +146,8 @@ public class RoomInvitationService {
                 .toList();
     }
 
-    public InvitationResponse getInvitationByToken(String invitationToken) {
+    public InvitationResponse getInvitationByToken(
+            String invitationToken) {
 
         ReadingRoomInvitationEntity invitation = invitationRepository.findByInvitationToken(invitationToken)
                 .orElseThrow(() -> new RuntimeException("Invalid invitation token"));
@@ -152,7 +155,9 @@ public class RoomInvitationService {
         return mapToResponse(invitation);
     }
 
-    public String generateShareLink(UUID roomId, UUID userId) {
+    public String generateShareLink(
+            UUID roomId,
+            UUID userId) {
 
         ReadingRoomEntity room = roomRepository.findById(roomId)
                 .orElseThrow(() -> new RuntimeException("Room not found with id: " + roomId));

@@ -43,13 +43,6 @@ public class TwilioSmsProvider implements SmsNotificationProvider {
             // TODO: Implement Twilio SMS integration
             log.info("Sending SMS via Twilio to {}: {}", phoneNumber, message);
 
-            // Example implementation:
-            // Message twilioMessage = Message.creator(
-            //     new PhoneNumber(phoneNumber),
-            //     new PhoneNumber(twilioConfig.getFromNumber()),
-            //     message)
-            //     .create();
-
         } catch (Exception e) {
             log.error("Failed to send SMS via Twilio to {}", phoneNumber, e);
         }

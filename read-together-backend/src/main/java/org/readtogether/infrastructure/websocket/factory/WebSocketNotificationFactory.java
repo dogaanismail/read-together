@@ -10,7 +10,8 @@ import java.util.UUID;
 @UtilityClass
 public class WebSocketNotificationFactory {
 
-    public static Map<String, Object> createSessionStatusNotification(SessionEntity session) {
+    public static Map<String, Object> createSessionStatusNotification(
+            SessionEntity session) {
 
         Map<String, Object> notification = new HashMap<>();
         notification.put("sessionId", session.getId().toString());
@@ -41,7 +42,8 @@ public class WebSocketNotificationFactory {
         );
     }
 
-    public static Map<String, Object> createSessionCompletedNotification(SessionEntity session) {
+    public static Map<String, Object> createSessionCompletedNotification(
+            SessionEntity session) {
 
         return Map.of(
                 "sessionId", session.getId().toString(),

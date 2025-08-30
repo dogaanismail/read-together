@@ -30,7 +30,9 @@ public class NotificationService {
     private final ObjectMapper objectMapper;
 
     @Transactional
-    public void notifySessionUploadStarted(UUID userId, SessionEntity session) {
+    public void notifySessionUploadStarted(
+            UUID userId,
+            SessionEntity session) {
 
         if (!preferencesService.shouldSendPushNotification(userId, NotificationPreferenceType.UPLOAD_STATUS)) {
             log.debug("User {} has disabled upload status push notifications", userId);
@@ -63,7 +65,9 @@ public class NotificationService {
     }
 
     @Transactional
-    public void notifySessionUploadCompleted(UUID userId, SessionEntity session) {
+    public void notifySessionUploadCompleted(
+            UUID userId,
+            SessionEntity session) {
 
         String metadata = NotificationMetadataUtils.createSessionMetadata(objectMapper, session);
         NotificationEntity notification = NotificationEntityFactory.createSessionUploadCompletedNotification(userId, session, metadata);
@@ -105,7 +109,9 @@ public class NotificationService {
     }
 
     @Transactional
-    public void notifySessionProcessingStarted(UUID userId, SessionEntity session) {
+    public void notifySessionProcessingStarted(
+            UUID userId,
+            SessionEntity session) {
 
         String metadata = NotificationMetadataUtils.createSessionMetadata(objectMapper, session);
         NotificationEntity notification = NotificationEntityFactory.createSessionProcessingStartedNotification(userId, session, metadata);
@@ -244,7 +250,8 @@ public class NotificationService {
         return notificationRepository.findByUserIdOrderByCreatedAtDesc(userId, pageable);
     }
 
-    public long getUnreadCount(UUID userId) {
+    public long getUnreadCount(
+            UUID userId) {
 
         return notificationRepository.countUnreadByUserId(userId);
     }
@@ -259,7 +266,8 @@ public class NotificationService {
     }
 
     @Transactional
-    public int markAllAsRead(UUID userId) {
+    public int markAllAsRead(
+            UUID userId) {
 
         return notificationRepository.markAllAsRead(userId, Instant.now());
     }

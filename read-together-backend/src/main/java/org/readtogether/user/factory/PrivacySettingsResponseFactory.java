@@ -7,7 +7,8 @@ import org.readtogether.user.model.response.PrivacySettingsResponse;
 @UtilityClass
 public class PrivacySettingsResponseFactory {
 
-    public static PrivacySettingsResponse createFromEntity(PrivacySettingsEntity entity) {
+    public static PrivacySettingsResponse createFromEntity(
+            PrivacySettingsEntity entity) {
 
         return PrivacySettingsResponse.builder()
                 .profileVisibility(entity.getProfileVisibility().name().toLowerCase())

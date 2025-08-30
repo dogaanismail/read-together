@@ -37,7 +37,6 @@ public class RoomSettingsService {
         ReadingRoomEntity room = roomRepository.findById(roomId)
                 .orElseThrow(() -> new RuntimeException("Room not found with id: " + roomId));
 
-        // Only host can update settings
         if (!room.getHost().getId().equals(userId)) {
             throw new RuntimeException("Only the host can update room settings");
         }
@@ -52,7 +51,8 @@ public class RoomSettingsService {
     }
 
     @Transactional
-    public RoomSettingsResponse getRoomSettings(UUID roomId) {
+    public RoomSettingsResponse getRoomSettings(
+            UUID roomId) {
 
         ReadingRoomSettingsEntity settings = settingsRepository.findByReadingRoomId(roomId)
                 .orElseThrow(() -> new RuntimeException("Settings not found for room: " + roomId));
@@ -80,20 +80,23 @@ public class RoomSettingsService {
     }
 
     @Transactional
-    public void createDefaultSettings(ReadingRoomEntity room) {
+    public void createDefaultSettings(
+            ReadingRoomEntity room) {
 
         ReadingRoomSettingsEntity settings = ReadingRoomSettingsEntityFactory.createDefaultSettings(room);
         ReadingRoomSettingsEntity savedSettings = settingsRepository.save(settings);
         RoomSettingsResponseFactory.createResponse(savedSettings);
     }
 
-    public ReadingRoomSettingsEntity getSettingsEntity(UUID roomId) {
+    public ReadingRoomSettingsEntity getSettingsEntity(
+            UUID roomId) {
 
         return settingsRepository.findByReadingRoomId(roomId)
                 .orElseThrow(() -> new RuntimeException("Settings not found for room: " + roomId));
     }
 
-    private ReadingRoomSettingsEntity createDefaultSettingsEntity(ReadingRoomEntity room) {
+    private ReadingRoomSettingsEntity createDefaultSettingsEntity(
+            ReadingRoomEntity room) {
 
         return ReadingRoomSettingsEntityFactory.createDefaultSettings(room);
     }
@@ -161,6 +164,7 @@ public class RoomSettingsService {
     }
 
     private RoomSettingsResponse mapToResponse(ReadingRoomSettingsEntity settings) {
+
         return RoomSettingsResponseFactory.createResponse(settings);
     }
 }

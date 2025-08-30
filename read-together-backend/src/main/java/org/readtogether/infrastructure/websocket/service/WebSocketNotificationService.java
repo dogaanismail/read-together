@@ -18,7 +18,9 @@ public class WebSocketNotificationService {
 
     private final SimpMessagingTemplate messagingTemplate;
 
-    public void notifySessionStatusChange(UUID userId, SessionEntity session) {
+    public void notifySessionStatusChange(
+            UUID userId,
+            SessionEntity session) {
 
         Map<String, Object> notification = WebSocketNotificationFactory.createSessionStatusNotification(session);
         WebSocketUtils.sendSessionStatusNotification(messagingTemplate, userId, notification);
@@ -33,7 +35,9 @@ public class WebSocketNotificationService {
         WebSocketUtils.sendUploadProgressNotification(messagingTemplate, userId, notification);
     }
 
-    public void notifySessionCompleted(UUID userId, SessionEntity session) {
+    public void notifySessionCompleted(
+            UUID userId,
+            SessionEntity session) {
 
         Map<String, Object> notification = WebSocketNotificationFactory.createSessionCompletedNotification(session);
         WebSocketUtils.sendGeneralNotification(messagingTemplate, userId, notification);

@@ -101,7 +101,8 @@ public class NotificationProviderService {
         }
     }
 
-    private boolean isCriticalNotification(NotificationPreferenceType preferenceType) {
+    private boolean isCriticalNotification(
+            NotificationPreferenceType preferenceType) {
 
         return preferenceType == NotificationPreferenceType.UPLOAD_STATUS;
     }

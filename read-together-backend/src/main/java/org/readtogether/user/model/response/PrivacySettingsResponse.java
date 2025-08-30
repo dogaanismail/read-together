@@ -12,9 +12,14 @@ import lombok.NoArgsConstructor;
 public class PrivacySettingsResponse {
 
     private String profileVisibility; // lowercase: public|followers|private
+
     private boolean showEmail;
+
     private boolean showOnlineStatus;
+
     private boolean allowMessages;
+
     private boolean showReadingSessions;
+
     private boolean searchable;
 }

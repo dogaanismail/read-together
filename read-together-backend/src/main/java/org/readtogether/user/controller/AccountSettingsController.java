@@ -21,7 +21,8 @@ public class AccountSettingsController {
 
     @GetMapping
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<AccountSettingsResponse> getAllSettings(Authentication authentication) {
+    public ResponseEntity<AccountSettingsResponse> getAllSettings(
+            Authentication authentication) {
 
         UUID userId = SecurityUtils.getCurrentUserId(authentication);
         AccountSettingsResponse settings = accountSettingsService.getAllSettings(userId);

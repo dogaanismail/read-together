@@ -25,9 +25,10 @@ public class CustomBearerTokenAuthenticationFilter extends OncePerRequestFilter 
     private final TokenService tokenService;
 
     @Override
-    public void doFilterInternal(@NonNull final HttpServletRequest httpServletRequest,
-                                 @NonNull final HttpServletResponse httpServletResponse,
-                                 @NonNull final FilterChain filterChain) throws ServletException, IOException {
+    public void doFilterInternal(
+            @NonNull final HttpServletRequest httpServletRequest,
+            @NonNull final HttpServletResponse httpServletResponse,
+            @NonNull final FilterChain filterChain) throws ServletException, IOException {
 
         log.debug("Api request has been secured by Bearer token");
 

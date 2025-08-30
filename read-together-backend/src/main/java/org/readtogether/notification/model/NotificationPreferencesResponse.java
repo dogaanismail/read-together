@@ -12,15 +12,24 @@ import lombok.NoArgsConstructor;
 public class NotificationPreferencesResponse {
 
     private boolean emailNotifications;
+
     private boolean pushNotifications;
+
     private boolean sessionLikes;
+
     private boolean newFollowers;
+
     private boolean liveStreamAlerts;
+
     private boolean weeklyDigest;
+
     private boolean marketingEmails;
+
     private boolean uploadStatus;
 
     private String emailAddress;
+
     private String phoneNumber;
+
     private String pushSubscriptionEndpoint;
 }

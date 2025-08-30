@@ -12,7 +12,9 @@ import java.util.UUID;
 @Repository
 public interface ReadingRoomParticipantRepository extends JpaRepository<ReadingRoomParticipantEntity, UUID> {
 
-    Optional<ReadingRoomParticipantEntity> findByReadingRoomIdAndUserId(UUID roomId, UUID userId);
+    Optional<ReadingRoomParticipantEntity> findByReadingRoomIdAndUserId(
+            UUID roomId,
+            UUID userId);
 
     @Query("SELECT COUNT(p) FROM ReadingRoomParticipantEntity p WHERE p.readingRoom.id = :roomId AND p.status = 'JOINED'")
     Integer countActiveParticipantsByRoomId(@Param("roomId") UUID roomId);

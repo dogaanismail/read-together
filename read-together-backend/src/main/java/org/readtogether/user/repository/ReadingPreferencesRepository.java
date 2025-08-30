@@ -11,5 +11,4 @@ import java.util.UUID;
 public interface ReadingPreferencesRepository extends JpaRepository<ReadingPreferencesEntity, UUID> {
 
     Optional<ReadingPreferencesEntity> findByUserId(UUID userId);
-
 }

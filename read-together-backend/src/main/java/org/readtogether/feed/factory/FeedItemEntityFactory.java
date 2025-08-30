@@ -13,7 +13,8 @@ import static org.readtogether.feed.common.enums.FeedItemType.MILESTONE;
 @UtilityClass
 public class FeedItemEntityFactory {
 
-    public static FeedItemEntity createFromSession(SessionEntity session) {
+    public static FeedItemEntity createFromSession(
+            SessionEntity session) {
 
         return FeedItemEntity.builder()
                 .userId(session.getUserId())
@@ -27,7 +28,8 @@ public class FeedItemEntityFactory {
                 .build();
     }
 
-    public static FeedItemEntity createFeedItemFromSession(SessionEntity session) {
+    public static FeedItemEntity createFeedItemFromSession(
+            SessionEntity session) {
 
         return FeedItemEntity.builder()
                 .userId(session.getUserId())
@@ -78,7 +80,8 @@ public class FeedItemEntityFactory {
                 .build();
     }
 
-    private static String createSessionMetadata(SessionEntity session) {
+    private static String createSessionMetadata(
+            SessionEntity session) {
 
         return String.format(
                 "{\"mediaType\":\"%s\",\"duration\":%d,\"fileSize\":%d}",

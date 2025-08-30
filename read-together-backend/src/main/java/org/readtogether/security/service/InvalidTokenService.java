@@ -15,7 +15,8 @@ public class InvalidTokenService {
 
     private final InvalidTokenRepository invalidTokenRepository;
 
-    public void invalidateTokens(Set<String> tokenIds) {
+    public void invalidateTokens(
+            Set<String> tokenIds) {
 
         Set<InvalidTokenEntity> invalidTokenEntities = tokenIds.stream()
                 .map(tokenId -> InvalidTokenEntity.builder()
@@ -27,7 +28,8 @@ public class InvalidTokenService {
         invalidTokenRepository.saveAll(invalidTokenEntities);
     }
 
-    public void checkForInvalidityOfToken(String tokenId) {
+    public void checkForInvalidityOfToken(
+            String tokenId) {
 
         boolean isTokenInvalid = invalidTokenRepository
                 .findByTokenId(tokenId)

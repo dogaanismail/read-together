@@ -13,30 +13,40 @@ import java.util.UUID;
 
 public interface BookRepository extends JpaRepository<BookEntity, UUID> {
 
-    Optional<BookEntity> findByIdAndAddedByUserId(UUID id, UUID userId);
+    Optional<BookEntity> findByIdAndAddedByUserId(
+            UUID id,
+            UUID userId);
 
-    List<BookEntity> findByAddedByUserIdOrderByCreatedAtDesc(UUID userId);
+    List<BookEntity> findByAddedByUserIdOrderByCreatedAtDesc(
+            UUID userId);
 
-    Page<BookEntity> findByAddedByUserIdOrderByCreatedAtDesc(UUID userId, Pageable pageable);
+    Page<BookEntity> findByAddedByUserIdOrderByCreatedAtDesc(
+            UUID userId,
+            Pageable pageable);
 
     List<BookEntity> findByIsPublicTrueOrderByCreatedAtDesc();
 
-    Page<BookEntity> findByIsPublicTrueOrderByCreatedAtDesc(Pageable pageable);
+    Page<BookEntity> findByIsPublicTrueOrderByCreatedAtDesc(
+            Pageable pageable);
 
     @Query("SELECT b FROM book b WHERE b.addedByUserId = :userId AND " +
-           "(LOWER(b.title) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
-           "LOWER(b.author) LIKE LOWER(CONCAT('%', :searchTerm, '%')))")
-    List<BookEntity> findByUserIdAndSearchTerm(@Param("userId") UUID userId,
-                                               @Param("searchTerm") String searchTerm);
+            "(LOWER(b.title) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
+            "LOWER(b.author) LIKE LOWER(CONCAT('%', :searchTerm, '%')))")
+    List<BookEntity> findByUserIdAndSearchTerm(
+            @Param("userId") UUID userId,
+            @Param("searchTerm") String searchTerm);
 
     @Query("SELECT b FROM book b WHERE b.isPublic = true AND " +
-           "(LOWER(b.title) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
-           "LOWER(b.author) LIKE LOWER(CONCAT('%', :searchTerm, '%')))")
+            "(LOWER(b.title) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
+            "LOWER(b.author) LIKE LOWER(CONCAT('%', :searchTerm, '%')))")
     List<BookEntity> findPublicBooksBySearchTerm(@Param("searchTerm") String searchTerm);
 
-    boolean existsByIsbnAndAddedByUserId(String isbn, UUID userId);
+    boolean existsByIsbnAndAddedByUserId(
+            String isbn,
+            UUID userId);
 
-    long countByAddedByUserId(UUID userId);
+    long countByAddedByUserId(
+            UUID userId);
 
     @Query("SELECT COUNT(b) FROM book b WHERE b.isPublic = true")
     long countPublicBooks();

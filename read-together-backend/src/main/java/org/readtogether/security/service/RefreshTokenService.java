@@ -21,7 +21,8 @@ public class RefreshTokenService {
     private final UserRepository userRepository;
     private final TokenService tokenService;
 
-    public Token refreshToken(TokenRefreshRequest tokenRefreshRequest) {
+    public Token refreshToken(
+            TokenRefreshRequest tokenRefreshRequest) {
 
         tokenService.verifyAndValidate(tokenRefreshRequest.getRefreshToken());
 
@@ -40,10 +41,10 @@ public class RefreshTokenService {
                 userEntityFromDB.getClaims(),
                 tokenRefreshRequest.getRefreshToken()
         );
-
     }
 
-    private void validateUserStatus(UserEntity userEntity) {
+    private void validateUserStatus(
+            UserEntity userEntity) {
 
         if (!(ACTIVE.equals(userEntity.getUserStatus()))) {
             throw new UserStatusNotValidException("UserStatus = " + userEntity.getUserStatus());

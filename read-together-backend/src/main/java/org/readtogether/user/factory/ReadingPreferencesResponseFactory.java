@@ -7,7 +7,8 @@ import org.readtogether.user.model.response.ReadingPreferencesResponse;
 @UtilityClass
 public class ReadingPreferencesResponseFactory {
 
-    public static ReadingPreferencesResponse createFromEntity(ReadingPreferencesEntity entity) {
+    public static ReadingPreferencesResponse createFromEntity(
+            ReadingPreferencesEntity entity) {
 
         String language = entity.getDefaultLanguage().name().toLowerCase();
         String speed = entity.getReadingSpeed().name().toLowerCase();

@@ -13,6 +13,8 @@ import org.readtogether.notification.model.NotificationPreferencesUpdateRequest;
 public class AccountSettingsUpdateRequest {
 
     private PrivacySettingsUpdateRequest privacy;
+
     private ReadingPreferencesUpdateRequest reading;
+
     private NotificationPreferencesUpdateRequest notifications;
 }

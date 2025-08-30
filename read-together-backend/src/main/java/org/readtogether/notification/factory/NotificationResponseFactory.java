@@ -31,12 +31,19 @@ public class NotificationResponseFactory {
                 .build();
     }
 
-    public static NotificationResponse createFromEntity(NotificationEntity entity) {
+    public static NotificationResponse createFromEntity(
+            NotificationEntity entity) {
 
-        return createFromEntity(entity, null, null, null);
+        return createFromEntity(
+                entity,
+                null,
+                null,
+                null
+        );
     }
 
-    private static String mapNotificationTypeToFrontend(NotificationType type) {
+    private static String mapNotificationTypeToFrontend(
+            NotificationType type) {
 
         return switch (type) {
             case SESSION_UPLOAD_STARTED, SESSION_PROCESSING_STARTED -> "session_start";

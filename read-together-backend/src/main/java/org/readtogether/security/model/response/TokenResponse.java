@@ -10,7 +10,8 @@ import lombok.*;
 public class TokenResponse {
 
     private String accessToken;
-    private Long accessTokenExpiresAt;
-    private String refreshToken;
 
+    private Long accessTokenExpiresAt;
+
+    private String refreshToken;
 }

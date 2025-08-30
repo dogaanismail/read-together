@@ -22,7 +22,8 @@ public class NotificationPreferencesService {
     private final NotificationPreferencesRepository preferencesRepository;
 
     @Transactional(readOnly = true)
-    public NotificationPreferenceEntity getUserPreferences(UUID userId) {
+    public NotificationPreferenceEntity getUserPreferences(
+            UUID userId) {
 
         return preferencesRepository.findByUserId(userId)
                 .orElse(NotificationPreferencesFactory.createDefaultPreferences(userId));
@@ -44,7 +45,8 @@ public class NotificationPreferencesService {
     }
 
     @Transactional
-    public NotificationPreferenceEntity createDefaultPreferences(UUID userId) {
+    public NotificationPreferenceEntity createDefaultPreferences(
+            UUID userId) {
 
         if (preferencesRepository.existsByUserId(userId)) {
             return preferencesRepository.findByUserId(userId)
@@ -89,7 +91,8 @@ public class NotificationPreferencesService {
         return NotificationPreferencesUtils.shouldSendPushNotification(preferences, preferenceType);
     }
 
-    private NotificationPreferenceEntity createDefaultPreferencesInternal(UUID userId) {
+    private NotificationPreferenceEntity createDefaultPreferencesInternal(
+            UUID userId) {
 
         if (preferencesRepository.existsByUserId(userId)) {
             return preferencesRepository.findByUserId(userId)

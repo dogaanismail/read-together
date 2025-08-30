@@ -8,7 +8,9 @@ import java.time.temporal.ChronoUnit;
 @UtilityClass
 public class TimeUtils {
 
-    public static String formatTimeAgo(Instant dateTime) {
+    public static String formatTimeAgo(
+            Instant dateTime) {
+
         Instant now = Instant.now();
         long minutes = ChronoUnit.MINUTES.between(dateTime, now);
 
@@ -21,7 +23,8 @@ public class TimeUtils {
         }
     }
 
-    public static String formatDuration(Integer seconds) {
+    public static String formatDuration(
+            Integer seconds) {
 
         if (seconds == null || seconds < 0) {
             return "00:00";

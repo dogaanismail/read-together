@@ -26,7 +26,8 @@ public class InvitationController {
     @GetMapping("/my-invitations")
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     @Operation(summary = "Get current user's pending invitations")
-    public ResponseEntity<List<InvitationResponse>> getMyPendingInvitations(Authentication authentication) {
+    public ResponseEntity<List<InvitationResponse>> getMyPendingInvitations(
+            Authentication authentication) {
 
         UUID userId = AuthenticationUtils.extractUserIdFromAuth(authentication);
         List<InvitationResponse> invitations = invitationService.getUserPendingInvitations(userId);

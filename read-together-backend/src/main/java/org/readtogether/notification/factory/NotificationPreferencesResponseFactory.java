@@ -7,7 +7,8 @@ import org.readtogether.notification.model.NotificationPreferencesResponse;
 @UtilityClass
 public class NotificationPreferencesResponseFactory {
 
-    public static NotificationPreferencesResponse createFromEntity(NotificationPreferenceEntity entity) {
+    public static NotificationPreferencesResponse createFromEntity(
+            NotificationPreferenceEntity entity) {
 
         return NotificationPreferencesResponse.builder()
                 .emailNotifications(entity.isEmailNotifications())

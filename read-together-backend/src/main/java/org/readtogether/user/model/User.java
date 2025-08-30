@@ -14,9 +14,14 @@ import org.readtogether.user.common.enums.UserType;
 public class User {
 
     private String id;
+
     private String email;
+
     private String firstName;
+
     private String lastName;
+
     private UserStatus userStatus;
+
     private UserType userType;
 }

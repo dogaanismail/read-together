@@ -9,7 +9,9 @@ import org.springframework.util.StringUtils;
 public class Token {
 
     private String accessToken;
+
     private Long accessTokenExpiresAt;
+
     private String refreshToken;
 
     private static final String TOKEN_PREFIX = "Bearer ";

@@ -9,7 +9,8 @@ import java.util.UUID;
 @UtilityClass
 public class PrivacySettingsFactory {
 
-    public static PrivacySettingsEntity createDefaultSettings(UUID userId) {
+    public static PrivacySettingsEntity createDefaultSettings(
+            UUID userId) {
 
         return PrivacySettingsEntity.builder()
                 .userId(userId)
