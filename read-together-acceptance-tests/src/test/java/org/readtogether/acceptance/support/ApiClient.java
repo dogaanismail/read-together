@@ -24,6 +24,7 @@ public class ApiClient {
     
     private static RequestSpecification baseRequestSpec;
     private static String currentAccessToken;
+    private static Response lastResponse;
     
     static {
         configureRestAssured();
@@ -115,107 +116,125 @@ public class ApiClient {
     }
     
     /**
+     * Get the last response received from an API call.
+     */
+    public static Response getLastResponse() {
+        if (lastResponse == null) {
+            throw new IllegalStateException("No response available. Make an API call first.");
+        }
+        return lastResponse;
+    }
+    
+    /**
+     * Store the response for later access.
+     */
+    private static Response storeResponse(Response response) {
+        lastResponse = response;
+        return response;
+    }
+    
+    /**
      * POST request with JSON body.
      */
     public static Response post(String endpoint, Object body) {
-        return getRequest()
+        return storeResponse(getRequest()
                 .body(body)
                 .when()
-                .post(endpoint);
+                .post(endpoint));
     }
     
     /**
      * Authenticated POST request with JSON body.
      */
     public static Response postAuthenticated(String endpoint, Object body) {
-        return getAuthenticatedRequest()
+        return storeResponse(getAuthenticatedRequest()
                 .body(body)
                 .when()
-                .post(endpoint);
+                .post(endpoint));
     }
     
     /**
      * GET request.
      */
     public static Response get(String endpoint) {
-        return getRequest()
+        return storeResponse(getRequest()
                 .when()
-                .get(endpoint);
+                .get(endpoint));
     }
 
     /**
      * GET request without an API base path.
      */
     public static Response getWithoutApiBase(String endpoint) {
-        return getRequestWithoutApiBase()
+        return storeResponse(getRequestWithoutApiBase()
                 .when()
-                .get(endpoint);
+                .get(endpoint));
     }
 
     /**
      * Authenticated GET request.
      */
     public static Response getAuthenticated(String endpoint) {
-        return getAuthenticatedRequest()
+        return storeResponse(getAuthenticatedRequest()
                 .when()
-                .get(endpoint);
+                .get(endpoint));
     }
     
     /**
      * GET request with query parameters.
      */
     public static Response get(String endpoint, Map<String, Object> queryParams) {
-        return getRequest()
+        return storeResponse(getRequest()
                 .queryParams(queryParams)
                 .when()
-                .get(endpoint);
+                .get(endpoint));
     }
     
     /**
      * Authenticated GET request with query parameters.
      */
     public static Response getAuthenticated(String endpoint, Map<String, Object> queryParams) {
-        return getAuthenticatedRequest()
+        return storeResponse(getAuthenticatedRequest()
                 .queryParams(queryParams)
                 .when()
-                .get(endpoint);
+                .get(endpoint));
     }
     
     /**
      * PUT request with JSON body.
      */
     public static Response put(String endpoint, Object body) {
-        return getRequest()
+        return storeResponse(getRequest()
                 .body(body)
                 .when()
-                .put(endpoint);
+                .put(endpoint));
     }
     
     /**
      * Authenticated PUT request with JSON body.
      */
     public static Response putAuthenticated(String endpoint, Object body) {
-        return getAuthenticatedRequest()
+        return storeResponse(getAuthenticatedRequest()
                 .body(body)
                 .when()
-                .put(endpoint);
+                .put(endpoint));
     }
     
     /**
      * DELETE request.
      */
     public static Response delete(String endpoint) {
-        return getRequest()
+        return storeResponse(getRequest()
                 .when()
-                .delete(endpoint);
+                .delete(endpoint));
     }
     
     /**
      * Authenticated DELETE request.
      */
     public static Response deleteAuthenticated(String endpoint) {
-        return getAuthenticatedRequest()
+        return storeResponse(getAuthenticatedRequest()
                 .when()
-                .delete(endpoint);
+                .delete(endpoint));
     }
 }

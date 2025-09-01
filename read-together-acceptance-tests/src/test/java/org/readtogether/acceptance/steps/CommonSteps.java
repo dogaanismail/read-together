@@ -6,6 +6,7 @@ import io.cucumber.java.en.Given;
 import lombok.extern.slf4j.Slf4j;
 import org.awaitility.Awaitility;
 import org.readtogether.acceptance.support.ApiClient;
+import org.readtogether.acceptance.support.ApplicationManager;
 import org.readtogether.acceptance.support.DbUtils;
 import org.readtogether.acceptance.support.Env;
 
@@ -19,13 +20,27 @@ import static org.assertj.core.api.Assertions.assertThat;
 @Slf4j
 public class CommonSteps {
     
+    private static boolean shutdownHookAdded = false;
+    
     @Before
     public void beforeScenario() {
         log.debug("Starting scenario setup...");
         
+        // Add shutdown hook once to clean up resources when test suite completes
+        if (!shutdownHookAdded && Env.isEmbeddedMode()) {
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                log.info("Test suite completed, cleaning up resources...");
+                ApplicationManager.stopApplication();
+                DbUtils.stopEmbeddedDatabase();
+            }));
+            shutdownHookAdded = true;
+        }
+        
         // Start embedded database if in embedded mode
         if (Env.isEmbeddedMode()) {
             DbUtils.startEmbeddedDatabase();
+            // Start the Spring Boot application with the embedded database
+            ApplicationManager.startApplication();
         }
         
         // Clear any existing auth tokens from previous scenarios
@@ -46,10 +61,8 @@ public class CommonSteps {
         // Clear auth tokens
         ApiClient.clearAccessToken();
         
-        // Stop embedded database if in embedded mode
-        if (Env.isEmbeddedMode()) {
-            DbUtils.stopEmbeddedDatabase();
-        }
+        // Note: We don't stop the application/database between scenarios for performance
+        // They will be stopped when the test suite completes
         
         log.debug("Scenario cleanup completed");
     }

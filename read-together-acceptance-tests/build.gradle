@@ -10,6 +10,9 @@ repositories {
 }
 
 dependencies {
+    // Backend application dependency for embedded mode
+    testImplementation project(':read-together-backend')
+    
     // Cucumber BDD framework
     testImplementation 'io.cucumber:cucumber-java:7.19.0'
     testImplementation 'io.cucumber:cucumber-junit-platform-engine:7.19.0'
@@ -27,6 +30,9 @@ dependencies {
     testImplementation 'org.testcontainers:testcontainers:1.19.3'
     testImplementation 'org.testcontainers:postgresql:1.19.3'
     testImplementation 'org.testcontainers:junit-jupiter:1.19.3'
+    
+    // Spring Boot Test support for embedded mode (use BOM from backend project)
+    testImplementation 'org.springframework.boot:spring-boot-starter-test:3.5.0'
     
     // JSON processing
     testImplementation 'com.fasterxml.jackson.core:jackson-databind:2.16.1'

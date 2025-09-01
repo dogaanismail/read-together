@@ -27,6 +27,26 @@ public class UserSteps {
     private Map<String, Object> currentUserData;
     private Map<String, Object> originalProfileData;
     
+    @Given("a user exists with email {string}")
+    public void a_user_exists_with_email(String email) {
+        // Create a user via registration with default password
+        Map<String, Object> registerRequest = Fixtures.User.createRegisterRequest(
+                email,
+                "Password1!",  // Default password for test users
+                "Test",
+                "User",
+                "user"
+        );
+        
+        Response response = ApiClient.post("/users/register", registerRequest);
+        
+        assertThat(response.getStatusCode())
+                .as("User registration should succeed")
+                .isEqualTo(200);
+        
+        log.debug("Created user with email: {}", email);
+    }
+    
     @When("I register a new user with the following details:")
     public void i_register_a_new_user_with_the_following_details(DataTable dataTable) {
         Map<String, String> userData = dataTable.asMap(String.class, String.class);
