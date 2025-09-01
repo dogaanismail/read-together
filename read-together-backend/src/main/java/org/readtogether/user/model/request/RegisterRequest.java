@@ -25,7 +25,6 @@ public class RegisterRequest {
     @NotBlank(message = "Last name can't be blank.")
     private String lastName;
 
-    @NotBlank(message = "Role can't be blank.")
     private String role;
 
 }
