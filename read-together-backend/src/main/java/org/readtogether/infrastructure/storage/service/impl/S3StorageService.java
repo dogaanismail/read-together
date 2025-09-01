@@ -19,7 +19,6 @@ import java.io.InputStream;
 import java.util.concurrent.CompletableFuture;
 
 @Slf4j
-@Service("s3StorageService")
 public class S3StorageService implements StorageService {
 
     private final S3Client s3Client;
@@ -29,6 +28,12 @@ public class S3StorageService implements StorageService {
 
         this.s3Properties = storageProperties.getS3();
         this.s3Client = createS3Client();
+    }
+
+    // Constructor for testing - accepts S3Client directly  
+    public S3StorageService(S3Client s3Client, StorageProperties.S3Properties s3Properties) {
+        this.s3Client = s3Client;
+        this.s3Properties = s3Properties;
     }
 
     @Override

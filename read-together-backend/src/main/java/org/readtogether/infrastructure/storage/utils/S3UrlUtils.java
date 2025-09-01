@@ -29,8 +29,12 @@ public class S3UrlUtils {
             String bucket) {
 
         if (fileUrl.contains("amazonaws.com/")) {
-            return fileUrl.substring(fileUrl.lastIndexOf("/") + 1);
+            // For virtual-hosted style: https://bucket.s3.region.amazonaws.com/folder/file.mp4
+            // Extract everything after the domain
+            int domainEndIndex = fileUrl.indexOf("amazonaws.com/") + "amazonaws.com/".length();
+            return fileUrl.substring(domainEndIndex);
         } else if (fileUrl.contains(bucket + "/")) {
+            // For path-style/custom endpoint: https://endpoint/bucket/folder/file.mp4
             int index = fileUrl.indexOf(bucket + "/") + bucket.length() + 1;
             return fileUrl.substring(index);
         }
