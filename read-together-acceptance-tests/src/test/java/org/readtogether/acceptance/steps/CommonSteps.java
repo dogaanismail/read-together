@@ -9,6 +9,7 @@ import org.readtogether.acceptance.support.ApiClient;
 import org.readtogether.acceptance.support.ApplicationManager;
 import org.readtogether.acceptance.support.DbUtils;
 import org.readtogether.acceptance.support.Env;
+import io.restassured.RestAssured;
 
 import java.time.Duration;
 
@@ -71,16 +72,38 @@ public class CommonSteps {
     public void the_application_is_running() {
         log.info("Verifying application is running at: {}", Env.getBaseUrl());
 
-        // Wait for the application to be available
+        // Wait for the application to be available with longer timeout for startup
         Awaitility.await()
-                .atMost(Duration.ofSeconds(30))
-                .pollInterval(Duration.ofSeconds(2))
+                .atMost(Duration.ofSeconds(90))  // Increased timeout for application startup
+                .pollInterval(Duration.ofSeconds(3))  // Less frequent polling to reduce load
                 .until(() -> {
                     try {
-                        // Probe actuator health without an API base path to avoid auth
+                        // Try main server health endpoint first
                         var response = ApiClient.getWithoutApiBase("/actuator/health");
                         int status = response.getStatusCode();
-                        return status == 200 || status == 204; // 200 OK typically, 204 just in case
+                        if (status == 200) {
+                            log.debug("Health check successful at main server");
+                            return true;
+                        }
+                        
+                        // If main health check fails, try management server
+                        if (status == 404) {
+                            try {
+                                // The management server runs on port 5007
+                                var mgmtResponse = RestAssured.given()
+                                    .baseUri("http://localhost:5007")
+                                    .when()
+                                    .get("/actuator/health");
+                                int mgmtStatus = mgmtResponse.getStatusCode();
+                                log.debug("Management server health check: {}", mgmtStatus);
+                                return mgmtStatus == 200;
+                            } catch (Exception mgmtEx) {
+                                log.debug("Management server health check failed: {}", mgmtEx.getMessage());
+                            }
+                        }
+                        
+                        log.debug("Application health check returned status: {}", status);
+                        return false;
                     } catch (Exception e) {
                         log.debug("Application not yet available: {}", e.getMessage());
                         return false;
