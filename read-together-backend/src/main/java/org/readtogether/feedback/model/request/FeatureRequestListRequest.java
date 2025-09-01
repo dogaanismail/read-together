@@ -15,8 +15,11 @@ import org.springframework.data.domain.Pageable;
 public class FeatureRequestListRequest {
 
     private FeatureRequestCategory category;
+
     private FeatureRequestStatus status;
+
     private String sortBy;
+
     private Pageable pageable;
 
 }

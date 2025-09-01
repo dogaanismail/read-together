@@ -2,9 +2,6 @@ package org.readtogether.feedback.factory;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.readtogether.feedback.common.enums.FeatureRequestCategory;
-import org.readtogether.feedback.common.enums.FeatureRequestStatus;
-import org.readtogether.feedback.common.enums.Priority;
 import org.readtogether.feedback.entity.FeatureRequestEntity;
 import org.readtogether.feedback.fixtures.RequestFixtures;
 import org.readtogether.feedback.model.request.FeatureRequestSubmitRequest;
@@ -12,6 +9,9 @@ import org.readtogether.feedback.model.request.FeatureRequestSubmitRequest;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.readtogether.feedback.common.enums.FeatureRequestCategory.AI_ANALYTICS;
+import static org.readtogether.feedback.common.enums.FeatureRequestStatus.SUBMITTED;
+import static org.readtogether.feedback.common.enums.Priority.HIGH;
 
 @DisplayName("FeatureRequestEntityFactory Tests")
 class FeatureRequestEntityFactoryTests {
@@ -34,7 +34,7 @@ class FeatureRequestEntityFactoryTests {
         assertThat(entity.getDescription()).isEqualTo(request.getDescription());
         assertThat(entity.getCategory()).isEqualTo(request.getCategory());
         assertThat(entity.getPriority()).isEqualTo(request.getPriority());
-        assertThat(entity.getStatus()).isEqualTo(FeatureRequestStatus.SUBMITTED);
+        assertThat(entity.getStatus()).isEqualTo(SUBMITTED);
         assertThat(entity.getVotes()).isEqualTo(0);
         assertThat(entity.getAuthorId()).isEqualTo(TEST_AUTHOR_ID);
     }
@@ -47,8 +47,8 @@ class FeatureRequestEntityFactoryTests {
         FeatureRequestSubmitRequest request = RequestFixtures.createFeatureRequestSubmitRequest(
                 "AI-powered pronunciation feedback",
                 "Integrate AI to provide real-time feedback on pronunciation and speech patterns.",
-                FeatureRequestCategory.AI_ANALYTICS,
-                Priority.HIGH
+                AI_ANALYTICS,
+                HIGH
         );
 
         // When
@@ -58,9 +58,9 @@ class FeatureRequestEntityFactoryTests {
         assertThat(entity).isNotNull();
         assertThat(entity.getTitle()).isEqualTo("AI-powered pronunciation feedback");
         assertThat(entity.getDescription()).contains("AI to provide real-time feedback");
-        assertThat(entity.getCategory()).isEqualTo(FeatureRequestCategory.AI_ANALYTICS);
-        assertThat(entity.getPriority()).isEqualTo(Priority.HIGH);
-        assertThat(entity.getStatus()).isEqualTo(FeatureRequestStatus.SUBMITTED);
+        assertThat(entity.getCategory()).isEqualTo(AI_ANALYTICS);
+        assertThat(entity.getPriority()).isEqualTo(HIGH);
+        assertThat(entity.getStatus()).isEqualTo(SUBMITTED);
         assertThat(entity.getVotes()).isEqualTo(0);
         assertThat(entity.getAuthorId()).isEqualTo(TEST_AUTHOR_ID);
     }

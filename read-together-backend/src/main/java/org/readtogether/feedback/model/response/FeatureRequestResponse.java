@@ -17,13 +17,21 @@ import java.time.Instant;
 public class FeatureRequestResponse {
 
     private String id;
+
     private String title;
+
     private String description;
+
     private FeatureRequestCategory category;
+
     private Priority priority;
+
     private FeatureRequestStatus status;
+
     private int votes;
+
     private String authorId;
+
     private Instant createdAt;
 
 }

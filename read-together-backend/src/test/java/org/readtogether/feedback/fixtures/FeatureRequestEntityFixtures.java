@@ -8,6 +8,10 @@ import org.readtogether.feedback.entity.FeatureRequestEntity;
 
 import java.util.UUID;
 
+import static org.readtogether.feedback.common.enums.FeatureRequestCategory.UI_UX_IMPROVEMENTS;
+import static org.readtogether.feedback.common.enums.FeatureRequestStatus.SUBMITTED;
+import static org.readtogether.feedback.common.enums.Priority.MEDIUM;
+
 @UtilityClass
 public class FeatureRequestEntityFixtures {
 
@@ -20,9 +24,9 @@ public class FeatureRequestEntityFixtures {
                 .id(DEFAULT_FEATURE_REQUEST_ID)
                 .title("Dark mode for better accessibility")
                 .description("Add a dark theme option to reduce eye strain during long practice sessions.")
-                .category(FeatureRequestCategory.UI_UX_IMPROVEMENTS)
-                .priority(Priority.MEDIUM)
-                .status(FeatureRequestStatus.SUBMITTED)
+                .category(UI_UX_IMPROVEMENTS)
+                .priority(MEDIUM)
+                .status(SUBMITTED)
                 .votes(0)
                 .authorId(DEFAULT_AUTHOR_ID)
                 .build();
@@ -39,7 +43,7 @@ public class FeatureRequestEntityFixtures {
                 .description(description)
                 .category(category)
                 .priority(priority)
-                .status(FeatureRequestStatus.SUBMITTED)
+                .status(SUBMITTED)
                 .votes(0)
                 .authorId(DEFAULT_AUTHOR_ID)
                 .build();

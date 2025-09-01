@@ -7,6 +7,9 @@ import org.readtogether.feedback.entity.BugReportEntity;
 
 import java.util.UUID;
 
+import static org.readtogether.feedback.common.enums.BugReportSeverity.HIGH;
+import static org.readtogether.feedback.common.enums.BugReportStatus.SUBMITTED;
+
 @UtilityClass
 public class BugReportEntityFixtures {
 
@@ -18,11 +21,11 @@ public class BugReportEntityFixtures {
         return BugReportEntity.builder()
                 .id(DEFAULT_BUG_REPORT_ID)
                 .title("Login button not working")
-                .severity(BugReportSeverity.HIGH)
+                .severity(HIGH)
                 .stepsToReproduce("1. Go to login page 2. Enter credentials 3. Click login button")
                 .expectedVsActualBehavior("Expected: User should be logged in. Actual: Nothing happens.")
                 .browserDeviceInfo("Chrome 120, Windows 11")
-                .status(BugReportStatus.SUBMITTED)
+                .status(SUBMITTED)
                 .reporterId(DEFAULT_REPORTER_ID)
                 .build();
     }
@@ -39,7 +42,7 @@ public class BugReportEntityFixtures {
                 .stepsToReproduce(stepsToReproduce)
                 .expectedVsActualBehavior(expectedVsActualBehavior)
                 .browserDeviceInfo("Chrome 120, Windows 11")
-                .status(BugReportStatus.SUBMITTED)
+                .status(SUBMITTED)
                 .reporterId(DEFAULT_REPORTER_ID)
                 .build();
     }

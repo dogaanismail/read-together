@@ -7,6 +7,10 @@ import org.readtogether.feedback.common.enums.Priority;
 import org.readtogether.feedback.model.request.BugReportSubmitRequest;
 import org.readtogether.feedback.model.request.FeatureRequestSubmitRequest;
 
+import static org.readtogether.feedback.common.enums.BugReportSeverity.HIGH;
+import static org.readtogether.feedback.common.enums.FeatureRequestCategory.UI_UX_IMPROVEMENTS;
+import static org.readtogether.feedback.common.enums.Priority.MEDIUM;
+
 @UtilityClass
 public class RequestFixtures {
 
@@ -15,8 +19,8 @@ public class RequestFixtures {
         return FeatureRequestSubmitRequest.builder()
                 .title("Dark mode for better accessibility")
                 .description("Add a dark theme option to reduce eye strain during long practice sessions.")
-                .category(FeatureRequestCategory.UI_UX_IMPROVEMENTS)
-                .priority(Priority.MEDIUM)
+                .category(UI_UX_IMPROVEMENTS)
+                .priority(MEDIUM)
                 .build();
     }
 
@@ -38,7 +42,7 @@ public class RequestFixtures {
 
         return BugReportSubmitRequest.builder()
                 .title("Login button not working")
-                .severity(BugReportSeverity.HIGH)
+                .severity(HIGH)
                 .stepsToReproduce("1. Go to login page 2. Enter credentials 3. Click login button")
                 .expectedVsActualBehavior("Expected: User should be logged in. Actual: Nothing happens.")
                 .browserDeviceInfo("Chrome 120, Windows 11")

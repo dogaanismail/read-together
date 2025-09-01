@@ -2,8 +2,6 @@ package org.readtogether.feedback.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.readtogether.feedback.common.enums.BugReportSeverity;
-import org.readtogether.feedback.common.enums.BugReportStatus;
 import org.readtogether.feedback.common.enums.FeatureRequestCategory;
 import org.readtogether.feedback.common.enums.FeatureRequestStatus;
 import org.readtogether.feedback.entity.BugReportEntity;
@@ -28,9 +26,12 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
 import java.util.UUID;
 
+import static org.readtogether.feedback.common.enums.BugReportSeverity.CRITICAL;
+import static org.readtogether.feedback.common.enums.BugReportStatus.FIXED;
+import static org.readtogether.feedback.common.enums.BugReportStatus.IN_PROGRESS;
+import static org.readtogether.feedback.common.enums.FeatureRequestStatus.IMPLEMENTED;
 import static org.readtogether.security.common.enums.TokenClaims.USER_ID;
 
 @Slf4j
@@ -47,7 +48,8 @@ public class FeedbackService {
             BugReportEntityToBugReportResponseMapper.initialize();
 
     @Transactional
-    public FeatureRequestResponse submitFeatureRequest(FeatureRequestSubmitRequest request) {
+    public FeatureRequestResponse submitFeatureRequest(
+            FeatureRequestSubmitRequest request) {
 
         log.info("Submitting feature request with title: {}", request.getTitle());
 
@@ -60,7 +62,8 @@ public class FeedbackService {
     }
 
     @Transactional
-    public BugReportResponse submitBugReport(BugReportSubmitRequest request) {
+    public BugReportResponse submitBugReport(
+            BugReportSubmitRequest request) {
 
         log.info("Submitting bug report with title: {}", request.getTitle());
 
@@ -96,7 +99,8 @@ public class FeedbackService {
         return entities.map(featureRequestResponseMapper::map);
     }
 
-    public Page<BugReportResponse> getBugReports(Pageable pageable) {
+    public Page<BugReportResponse> getBugReports(
+            Pageable pageable) {
 
         log.info("Retrieving bug reports");
 
@@ -117,11 +121,11 @@ public class FeedbackService {
         log.info("Retrieving feedback statistics");
 
         int totalFeatureRequests = featureRequestRepository.countTotal();
-        int featuresImplemented = featureRequestRepository.countByStatus(FeatureRequestStatus.IMPLEMENTED);
+        int featuresImplemented = featureRequestRepository.countByStatus(IMPLEMENTED);
         int totalBugReports = bugReportRepository.countTotal();
-        int bugsFixed = bugReportRepository.countByStatus(BugReportStatus.FIXED);
-        int criticalBugs = bugReportRepository.countBySeverity(BugReportSeverity.CRITICAL);
-        int bugsInProgress = bugReportRepository.countByStatus(BugReportStatus.IN_PROGRESS);
+        int bugsFixed = bugReportRepository.countByStatus(FIXED);
+        int criticalBugs = bugReportRepository.countBySeverity(CRITICAL);
+        int bugsInProgress = bugReportRepository.countByStatus(IN_PROGRESS);
 
         return FeedbackStatisticsResponseFactory.createFeedbackStatisticsResponse(
                 totalFeatureRequests,
@@ -136,12 +140,12 @@ public class FeedbackService {
     private UUID getCurrentUserId() {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        
+
         if (authentication != null && authentication.getPrincipal() instanceof Jwt jwt) {
             String userIdString = jwt.getClaimAsString(USER_ID.getValue());
             return UUID.fromString(userIdString);
         }
-        
+
         throw new RuntimeException("Unable to get current user ID");
     }
 

@@ -16,14 +16,23 @@ import java.time.Instant;
 public class BugReport {
 
     private String id;
+
     private String title;
+
     private BugReportSeverity severity;
+
     private String stepsToReproduce;
+
     private String expectedVsActualBehavior;
+
     private String browserDeviceInfo;
+
     private BugReportStatus status;
+
     private String reporterId;
+
     private Instant createdAt;
+
     private Instant updatedAt;
 
 }

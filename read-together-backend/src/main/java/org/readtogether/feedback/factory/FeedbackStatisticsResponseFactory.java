@@ -1,9 +1,6 @@
 package org.readtogether.feedback.factory;
 
 import lombok.experimental.UtilityClass;
-import org.readtogether.feedback.common.enums.BugReportSeverity;
-import org.readtogether.feedback.common.enums.BugReportStatus;
-import org.readtogether.feedback.common.enums.FeatureRequestStatus;
 import org.readtogether.feedback.model.response.FeedbackStatisticsResponse;
 
 @UtilityClass

@@ -7,18 +7,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
-import org.readtogether.feedback.common.enums.BugReportSeverity;
-import org.readtogether.feedback.common.enums.BugReportStatus;
-import org.readtogether.feedback.common.enums.FeatureRequestCategory;
-import org.readtogether.feedback.common.enums.FeatureRequestStatus;
 import org.readtogether.feedback.entity.BugReportEntity;
 import org.readtogether.feedback.entity.FeatureRequestEntity;
 import org.readtogether.feedback.fixtures.BugReportEntityFixtures;
@@ -28,11 +20,9 @@ import org.readtogether.feedback.model.request.BugReportSubmitRequest;
 import org.readtogether.feedback.model.request.FeatureRequestSubmitRequest;
 import org.readtogether.feedback.model.response.BugReportResponse;
 import org.readtogether.feedback.model.response.FeatureRequestResponse;
-import org.readtogether.feedback.model.response.FeedbackStatisticsResponse;
 import org.readtogether.feedback.repository.BugReportRepository;
 import org.readtogether.feedback.repository.FeatureRequestRepository;
 
-import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -92,7 +82,7 @@ class FeedbackServiceTests {
         assertThat(response.getDescription()).isEqualTo(request.getDescription());
         assertThat(response.getCategory()).isEqualTo(request.getCategory());
         assertThat(response.getPriority()).isEqualTo(request.getPriority());
-        
+
         verify(featureRequestRepository).save(any(FeatureRequestEntity.class));
     }
 
@@ -114,7 +104,7 @@ class FeedbackServiceTests {
         assertThat(response.getTitle()).isEqualTo(request.getTitle());
         assertThat(response.getSeverity()).isEqualTo(request.getSeverity());
         assertThat(response.getStepsToReproduce()).isEqualTo(request.getStepsToReproduce());
-        
+
         verify(bugReportRepository).save(any(BugReportEntity.class));
     }
 

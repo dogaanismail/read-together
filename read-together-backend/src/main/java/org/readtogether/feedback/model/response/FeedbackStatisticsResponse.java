@@ -12,10 +12,15 @@ import lombok.NoArgsConstructor;
 public class FeedbackStatisticsResponse {
 
     private int totalFeatureRequests;
+
     private int featuresImplemented;
+
     private int totalBugReports;
+
     private int bugsFixed;
+
     private int criticalBugs;
+
     private int bugsInProgress;
 
 }

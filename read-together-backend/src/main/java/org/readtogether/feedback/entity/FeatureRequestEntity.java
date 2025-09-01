@@ -10,6 +10,9 @@ import org.readtogether.feedback.common.enums.Priority;
 
 import java.util.UUID;
 
+import static org.readtogether.feedback.common.enums.FeatureRequestStatus.SUBMITTED;
+import static org.readtogether.feedback.common.enums.Priority.MEDIUM;
+
 @Getter
 @Setter
 @SuperBuilder
@@ -38,12 +41,12 @@ public class FeatureRequestEntity extends BaseEntity {
     @Column(name = "priority", nullable = false, length = 50)
     @Builder.Default
     @Enumerated(EnumType.STRING)
-    private Priority priority = Priority.MEDIUM;
+    private Priority priority = MEDIUM;
 
     @Column(name = "status", nullable = false, length = 50)
     @Builder.Default
     @Enumerated(EnumType.STRING)
-    private FeatureRequestStatus status = FeatureRequestStatus.SUBMITTED;
+    private FeatureRequestStatus status = SUBMITTED;
 
     @Column(name = "votes", nullable = false)
     @Builder.Default

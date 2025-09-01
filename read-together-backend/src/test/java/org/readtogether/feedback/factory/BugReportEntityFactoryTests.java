@@ -2,8 +2,6 @@ package org.readtogether.feedback.factory;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.readtogether.feedback.common.enums.BugReportSeverity;
-import org.readtogether.feedback.common.enums.BugReportStatus;
 import org.readtogether.feedback.entity.BugReportEntity;
 import org.readtogether.feedback.fixtures.RequestFixtures;
 import org.readtogether.feedback.model.request.BugReportSubmitRequest;
@@ -11,6 +9,9 @@ import org.readtogether.feedback.model.request.BugReportSubmitRequest;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.readtogether.feedback.common.enums.BugReportSeverity.CRITICAL;
+import static org.readtogether.feedback.common.enums.BugReportSeverity.LOW;
+import static org.readtogether.feedback.common.enums.BugReportStatus.SUBMITTED;
 
 @DisplayName("BugReportEntityFactory Tests")
 class BugReportEntityFactoryTests {
@@ -34,7 +35,7 @@ class BugReportEntityFactoryTests {
         assertThat(entity.getStepsToReproduce()).isEqualTo(request.getStepsToReproduce());
         assertThat(entity.getExpectedVsActualBehavior()).isEqualTo(request.getExpectedVsActualBehavior());
         assertThat(entity.getBrowserDeviceInfo()).isEqualTo(request.getBrowserDeviceInfo());
-        assertThat(entity.getStatus()).isEqualTo(BugReportStatus.SUBMITTED);
+        assertThat(entity.getStatus()).isEqualTo(SUBMITTED);
         assertThat(entity.getReporterId()).isEqualTo(TEST_REPORTER_ID);
     }
 
@@ -45,7 +46,7 @@ class BugReportEntityFactoryTests {
         // Given
         BugReportSubmitRequest request = RequestFixtures.createBugReportSubmitRequest(
                 "Audio not working in reading rooms",
-                BugReportSeverity.CRITICAL,
+                CRITICAL,
                 "1. Join a reading room 2. Try to enable audio 3. No sound is heard",
                 "Expected: Audio should work. Actual: No audio output."
         );
@@ -56,10 +57,10 @@ class BugReportEntityFactoryTests {
         // Then
         assertThat(entity).isNotNull();
         assertThat(entity.getTitle()).isEqualTo("Audio not working in reading rooms");
-        assertThat(entity.getSeverity()).isEqualTo(BugReportSeverity.CRITICAL);
+        assertThat(entity.getSeverity()).isEqualTo(CRITICAL);
         assertThat(entity.getStepsToReproduce()).contains("Join a reading room");
         assertThat(entity.getExpectedVsActualBehavior()).contains("Expected: Audio should work");
-        assertThat(entity.getStatus()).isEqualTo(BugReportStatus.SUBMITTED);
+        assertThat(entity.getStatus()).isEqualTo(SUBMITTED);
         assertThat(entity.getReporterId()).isEqualTo(TEST_REPORTER_ID);
     }
 
@@ -70,7 +71,7 @@ class BugReportEntityFactoryTests {
         // Given
         BugReportSubmitRequest request = BugReportSubmitRequest.builder()
                 .title("UI issue")
-                .severity(BugReportSeverity.LOW)
+                .severity(LOW)
                 .stepsToReproduce("Steps")
                 .expectedVsActualBehavior("Behavior")
                 .browserDeviceInfo(null)

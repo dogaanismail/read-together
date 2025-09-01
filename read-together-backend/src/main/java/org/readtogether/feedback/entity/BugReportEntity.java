@@ -9,6 +9,8 @@ import org.readtogether.feedback.common.enums.BugReportStatus;
 
 import java.util.UUID;
 
+import static org.readtogether.feedback.common.enums.BugReportStatus.SUBMITTED;
+
 @Getter
 @Setter
 @SuperBuilder
@@ -43,7 +45,7 @@ public class BugReportEntity extends BaseEntity {
     @Column(name = "status", nullable = false, length = 50)
     @Builder.Default
     @Enumerated(EnumType.STRING)
-    private BugReportStatus status = BugReportStatus.SUBMITTED;
+    private BugReportStatus status = SUBMITTED;
 
     @Column(name = "reporter_id", nullable = false)
     private UUID reporterId;
