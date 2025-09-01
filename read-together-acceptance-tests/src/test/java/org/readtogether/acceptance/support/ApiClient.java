@@ -144,7 +144,7 @@ public class ApiClient {
     }
 
     /**
-     * GET request without API base path.
+     * GET request without an API base path.
      */
     public static Response getWithoutApiBase(String endpoint) {
         return getRequestWithoutApiBase()
