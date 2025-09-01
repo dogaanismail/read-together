@@ -14,9 +14,9 @@ import java.util.Base64;
 @Slf4j
 @UtilityClass
 public class JwtUtils {
-    
+
     private static final ObjectMapper objectMapper = new ObjectMapper();
-    
+
     /**
      * Parse JWT token and extract payload claims.
      */
@@ -27,28 +27,28 @@ public class JwtUtils {
             if (parts.length != 3) {
                 throw new IllegalArgumentException("Invalid JWT token format");
             }
-            
+
             // Decode the payload (second part)
             String payload = parts[1];
             byte[] decodedBytes = Base64.getUrlDecoder().decode(payload);
             String decodedPayload = new String(decodedBytes);
-            
+
             return objectMapper.readTree(decodedPayload);
         } catch (Exception e) {
             log.error("Failed to parse JWT token: {}", e.getMessage());
             throw new RuntimeException("Failed to parse JWT token", e);
         }
     }
-    
+
     /**
-     * Extract user ID from JWT token.
+     * Extract user ID from a JWT token.
      */
     public static String extractUserId(String token) {
         JsonNode payload = parseTokenPayload(token);
         JsonNode userIdNode = payload.get("userId");
         return userIdNode != null ? userIdNode.asText() : null;
     }
-    
+
     /**
      * Extract user type from JWT token.
      */
@@ -57,16 +57,16 @@ public class JwtUtils {
         JsonNode userTypeNode = payload.get("userType");
         return userTypeNode != null ? userTypeNode.asText() : null;
     }
-    
+
     /**
-     * Extract expiration time from JWT token.
+     * Extract expiration time from the JWT token.
      */
     public static Long extractExpirationTime(String token) {
         JsonNode payload = parseTokenPayload(token);
         JsonNode expNode = payload.get("exp");
         return expNode != null ? expNode.asLong() : null;
     }
-    
+
     /**
      * Extract issued at time from JWT token.
      */
@@ -75,20 +75,20 @@ public class JwtUtils {
         JsonNode iatNode = payload.get("iat");
         return iatNode != null ? iatNode.asLong() : null;
     }
-    
+
     /**
-     * Check if token is expired based on current time.
+     * Check if the token is expired based on the current time.
      */
     public static boolean isTokenExpired(String token) {
         Long expirationTime = extractExpirationTime(token);
         if (expirationTime == null) {
             return false; // No expiration time found
         }
-        
+
         long currentTimeSeconds = System.currentTimeMillis() / 1000;
         return currentTimeSeconds > expirationTime;
     }
-    
+
     /**
      * Validate token structure (basic format check).
      */
@@ -96,28 +96,28 @@ public class JwtUtils {
         if (token == null || token.trim().isEmpty()) {
             return false;
         }
-        
+
         try {
             String[] parts = token.split("\\.");
-            return parts.length == 3 && 
-                   !parts[0].isEmpty() && 
-                   !parts[1].isEmpty() && 
-                   !parts[2].isEmpty();
+            return parts.length == 3 &&
+                    !parts[0].isEmpty() &&
+                    !parts[1].isEmpty() &&
+                    !parts[2].isEmpty();
         } catch (Exception e) {
             log.debug("Token structure validation failed: {}", e.getMessage());
             return false;
         }
     }
-    
+
     /**
-     * Extract claim value from JWT token.
+     * Extract claim value from a JWT token.
      */
     public static String extractClaim(String token, String claimName) {
         JsonNode payload = parseTokenPayload(token);
         JsonNode claimNode = payload.get(claimName);
         return claimNode != null ? claimNode.asText() : null;
     }
-    
+
     /**
      * Get all claims from JWT token as JsonNode.
      */

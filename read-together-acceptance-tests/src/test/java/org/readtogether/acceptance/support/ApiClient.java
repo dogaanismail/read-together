@@ -17,7 +17,7 @@ import static io.restassured.RestAssured.given;
 
 /**
  * RestAssured-based API client for acceptance tests.
- * Provides configured HTTP client with authentication helpers.
+ * Provides a configured HTTP client with authentication helpers.
  */
 @Slf4j
 public class ApiClient {
@@ -63,6 +63,14 @@ public class ApiClient {
         return given().spec(baseRequestSpec);
     }
     
+    /**
+     * Get a request specification that ignores the default API base path.
+     * Useful for actuator/health and other non-API endpoints.
+     */
+    public static RequestSpecification getRequestWithoutApiBase() {
+        return given().spec(baseRequestSpec).basePath("");
+    }
+
     /**
      * Get a request specification with Bearer token authentication.
      */
@@ -134,7 +142,16 @@ public class ApiClient {
                 .when()
                 .get(endpoint);
     }
-    
+
+    /**
+     * GET request without API base path.
+     */
+    public static Response getWithoutApiBase(String endpoint) {
+        return getRequestWithoutApiBase()
+                .when()
+                .get(endpoint);
+    }
+
     /**
      * Authenticated GET request.
      */

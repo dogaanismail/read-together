@@ -218,7 +218,7 @@ public class UserSteps {
         if (loginResponse.getStatusCode() == 200) {
             String accessToken = loginResponse.jsonPath().getString("response.accessToken");
             
-            // Get user profile to extract ID
+            // Get a user profile to extract ID
             Response profileResponse = ApiClient.getAuthenticatedRequest(accessToken)
                     .when()
                     .get("/users/current-user");

@@ -43,11 +43,15 @@ public class SecurityConfig {
                 .exceptionHandling(customizer -> customizer.authenticationEntryPoint(customErrorAuthenticationEntryPoint))
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(customizer -> customizer
+                        // Public endpoints
                         .requestMatchers(GET, "/api/v1/auth/**").permitAll()
                         .requestMatchers(POST, "/api/v1/users/**").permitAll()
                         .requestMatchers(GET, "/api/v1/sessions/public").permitAll()
                         .requestMatchers(GET, "/api/v1/library/books/public").permitAll()
                         .requestMatchers(GET, "/api/v1/room/join").permitAll()
+                        // Health probes for automation and orchestration
+                        .requestMatchers(GET, "/actuator/health/**").permitAll()
+                        .requestMatchers(GET, "/health/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(customizer -> customizer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

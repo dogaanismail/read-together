@@ -14,12 +14,20 @@ public class Env {
     public static final String DEFAULT_BASE_URL = "http://localhost:5006";
     public static final String DEFAULT_MODE = "embedded";
     
+    private static String getPropOrEnv(String key, String defaultValue) {
+        String sys = System.getProperty(key);
+        if (sys != null && !sys.isBlank()) return sys;
+        String env = System.getenv(key);
+        if (env != null && !env.isBlank()) return env;
+        return defaultValue;
+    }
+
     /**
      * Get the base URL for API calls.
      * Defaults to localhost:5006 if not specified.
      */
     public static String getBaseUrl() {
-        String baseUrl = System.getProperty("E2E_BASE_URL", DEFAULT_BASE_URL);
+        String baseUrl = getPropOrEnv("E2E_BASE_URL", DEFAULT_BASE_URL);
         log.debug("Using base URL: {}", baseUrl);
         return baseUrl;
     }
@@ -29,7 +37,7 @@ public class Env {
      * @return "local" or "embedded"
      */
     public static String getMode() {
-        String mode = System.getProperty("E2E_MODE", DEFAULT_MODE);
+        String mode = getPropOrEnv("E2E_MODE", DEFAULT_MODE);
         log.debug("Using test mode: {}", mode);
         return mode;
     }
@@ -52,7 +60,7 @@ public class Env {
      * Check if debug mode is enabled for verbose logging.
      */
     public static boolean isDebugMode() {
-        return Boolean.parseBoolean(System.getProperty("E2E_DEBUG", "false"));
+        return Boolean.parseBoolean(getPropOrEnv("E2E_DEBUG", "false"));
     }
     
     /**

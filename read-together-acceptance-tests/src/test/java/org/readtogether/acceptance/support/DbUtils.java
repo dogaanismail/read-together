@@ -20,7 +20,7 @@ public class DbUtils {
     private static PostgreSQLContainer<?> postgresContainer;
     
     /**
-     * Start PostgreSQL Testcontainer for embedded mode.
+     * Start a PostgreSQL Testcontainer for embedded mode.
      */
     public static void startEmbeddedDatabase() {
         if (!Env.isEmbeddedMode()) {
@@ -75,7 +75,7 @@ public class DbUtils {
             username = postgresContainer.getUsername();
             password = postgresContainer.getPassword();
         } else {
-            // Local mode - use default local database
+            // Local mode - use a default local database
             jdbcUrl = "jdbc:postgresql://localhost:5434/read-together-app-db";
             username = "default";
             password = "default";
@@ -147,7 +147,7 @@ public class DbUtils {
     }
     
     /**
-     * Check if database is accessible.
+     * Check if a database is accessible.
      */
     public static boolean isDatabaseAccessible() {
         try (Connection connection = getDatabaseConnection()) {

@@ -64,7 +64,7 @@ public class AuthSteps {
         String email = Fixtures.User.generateUniqueEmail();
         String password = Fixtures.Common.DEFAULT_PASSWORD;
         
-        // First register the user
+        // First, register the user
         a_user_exists_with_email_and_password(email, password);
         
         // Then login to get tokens

@@ -33,7 +33,7 @@ dependencies {
     testImplementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.16.1'
     
     // Utility libraries
-    testImplementation 'org.apache.commons:commons-lang3:3.14.0'
+    testImplementation 'org.apache.commons:commons-lang3:3.18.0'
     testImplementation 'org.awaitility:awaitility:4.2.0'
     
     // AssertJ for fluent assertions
@@ -43,7 +43,7 @@ dependencies {
     testImplementation 'com.github.tomakehurst:wiremock-jre8:2.35.2'
     
     // PostgreSQL driver
-    testImplementation 'org.postgresql:postgresql:42.7.1'
+    testImplementation 'org.postgresql:postgresql:42.7.7'
     
     // Lombok for cleaner code
     compileOnly 'org.projectlombok:lombok:1.18.30'
@@ -81,20 +81,20 @@ test {
 }
 
 // Task to run tests in local mode (assumes backend is running)
-task testLocal(type: Test) {
+tasks.register('testLocal', Test) {
     useJUnitPlatform()
     systemProperty 'E2E_MODE', 'local'
     systemProperty 'E2E_BASE_URL', 'http://localhost:5006'
 }
 
 // Task to run tests in embedded mode (uses Testcontainers)
-task testEmbedded(type: Test) {
+tasks.register('testEmbedded', Test) {
     useJUnitPlatform()
     systemProperty 'E2E_MODE', 'embedded'
 }
 
 // Task to generate Cucumber reports
-task cucumberReport {
+tasks.register('cucumberReport') {
     dependsOn test
     doLast {
         println "Cucumber reports generated:"

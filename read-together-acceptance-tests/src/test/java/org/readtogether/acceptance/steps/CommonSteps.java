@@ -56,18 +56,18 @@ public class CommonSteps {
     
     @Given("the application is running")
     public void the_application_is_running() {
-        log.info("Verifying application is running at: {}", Env.getApiUrl());
-        
-        // Wait for application to be available
+        log.info("Verifying application is running at: {}", Env.getBaseUrl());
+
+        // Wait for the application to be available
         Awaitility.await()
                 .atMost(Duration.ofSeconds(30))
                 .pollInterval(Duration.ofSeconds(2))
                 .until(() -> {
                     try {
-                        // Try to access a health endpoint or any available endpoint
-                        var response = ApiClient.get("/health");
-                        return response.getStatusCode() == 200 || 
-                               response.getStatusCode() == 404; // 404 is ok if health endpoint doesn't exist
+                        // Probe actuator health without an API base path to avoid auth
+                        var response = ApiClient.getWithoutApiBase("/actuator/health");
+                        int status = response.getStatusCode();
+                        return status == 200 || status == 204; // 200 OK typically, 204 just in case
                     } catch (Exception e) {
                         log.debug("Application not yet available: {}", e.getMessage());
                         return false;
@@ -97,7 +97,7 @@ public class CommonSteps {
     
     @Given("the database is setup")
     public void the_database_is_setup() {
-        // Ensure database is running and accessible
+        // Ensure the database is running and accessible
         the_database_is_clean();
         
         // Seed any initial test data if needed
