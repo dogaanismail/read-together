@@ -1,5 +1,6 @@
 package org.readtogether.notification.factory;
 
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.readtogether.notification.entity.NotificationEntity;
@@ -8,6 +9,7 @@ import org.readtogether.notification.fixtures.NotificationEntityFixtures;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Tag("unit")
 @DisplayName("NotificationResponseFactory Tests")
 class NotificationResponseFactoryTests {
 

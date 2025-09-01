@@ -1,9 +1,6 @@
 package org.readtogether.common.utils;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
@@ -23,6 +20,7 @@ import static org.readtogether.security.common.enums.TokenClaims.USER_EMAIL;
 import static org.readtogether.security.common.enums.TokenClaims.USER_ID;
 import static org.readtogether.user.common.enums.UserType.ANONYMOUS;
 
+@Tag("unit")
 @ExtendWith(MockitoExtension.class)
 @DisplayName("SecurityUtils Tests")
 class SecurityUtilsTest {

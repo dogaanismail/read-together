@@ -1,6 +1,7 @@
 package org.readtogether.readingroom.factory;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.readtogether.readingroom.entity.ReadingRoomSettingsEntity;
 import org.readtogether.readingroom.fixtures.ReadingRoomEntityFixtures;
@@ -11,6 +12,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.readtogether.readingroom.common.enums.TranscriptionLanguage.ENGLISH;
 import static org.readtogether.readingroom.common.enums.TranscriptionLanguage.SPANISH;
 
+@Tag("unit")
+@DisplayName("RoomSettingsResponseFactory Tests")
 class RoomSettingsResponseFactoryTests {
 
     @Test

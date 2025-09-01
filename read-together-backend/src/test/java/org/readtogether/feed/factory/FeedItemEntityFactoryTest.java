@@ -1,6 +1,7 @@
 package org.readtogether.feed.factory;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.readtogether.feed.entity.FeedItemEntity;
 import org.readtogether.session.entity.SessionEntity;
@@ -13,6 +14,7 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.readtogether.feed.common.enums.FeedItemType.*;
 
+@Tag("unit")
 @DisplayName("FeedItemEntityFactory Tests")
 class FeedItemEntityFactoryTest {
 

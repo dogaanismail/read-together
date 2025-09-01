@@ -1,6 +1,7 @@
 package org.readtogether.security.utils;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.readtogether.security.fixtures.KeyFixtures;
 
@@ -11,6 +12,7 @@ import java.security.PublicKey;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+@Tag("unit")
 @DisplayName("KeyConverter Tests")
 class KeyConverterTests {
 

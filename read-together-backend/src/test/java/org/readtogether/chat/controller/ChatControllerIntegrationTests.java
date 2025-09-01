@@ -3,6 +3,7 @@ package org.readtogether.chat.controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.readtogether.common.BaseIntegrationTest;
 import org.readtogether.chat.model.request.ChatRoomCreateRequest;
@@ -22,6 +23,7 @@ import java.util.UUID;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@Tag("integration")
 @DisplayName("ChatController Integration Tests")
 class ChatControllerIntegrationTests extends BaseIntegrationTest {
 
@@ -231,7 +233,7 @@ class ChatControllerIntegrationTests extends BaseIntegrationTest {
     private String loginAndGetAccessToken(
             String email,
             String password) throws Exception {
-        
+
         LoginRequest login = RequestFixtures.createLoginRequest(email, password);
 
         MvcResult loginResult = mockMvc.perform(post("/api/v1/users/login")

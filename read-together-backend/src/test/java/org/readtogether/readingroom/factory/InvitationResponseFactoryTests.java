@@ -1,6 +1,7 @@
 package org.readtogether.readingroom.factory;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.readtogether.readingroom.entity.ReadingRoomInvitationEntity;
 import org.readtogether.readingroom.fixtures.ReadingRoomEntityFixtures;
@@ -14,6 +15,8 @@ import static java.time.temporal.ChronoUnit.DAYS;
 import static java.time.temporal.ChronoUnit.HOURS;
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Tag("unit")
+@DisplayName("InvitationResponseFactory Tests")
 class InvitationResponseFactoryTests {
 
     private static final String BASE_URL = "https://app.readtogether.com";

@@ -2,6 +2,7 @@ package org.readtogether.infrastructure.storage.service.impl;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -24,6 +25,7 @@ import static org.mockito.Mockito.*;
 import static software.amazon.awssdk.services.s3.model.ServerSideEncryption.AES256;
 import static software.amazon.awssdk.services.s3.model.ServerSideEncryption.AWS_KMS;
 
+@Tag("unit")
 @ExtendWith(MockitoExtension.class)
 @DisplayName("S3StorageService Tests")
 class S3StorageServiceTest {

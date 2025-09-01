@@ -1,6 +1,7 @@
 package org.readtogether.session.factory;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.readtogether.session.entity.SessionEntity;
 import org.readtogether.session.fixtures.SessionRequestFixtures;
@@ -15,6 +16,8 @@ import static org.readtogether.session.common.enums.MediaType.AUDIO;
 import static org.readtogether.session.common.enums.MediaType.VIDEO;
 import static org.readtogether.session.common.enums.ProcessingStatus.PENDING;
 
+@Tag("unit")
+@DisplayName("SessionEntityFactory Tests")
 class SessionEntityFactoryTest {
 
     @Test

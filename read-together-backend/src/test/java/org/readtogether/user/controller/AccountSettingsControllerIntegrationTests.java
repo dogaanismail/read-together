@@ -3,6 +3,7 @@ package org.readtogether.user.controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.readtogether.common.BaseIntegrationTest;
 import org.readtogether.notification.fixtures.NotificationPreferencesRequestFixtures;
@@ -24,6 +25,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+@Tag("integration")
+@DisplayName("AccountSettingsController Integration Tests")
 class AccountSettingsControllerIntegrationTests extends BaseIntegrationTest {
 
     @Autowired

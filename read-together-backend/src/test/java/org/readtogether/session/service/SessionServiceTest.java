@@ -1,9 +1,6 @@
 package org.readtogether.session.service;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
@@ -41,6 +38,8 @@ import static org.mockito.Mockito.*;
 import static org.readtogether.session.common.enums.MediaType.AUDIO;
 import static org.readtogether.session.common.enums.ProcessingStatus.*;
 
+@Tag("unit")
+@DisplayName("SessionService Tests")
 @ExtendWith(MockitoExtension.class)
 class SessionServiceTest {
 

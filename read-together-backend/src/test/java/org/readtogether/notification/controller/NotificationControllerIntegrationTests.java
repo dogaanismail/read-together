@@ -3,6 +3,7 @@ package org.readtogether.notification.controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.readtogether.common.BaseIntegrationTest;
 import org.readtogether.notification.fixtures.NotificationRequestFixtures;
@@ -19,6 +20,8 @@ import org.springframework.test.web.servlet.MvcResult;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@Tag("integration")
+@DisplayName("NotificationController Integration Tests")
 class NotificationControllerIntegrationTests extends BaseIntegrationTest {
 
     @Autowired
@@ -212,7 +215,7 @@ class NotificationControllerIntegrationTests extends BaseIntegrationTest {
     private String registerAndLoginUser
             (String email,
              String password) throws Exception {
-        
+
         // Register user
         RegisterRequest registerRequest = RequestFixtures.createRegisterRequest(email, password, "Test", "User", "user");
 

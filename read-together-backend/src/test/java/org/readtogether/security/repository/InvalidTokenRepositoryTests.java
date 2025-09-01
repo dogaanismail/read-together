@@ -1,6 +1,7 @@
 package org.readtogether.security.repository;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.readtogether.common.BaseIntegrationTest;
 import org.readtogether.security.entity.InvalidTokenEntity;
@@ -11,6 +12,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Tag("integration")
 @DisplayName("InvalidTokenRepository Tests")
 class InvalidTokenRepositoryTests extends BaseIntegrationTest {
 
@@ -71,10 +73,10 @@ class InvalidTokenRepositoryTests extends BaseIntegrationTest {
         String tokenId = "unique-test-token-" + System.currentTimeMillis();
         InvalidTokenEntity entity1 = InvalidTokenEntityFixtures.createInvalidTokenEntity(tokenId);
         InvalidTokenEntity entity2 = InvalidTokenEntityFixtures.createInvalidTokenEntity(tokenId);
-        
+
         // When
         invalidTokenRepository.save(entity1);
-        
+
         // Then - should be able to save another with same tokenId (no unique constraint expected based on entity)
         InvalidTokenEntity saved2 = invalidTokenRepository.save(entity2);
         assertThat(saved2).isNotNull();
@@ -88,7 +90,7 @@ class InvalidTokenRepositoryTests extends BaseIntegrationTest {
         String tokenId1 = "multi-test-token-1-" + System.currentTimeMillis();
         String tokenId2 = "multi-test-token-2-" + System.currentTimeMillis();
         String tokenId3 = "multi-test-token-3-" + System.currentTimeMillis();
-        
+
         InvalidTokenEntity entity1 = InvalidTokenEntityFixtures.createInvalidTokenEntity(tokenId1);
         InvalidTokenEntity entity2 = InvalidTokenEntityFixtures.createInvalidTokenEntity(tokenId2);
         InvalidTokenEntity entity3 = InvalidTokenEntityFixtures.createInvalidTokenEntity(tokenId3);

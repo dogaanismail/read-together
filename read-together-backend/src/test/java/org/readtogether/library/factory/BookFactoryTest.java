@@ -1,6 +1,7 @@
 package org.readtogether.library.factory;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.readtogether.library.entity.BookEntity;
 import org.readtogether.library.model.request.BookCreateRequest;
@@ -15,6 +16,7 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Tag("unit")
 @DisplayName("BookFactory Tests")
 class BookFactoryTest {
 

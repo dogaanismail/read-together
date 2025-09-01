@@ -1,6 +1,7 @@
 package org.readtogether.readingroom.factory;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.readtogether.readingroom.entity.ReadingRoomEntity;
 import org.readtogether.readingroom.entity.ReadingRoomParticipantEntity;
@@ -13,6 +14,8 @@ import static org.readtogether.readingroom.common.enums.ApprovalStatus.APPROVED;
 import static org.readtogether.readingroom.common.enums.ParticipantStatus.JOINED;
 import static org.readtogether.readingroom.common.enums.ParticipantStatus.LEFT;
 
+@Tag("unit")
+@DisplayName("ReadingRoomParticipantEntityFactory Tests")
 class ReadingRoomParticipantEntityFactoryTests {
 
     @Test
@@ -70,7 +73,7 @@ class ReadingRoomParticipantEntityFactoryTests {
         UserEntity user = UserEntityFixtures.createDefaultUserEntity();
         ReadingRoomParticipantEntity participant = ReadingRoomParticipantEntityFactory.createParticipant(
                 room, user, false);
-        
+
         // Simulate a participant speaking before leaving
         participant.setSpeaking(true);
 
@@ -81,7 +84,7 @@ class ReadingRoomParticipantEntityFactoryTests {
         assertThat(result.getStatus()).isEqualTo(LEFT);
         assertThat(result.getLeftAt()).isNotNull();
         assertThat(result.getJoinedAt()).isNotNull(); // should preserve join time
-        
+
         // Note: The factory doesn't modify speaking status, that's handled elsewhere
         assertThat(result.isSpeaking()).isTrue(); // still true as factory doesn't change it
     }
@@ -94,7 +97,7 @@ class ReadingRoomParticipantEntityFactoryTests {
         UserEntity user = UserEntityFixtures.createSecondaryUserEntity();
         ReadingRoomParticipantEntity participant = ReadingRoomParticipantEntityFactory.createParticipant(
                 room, user, true);
-        
+
         // Store original values
         boolean originalMuted = participant.isMuted();
         boolean originalVideoEnabled = participant.isVideoEnabled();

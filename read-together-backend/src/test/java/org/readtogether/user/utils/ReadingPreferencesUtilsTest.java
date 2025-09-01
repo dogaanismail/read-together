@@ -1,6 +1,7 @@
 package org.readtogether.user.utils;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.readtogether.user.common.enums.ReadingSpeed;
 import org.readtogether.user.common.enums.VideoQuality;
@@ -10,6 +11,7 @@ import org.readtogether.user.entity.ReadingPreferencesEntity;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Tag("unit")
 @DisplayName("ReadingPreferencesUtils Tests")
 class ReadingPreferencesUtilsTest {
 

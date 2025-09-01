@@ -1,6 +1,7 @@
 package org.readtogether.readingroom.factory;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.readtogether.readingroom.entity.ReadingRoomEntity;
 import org.readtogether.readingroom.entity.ReadingRoomInvitationEntity;
@@ -19,6 +20,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.readtogether.readingroom.common.enums.InvitationStatus.*;
 import static org.readtogether.readingroom.common.enums.InvitationType.*;
 
+@Tag("unit")
+@DisplayName("ReadingRoomInvitationEntityFactory Tests")
 class ReadingRoomInvitationEntityFactoryTests {
 
     @Test

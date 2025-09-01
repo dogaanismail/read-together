@@ -1,12 +1,14 @@
 package org.readtogether.user.utils;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.readtogether.user.common.enums.ProfileVisibility;
 import org.readtogether.user.entity.PrivacySettingsEntity;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Tag("unit")
 @DisplayName("PrivacySettingsUtils Tests")
 class PrivacySettingsUtilsTest {
 

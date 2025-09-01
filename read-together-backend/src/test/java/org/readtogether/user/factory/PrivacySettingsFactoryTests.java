@@ -1,5 +1,6 @@
 package org.readtogether.user.factory;
 
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.readtogether.user.entity.PrivacySettingsEntity;
@@ -12,6 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.readtogether.user.fixtures.UserEntityFixtures.DEFAULT_USER_ID;
 import static org.readtogether.user.fixtures.UserEntityFixtures.SECONDARY_USER_ID;
 
+@Tag("unit")
 @DisplayName("PrivacySettingsFactory Tests")
 class PrivacySettingsFactoryTests {
 

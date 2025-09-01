@@ -1,5 +1,6 @@
 package org.readtogether.user.factory;
 
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.readtogether.user.entity.UserEntity;
@@ -9,6 +10,7 @@ import org.readtogether.user.fixtures.RequestFixtures;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Tag("unit")
 @DisplayName("UserEntityFactory Tests")
 class UserEntityFactoryTests {
 

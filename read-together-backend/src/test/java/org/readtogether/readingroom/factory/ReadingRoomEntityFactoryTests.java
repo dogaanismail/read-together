@@ -1,6 +1,7 @@
 package org.readtogether.readingroom.factory;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.readtogether.readingroom.entity.ReadingRoomEntity;
 import org.readtogether.readingroom.fixtures.ReadingRoomRequestFixtures;
@@ -14,6 +15,8 @@ import static java.time.temporal.ChronoUnit.HOURS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.readtogether.readingroom.common.enums.RoomStatus.ACTIVE;
 
+@Tag("unit")
+@DisplayName("ReadingRoomEntityFactory Tests")
 class ReadingRoomEntityFactoryTests {
 
     @Test

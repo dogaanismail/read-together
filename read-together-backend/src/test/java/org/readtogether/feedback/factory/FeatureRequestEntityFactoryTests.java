@@ -1,6 +1,7 @@
 package org.readtogether.feedback.factory;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.readtogether.feedback.entity.FeatureRequestEntity;
 import org.readtogether.feedback.fixtures.RequestFixtures;
@@ -13,6 +14,7 @@ import static org.readtogether.feedback.common.enums.FeatureRequestCategory.AI_A
 import static org.readtogether.feedback.common.enums.FeatureRequestStatus.SUBMITTED;
 import static org.readtogether.feedback.common.enums.Priority.HIGH;
 
+@Tag("unit")
 @DisplayName("FeatureRequestEntityFactory Tests")
 class FeatureRequestEntityFactoryTests {
 

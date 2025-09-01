@@ -1,6 +1,7 @@
 package org.readtogether.feed.service;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -24,6 +25,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.readtogether.feed.common.enums.FeedItemType.SESSION;
 
+@Tag("unit")
 @ExtendWith(MockitoExtension.class)
 class FeedCommentServiceTest {
 

@@ -1,5 +1,6 @@
 package org.readtogether.user.service;
 
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,6 +26,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 import static org.readtogether.security.common.enums.TokenClaims.USER_ID;
 
+@Tag("unit")
 @ExtendWith(MockitoExtension.class)
 @DisplayName("UserService Tests")
 class UserServiceTests {

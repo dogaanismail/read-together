@@ -1,6 +1,7 @@
 package org.readtogether.feedback.factory;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.readtogether.feedback.entity.BugReportEntity;
 import org.readtogether.feedback.fixtures.RequestFixtures;
@@ -13,6 +14,7 @@ import static org.readtogether.feedback.common.enums.BugReportSeverity.CRITICAL;
 import static org.readtogether.feedback.common.enums.BugReportSeverity.LOW;
 import static org.readtogether.feedback.common.enums.BugReportStatus.SUBMITTED;
 
+@Tag("unit")
 @DisplayName("BugReportEntityFactory Tests")
 class BugReportEntityFactoryTests {
 

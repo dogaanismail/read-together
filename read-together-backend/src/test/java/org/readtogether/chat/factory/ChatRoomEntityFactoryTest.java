@@ -1,5 +1,6 @@
 package org.readtogether.chat.factory;
 
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.DisplayName;
 import org.readtogether.chat.entity.ChatRoomEntity;
@@ -11,6 +12,7 @@ import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Tag("unit")
 @DisplayName("ChatRoomEntityFactory Tests")
 class ChatRoomEntityFactoryTest {
 

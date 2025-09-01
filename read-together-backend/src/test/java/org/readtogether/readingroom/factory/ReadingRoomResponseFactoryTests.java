@@ -1,6 +1,7 @@
 package org.readtogether.readingroom.factory;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.readtogether.readingroom.entity.ReadingRoomEntity;
 import org.readtogether.readingroom.fixtures.ReadingRoomEntityFixtures;
@@ -8,6 +9,8 @@ import org.readtogether.readingroom.model.response.ReadingRoomResponse;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Tag("unit")
+@DisplayName("ReadingRoomResponseFactory Tests")
 class ReadingRoomResponseFactoryTests {
 
     @Test
