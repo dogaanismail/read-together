@@ -135,9 +135,15 @@ class FeedbackControllerIntegrationTests extends BaseIntegrationTest {
     }
 
     @Test
-    @DisplayName("GET /api/v1/feedback/feature-requests should return feature requests without authentication")
-    void shouldReturnFeatureRequestsWithoutAuth() throws Exception {
+    @DisplayName("GET /api/v1/feedback/feature-requests should return feature requests with authentication")
+    void shouldReturnFeatureRequestsWithAuth() throws Exception {
+        // Given: register and login user
+        String email = "public.feature" + System.currentTimeMillis() + "@test.local";
+        String password = "Password1!";
+        String token = registerAndLogin(email, password, "Public", "Feature");
+
         mockMvc.perform(get("/api/v1/feedback/feature-requests")
+                        .header("Authorization", "Bearer " + token)
                         .param("page", "0")
                         .param("size", "20"))
                 .andExpect(status().isOk())
@@ -147,9 +153,24 @@ class FeedbackControllerIntegrationTests extends BaseIntegrationTest {
     }
 
     @Test
-    @DisplayName("GET /api/v1/feedback/feature-requests with category filter should work")
-    void shouldReturnFeatureRequestsWithCategoryFilter() throws Exception {
+    @DisplayName("GET /api/v1/feedback/feature-requests without authentication should return 401")
+    void shouldReturn401WhenGettingFeatureRequestsWithoutAuth() throws Exception {
         mockMvc.perform(get("/api/v1/feedback/feature-requests")
+                        .param("page", "0")
+                        .param("size", "20"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @DisplayName("GET /api/v1/feedback/feature-requests with category filter should work with authentication")
+    void shouldReturnFeatureRequestsWithCategoryFilter() throws Exception {
+        // Given: register and login user
+        String email = "category.filter" + System.currentTimeMillis() + "@test.local";
+        String password = "Password1!";
+        String token = registerAndLogin(email, password, "Category", "Filter");
+
+        mockMvc.perform(get("/api/v1/feedback/feature-requests")
+                        .header("Authorization", "Bearer " + token)
                         .param("category", UI_UX_IMPROVEMENTS.toString())
                         .param("page", "0")
                         .param("size", "20"))
@@ -160,9 +181,15 @@ class FeedbackControllerIntegrationTests extends BaseIntegrationTest {
     }
 
     @Test
-    @DisplayName("GET /api/v1/feedback/feature-requests with status filter should work")
+    @DisplayName("GET /api/v1/feedback/feature-requests with status filter should work with authentication")
     void shouldReturnFeatureRequestsWithStatusFilter() throws Exception {
+        // Given: register and login user
+        String email = "status.filter" + System.currentTimeMillis() + "@test.local";
+        String password = "Password1!";
+        String token = registerAndLogin(email, password, "Status", "Filter");
+
         mockMvc.perform(get("/api/v1/feedback/feature-requests")
+                        .header("Authorization", "Bearer " + token)
                         .param("status", SUBMITTED.toString())
                         .param("page", "0")
                         .param("size", "20"))
@@ -173,15 +200,30 @@ class FeedbackControllerIntegrationTests extends BaseIntegrationTest {
     }
 
     @Test
-    @DisplayName("GET /api/v1/feedback/bug-reports should return bug reports without authentication")
-    void shouldReturnBugReportsWithoutAuth() throws Exception {
+    @DisplayName("GET /api/v1/feedback/bug-reports should return bug reports with authentication")
+    void shouldReturnBugReportsWithAuth() throws Exception {
+        // Given: register and login user  
+        String email = "public.bug" + System.currentTimeMillis() + "@test.local";
+        String password = "Password1!";
+        String token = registerAndLogin(email, password, "Public", "Bug");
+
         mockMvc.perform(get("/api/v1/feedback/bug-reports")
+                        .header("Authorization", "Bearer " + token)
                         .param("page", "0")
                         .param("size", "20"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.isSuccess").value(true))
                 .andExpect(jsonPath("$.response").exists())
                 .andExpect(jsonPath("$.response.content").isArray());
+    }
+
+    @Test
+    @DisplayName("GET /api/v1/feedback/bug-reports without authentication should return 401")
+    void shouldReturn401WhenGettingBugReportsWithoutAuth() throws Exception {
+        mockMvc.perform(get("/api/v1/feedback/bug-reports")
+                        .param("page", "0")
+                        .param("size", "20"))
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -220,9 +262,15 @@ class FeedbackControllerIntegrationTests extends BaseIntegrationTest {
     }
 
     @Test
-    @DisplayName("GET /api/v1/feedback/statistics should return statistics without authentication")
-    void shouldReturnStatisticsWithoutAuth() throws Exception {
-        mockMvc.perform(get("/api/v1/feedback/statistics"))
+    @DisplayName("GET /api/v1/feedback/statistics should return statistics with authentication")
+    void shouldReturnStatisticsWithAuth() throws Exception {
+        // Given: register and login user
+        String email = "public.stats" + System.currentTimeMillis() + "@test.local";
+        String password = "Password1!";
+        String token = registerAndLogin(email, password, "Public", "Stats");
+
+        mockMvc.perform(get("/api/v1/feedback/statistics")
+                        .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.isSuccess").value(true))
                 .andExpect(jsonPath("$.response").exists())
@@ -232,6 +280,13 @@ class FeedbackControllerIntegrationTests extends BaseIntegrationTest {
                 .andExpect(jsonPath("$.response.bugsFixed").isNumber())
                 .andExpect(jsonPath("$.response.criticalBugs").isNumber())
                 .andExpect(jsonPath("$.response.bugsInProgress").isNumber());
+    }
+
+    @Test
+    @DisplayName("GET /api/v1/feedback/statistics without authentication should return 401")
+    void shouldReturn401WhenGettingStatisticsWithoutAuth() throws Exception {
+        mockMvc.perform(get("/api/v1/feedback/statistics"))
+                .andExpect(status().isUnauthorized());
     }
 
     private String registerAndLogin(
