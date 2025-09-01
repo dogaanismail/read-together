@@ -17,7 +17,6 @@ import java.nio.file.Paths;
 import java.util.concurrent.CompletableFuture;
 
 @Slf4j
-@Service("localStorageService")
 public class LocalStorageService implements StorageService {
 
     private final StorageProperties.LocalProperties localProperties;

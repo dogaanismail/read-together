@@ -75,6 +75,7 @@ dependencies {
     testImplementation "org.wiremock:wiremock-standalone:${wireMockStandaloneVersion}"
     testImplementation 'org.testcontainers:testcontainers'
     testImplementation 'org.testcontainers:postgresql'
+    testImplementation 'org.testcontainers:localstack'
     testImplementation 'org.mockito:mockito-inline:5.2.0'
 }
 
