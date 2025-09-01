@@ -166,11 +166,8 @@ class S3UrlUtilsTest {
     @Test
     @DisplayName("Should invalidate null URL")
     void shouldInvalidateNullUrl() {
-        // When
-        boolean result = S3UrlUtils.isValidS3Url(null);
-
-        // Then
-        assertThat(result).isFalse();
+        // When & Then
+        assertThat(S3UrlUtils.isValidS3Url(null)).isFalse();
     }
 
     @Test
@@ -198,4 +195,5 @@ class S3UrlUtilsTest {
         // Then
         assertThat(result).isNull();
     }
+
 }

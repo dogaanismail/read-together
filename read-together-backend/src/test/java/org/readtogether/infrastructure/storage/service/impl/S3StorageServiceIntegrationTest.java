@@ -18,6 +18,7 @@ import java.io.InputStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.testcontainers.containers.localstack.LocalStackContainer.Service.S3;
 
 @Tag("integration")
 @Testcontainers
@@ -27,7 +28,7 @@ class S3StorageServiceIntegrationTest {
     @Container
     static LocalStackContainer localStack = new LocalStackContainer(
             DockerImageName.parse("localstack/localstack:latest"))
-            .withServices(LocalStackContainer.Service.S3);
+            .withServices(S3);
 
     private S3Client s3Client;
     private S3StorageService s3StorageService;
@@ -41,17 +42,17 @@ class S3StorageServiceIntegrationTest {
         s3Properties.setRegion(localStack.getRegion());
         s3Properties.setAccessKey("test");
         s3Properties.setSecretKey("test");
-        s3Properties.setEndpoint(localStack.getEndpointOverride(LocalStackContainer.Service.S3).toString());
+        s3Properties.setEndpoint(localStack.getEndpointOverride(S3).toString());
         s3Properties.setServerSideEncryption("AES256");
 
-        // Create S3 client configured for LocalStack
+        // Create an S3 client configured for LocalStack
         s3Client = AwsClientFactory.createS3Client(
                 s3Properties.getAccessKey(),
                 s3Properties.getSecretKey(),
                 s3Properties.getRegion(),
                 s3Properties.getEndpoint());
 
-        // Create test bucket
+        // Create a test bucket
         try {
             s3Client.createBucket(CreateBucketRequest.builder()
                     .bucket(s3Properties.getBucket())
@@ -73,14 +74,14 @@ class S3StorageServiceIntegrationTest {
         String testContent = "test audio content";
         InputStream inputStream = new ByteArrayInputStream(testContent.getBytes());
 
-        // When - Upload file
+        // When - Upload a file
         String publicUrl = s3StorageService.uploadFile(inputStream, fileName, folder, contentType);
 
         // Then - Verify upload succeeded
         assertThat(publicUrl).contains(s3Properties.getBucket());
         assertThat(publicUrl).contains("audio/test-file.mp3");
 
-        // Verify file exists using headObject
+        // Verify the file exists using headObject
         String key = folder + "/" + fileName;
         HeadObjectResponse headResponse = s3Client.headObject(HeadObjectRequest.builder()
                 .bucket(s3Properties.getBucket())
@@ -89,7 +90,7 @@ class S3StorageServiceIntegrationTest {
 
         assertThat(headResponse.contentType()).isEqualTo(contentType);
         assertThat(headResponse.contentLength()).isEqualTo(testContent.length());
-        // Note: LocalStack may not always return server-side encryption metadata
+        // Note: LocalStack may not always return server-side encryption metadata,
         // but the important thing is that the upload succeeded
 
         // Verify file exists using service method
@@ -100,7 +101,7 @@ class S3StorageServiceIntegrationTest {
                 .bucket(s3Properties.getBucket())
                 .key(key)
                 .build())) {
-            
+
             assertThat(getObjectResponse.response().contentType()).isEqualTo(contentType);
         }
     }
@@ -126,10 +127,10 @@ class S3StorageServiceIntegrationTest {
         // Then - Verify deletion succeeded
         assertThat(deleteResult).isTrue();
 
-        // Verify file no longer exists using service method
+        // Verify file no longer exists using the service method
         assertThat(s3StorageService.fileExists(publicUrl)).isFalse();
 
-        // Verify file no longer exists using direct S3 client
+        // Verify file no longer exists using a direct S3 client
         String key = folder + "/" + fileName;
         assertThatThrownBy(() -> s3Client.headObject(HeadObjectRequest.builder()
                 .bucket(s3Properties.getBucket())
@@ -190,13 +191,13 @@ class S3StorageServiceIntegrationTest {
         String testContent = "binary data content";
         InputStream inputStream = new ByteArrayInputStream(testContent.getBytes());
 
-        // When - Upload without content type
+        // When - Upload without a content type
         String publicUrl = s3StorageService.uploadFile(inputStream, fileName, folder, null);
 
         // Then
         assertThat(publicUrl).contains("data/no-content-type.dat");
 
-        // Verify file was uploaded with default content type
+        // Verify the file was uploaded with the default content type
         String key = folder + "/" + fileName;
         HeadObjectResponse headResponse = s3Client.headObject(HeadObjectRequest.builder()
                 .bucket(s3Properties.getBucket())
