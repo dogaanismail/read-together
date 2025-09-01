@@ -45,4 +45,9 @@
         <sqlFile path="changelog/add_library_domain_tables.sql" relativeToChangelogFile="true"/>
     </changeSet>
 
+    <changeSet id="2025-01-22-11-00" author="Ismail Dogan">
+        <comment>Add feedback domain tables</comment>
+        <sqlFile path="changelog/add_feedback_domain_tables.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
 </databaseChangeLog>
