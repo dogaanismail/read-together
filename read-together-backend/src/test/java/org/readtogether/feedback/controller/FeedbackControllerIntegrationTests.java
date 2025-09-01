@@ -5,17 +5,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.readtogether.common.BaseIntegrationTest;
-import org.readtogether.feedback.common.enums.FeatureRequestCategory;
-import org.readtogether.feedback.common.enums.FeatureRequestStatus;
 import org.readtogether.feedback.fixtures.RequestFixtures;
 import org.readtogether.feedback.model.request.BugReportSubmitRequest;
 import org.readtogether.feedback.model.request.FeatureRequestSubmitRequest;
-import org.readtogether.user.entity.UserEntity;
 import org.readtogether.user.model.request.LoginRequest;
 import org.readtogether.user.model.request.RegisterRequest;
-import org.readtogether.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -23,6 +18,8 @@ import java.util.UUID;
 
 import static org.readtogether.feedback.common.enums.FeatureRequestCategory.UI_UX_IMPROVEMENTS;
 import static org.readtogether.feedback.common.enums.FeatureRequestStatus.SUBMITTED;
+import static org.readtogether.user.fixtures.RequestFixtures.createRegisterRequest;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -34,9 +31,6 @@ class FeedbackControllerIntegrationTests extends BaseIntegrationTest {
 
     @Autowired
     private ObjectMapper objectMapper;
-
-    @Autowired
-    private UserRepository userRepository;
 
     @Test
     @DisplayName("POST /api/v1/feedback/feature-requests should submit feature request with authentication")
@@ -51,7 +45,7 @@ class FeedbackControllerIntegrationTests extends BaseIntegrationTest {
         // When & Then
         mockMvc.perform(post("/api/v1/feedback/feature-requests")
                         .header("Authorization", "Bearer " + token)
-                        .contentType(MediaType.APPLICATION_JSON)
+                        .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.isSuccess").value(true))
@@ -71,7 +65,7 @@ class FeedbackControllerIntegrationTests extends BaseIntegrationTest {
         FeatureRequestSubmitRequest request = RequestFixtures.createDefaultFeatureRequestSubmitRequest();
 
         mockMvc.perform(post("/api/v1/feedback/feature-requests")
-                        .contentType(MediaType.APPLICATION_JSON)
+                        .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isUnauthorized());
     }
@@ -93,7 +87,7 @@ class FeedbackControllerIntegrationTests extends BaseIntegrationTest {
         // When & Then
         mockMvc.perform(post("/api/v1/feedback/feature-requests")
                         .header("Authorization", "Bearer " + token)
-                        .contentType(MediaType.APPLICATION_JSON)
+                        .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(invalidRequest)))
                 .andExpect(status().isBadRequest());
     }
@@ -111,7 +105,7 @@ class FeedbackControllerIntegrationTests extends BaseIntegrationTest {
         // When & Then
         mockMvc.perform(post("/api/v1/feedback/bug-reports")
                         .header("Authorization", "Bearer " + token)
-                        .contentType(MediaType.APPLICATION_JSON)
+                        .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.isSuccess").value(true))
@@ -129,7 +123,7 @@ class FeedbackControllerIntegrationTests extends BaseIntegrationTest {
         BugReportSubmitRequest request = RequestFixtures.createDefaultBugReportSubmitRequest();
 
         mockMvc.perform(post("/api/v1/feedback/bug-reports")
-                        .contentType(MediaType.APPLICATION_JSON)
+                        .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isUnauthorized());
     }
@@ -237,7 +231,7 @@ class FeedbackControllerIntegrationTests extends BaseIntegrationTest {
         FeatureRequestSubmitRequest request = RequestFixtures.createDefaultFeatureRequestSubmitRequest();
         MvcResult submitResult = mockMvc.perform(post("/api/v1/feedback/feature-requests")
                         .header("Authorization", "Bearer " + token)
-                        .contentType(MediaType.APPLICATION_JSON)
+                        .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -296,7 +290,7 @@ class FeedbackControllerIntegrationTests extends BaseIntegrationTest {
             String lastName) throws Exception {
 
         // Register user
-        RegisterRequest registerRequest = org.readtogether.user.fixtures.RequestFixtures.createRegisterRequest(
+        RegisterRequest registerRequest = createRegisterRequest(
                 email,
                 password,
                 firstName,
@@ -305,7 +299,7 @@ class FeedbackControllerIntegrationTests extends BaseIntegrationTest {
         );
 
         mockMvc.perform(post("/api/v1/users/register")
-                        .contentType(MediaType.APPLICATION_JSON)
+                        .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(registerRequest)))
                 .andExpect(status().isOk());
 
@@ -320,7 +314,7 @@ class FeedbackControllerIntegrationTests extends BaseIntegrationTest {
         LoginRequest login = org.readtogether.user.fixtures.RequestFixtures.createLoginRequest(email, password);
 
         MvcResult loginResult = mockMvc.perform(post("/api/v1/users/login")
-                        .contentType(MediaType.APPLICATION_JSON)
+                        .contentType(APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(login)))
                 .andExpect(status().isOk())
                 .andReturn();
@@ -333,9 +327,4 @@ class FeedbackControllerIntegrationTests extends BaseIntegrationTest {
                 .asText();
     }
 
-    private UUID getUserIdByEmail(String email) {
-        return userRepository.findByEmail(email)
-                .map(UserEntity::getId)
-                .orElseThrow(() -> new RuntimeException("User not found: " + email));
-    }
 }
