@@ -66,4 +66,54 @@ public class ResponseSteps {
                 .isEqualTo(409);
         log.debug("Received expected 409 Conflict response");
     }
+    
+    @Then("the response should contain an error message")
+    public void the_response_should_contain_an_error_message() {
+        var response = ApiClient.getLastResponse();
+        var body = response.getBody().asString();
+        assertThat(body)
+                .as("Response should contain an error message")
+                .containsAnyOf("error", "message", "Error", "Message", "invalid", "failed");
+        log.debug("Response contains error message: {}", body);
+    }
+    
+    @Then("the response should contain validation errors")
+    public void the_response_should_contain_validation_errors() {
+        var response = ApiClient.getLastResponse();
+        var body = response.getBody().asString();
+        assertThat(body)
+                .as("Response should contain validation errors")
+                .containsAnyOf("validation", "Validation", "required", "invalid", "error", "errors");
+        log.debug("Response contains validation errors: {}", body);
+    }
+    
+    @Then("the response should contain an authentication error")
+    public void the_response_should_contain_an_authentication_error() {
+        var response = ApiClient.getLastResponse();
+        var body = response.getBody().asString();
+        assertThat(body)
+                .as("Response should contain authentication error")
+                .containsAnyOf("authentication", "unauthorized", "Unauthorized", "token", "login", "credential");
+        log.debug("Response contains authentication error: {}", body);
+    }
+    
+    @Then("the response should contain an authentication error about expired token")
+    public void the_response_should_contain_an_authentication_error_about_expired_token() {
+        var response = ApiClient.getLastResponse();
+        var body = response.getBody().asString();
+        assertThat(body)
+                .as("Response should contain expired token error")
+                .containsAnyOf("expired", "Expired", "token", "Token", "invalid", "authentication");
+        log.debug("Response contains expired token error: {}", body);
+    }
+    
+    @Then("the response should contain an authorization error")
+    public void the_response_should_contain_an_authorization_error() {
+        var response = ApiClient.getLastResponse();
+        var body = response.getBody().asString();
+        assertThat(body)
+                .as("Response should contain authorization error")
+                .containsAnyOf("authorization", "forbidden", "Forbidden", "access", "permission", "denied");
+        log.debug("Response contains authorization error: {}", body);
+    }
 }

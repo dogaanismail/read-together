@@ -25,16 +25,23 @@ public class AuthorizationSteps {
     
     @When("I attempt to access the second user's private information")
     public void i_attempt_to_access_the_second_users_private_information() {
-        // Try to access sensitive endpoints that should be restricted
-        lastResponse = ApiClient.getAuthenticated("/users/sensitive-info");
+        // Try to access sensitive user profile endpoint
+        // Assuming we have the second user ID stored somewhere
+        if (targetUserId != null) {
+            lastResponse = ApiClient.getAuthenticated("/users/" + targetUserId + "/profile");
+        } else {
+            // Fallback to attempting to access admin endpoint
+            lastResponse = ApiClient.getAuthenticated("/admin/users");
+        }
         
-        log.debug("Attempted to access second user's private info, status: {}", lastResponse.getStatusCode());
+        log.debug("Attempted to access private user information, status: {}", lastResponse.getStatusCode());
     }
     
     @When("I attempt to update the second user's profile")
     public void i_attempt_to_update_the_second_users_profile() {
         // Try to update another user's profile (this would need the target user ID)
-        Map<String, Object> updateRequest = Fixtures.Profile.createDefaultProfileUpdateRequest();
+        Map<String, Object> updateRequest = Fixtures.User.createProfileUpdateRequest(
+                "Updated", "Name", "Updated bio");
         
         // Attempt to update via admin endpoint or with user ID parameter
         lastResponse = ApiClient.putAuthenticated("/admin/users/profile", updateRequest);

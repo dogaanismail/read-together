@@ -1,6 +1,5 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.5.0'
     id 'io.spring.dependency-management' version '1.1.7'
 }
 
@@ -10,6 +9,7 @@ version = '1.0-SNAPSHOT'
 dependencyManagement {
     imports {
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:2025.0.0"
+        mavenBom "org.springframework.boot:spring-boot-dependencies:3.5.0"
     }
 }
 
@@ -53,8 +53,8 @@ dependencies {
     // AssertJ for fluent assertions
     testImplementation 'org.assertj:assertj-core:3.25.1'
     
-    // Optional: WireMock for external service mocking
-    testImplementation 'com.github.tomakehurst:wiremock-jre8:2.35.2'
+    // Optional: WireMock for external service mocking (updated to fix CVE-2023-44487)
+    testImplementation 'org.wiremock:wiremock:3.9.1'
     
     // PostgreSQL driver
     testImplementation 'org.postgresql:postgresql:42.7.7'
@@ -80,7 +80,7 @@ test {
     systemProperty 'cucumber.plugin', 'pretty,html:build/reports/cucumber.html,json:build/reports/cucumber.json'
     
     // Environment configuration
-    systemProperty 'E2E_BASE_URL', System.getProperty('E2E_BASE_URL', 'http://localhost:5006')
+    systemProperty 'E2E_BASE_URL', System.getProperty('E2E_BASE_URL', 'http://localhost:7031')
     systemProperty 'E2E_MODE', System.getProperty('E2E_MODE', 'embedded')
     systemProperty 'E2E_DEBUG', System.getProperty('E2E_DEBUG', 'false')
     
@@ -90,7 +90,7 @@ test {
         exceptionFormat 'full'
     }
     
-    // Parallel execution (optional)
+    // Parallel execution disabled for stable test execution
     maxParallelForks = 1
 }
 
@@ -98,7 +98,7 @@ test {
 tasks.register('testLocal', Test) {
     useJUnitPlatform()
     systemProperty 'E2E_MODE', 'local'
-    systemProperty 'E2E_BASE_URL', 'http://localhost:5006'
+    systemProperty 'E2E_BASE_URL', 'http://localhost:7031'
 }
 
 // Task to run tests in embedded mode (uses Testcontainers)
@@ -112,7 +112,7 @@ tasks.register('cucumberReport') {
     dependsOn test
     doLast {
         println "Cucumber reports generated:"
-        println "  HTML: ${project.buildDir}/reports/cucumber.html"
-        println "  JSON: ${project.buildDir}/reports/cucumber.json"
+        println "  HTML: ${project.layout.buildDirectory.get()}/reports/cucumber.html"
+        println "  JSON: ${project.layout.buildDirectory.get()}/reports/cucumber.json"
     }
 }

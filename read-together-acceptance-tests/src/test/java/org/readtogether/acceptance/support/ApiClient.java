@@ -109,13 +109,6 @@ public class ApiClient {
     }
     
     /**
-     * Get the current access token.
-     */
-    public static String getCurrentAccessToken() {
-        return currentAccessToken;
-    }
-    
-    /**
      * Get the last response received from an API call.
      */
     public static Response getLastResponse() {

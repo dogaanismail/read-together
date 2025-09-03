@@ -6,6 +6,9 @@ import io.cucumber.java.en.Then;
 import io.restassured.response.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.readtogether.acceptance.support.ApiClient;
+import org.readtogether.acceptance.support.Fixtures;
+
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -59,8 +62,27 @@ public class ProtectedEndpointSteps {
     
     @Given("I have logged in as a regular user and obtained an access token")
     public void i_have_logged_in_as_a_regular_user_and_obtained_an_access_token() {
-        // This will be handled by AuthSteps.i_have_logged_in_and_obtained_an_access_token()
-        // which already creates a regular user by default
+        // Register and login as a regular user (not admin)
+        String email = Fixtures.User.generateUniqueEmail();
+        String password = "Password1!";
+        
+        // Create regular user via registration
+        Map<String, Object> registerRequest = Fixtures.User.createRegisterRequest(
+                email, password, "Test", "User", "user"
+        );
+        
+        Response regResponse = ApiClient.post("/users/register", registerRequest);
+        log.debug("User registration status: {}", regResponse.getStatusCode());
+        
+        // Login to get access token
+        Map<String, Object> loginRequest = Fixtures.Auth.createLoginRequest(email, password);
+        lastResponse = ApiClient.post("/users/login", loginRequest);
+        
+        if (lastResponse.getStatusCode() == 200) {
+            String accessToken = lastResponse.jsonPath().getString("response.accessToken");
+            ApiClient.setAccessToken(accessToken);
+            log.debug("Regular user logged in successfully");
+        }
     }
     
     @When("I access the admin endpoint {string} with the access token")

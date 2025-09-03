@@ -34,8 +34,8 @@ public class ApplicationManager {
         
         try {
             // Set system properties for the application to use testcontainer database
-            System.setProperty("server.port", "5006");
-            System.setProperty("management.server.port", "5007");
+            System.setProperty("server.port", "7031");
+            System.setProperty("management.server.port", "7032");
             
             // Create SpringApplication
             SpringApplication app = new SpringApplication(ReadTogetherApplication.class);
@@ -49,7 +49,7 @@ public class ApplicationManager {
             // Start the application
             applicationContext = app.run();
             
-            log.info("Spring Boot application started successfully on port 5006");
+            log.info("Spring Boot application started successfully on port 7031");
             
         } catch (Exception e) {
             log.error("Failed to start Spring Boot application", e);

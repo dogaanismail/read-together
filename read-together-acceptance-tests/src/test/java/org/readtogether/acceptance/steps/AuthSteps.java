@@ -256,7 +256,10 @@ public class AuthSteps {
         currentAccessToken = lastResponse.jsonPath().getString("response.accessToken");
         currentRefreshToken = lastResponse.jsonPath().getString("response.refreshToken");
         
-        log.debug("Extracted tokens - Access token present: {}, Refresh token present: {}", 
-                currentAccessToken != null, currentRefreshToken != null);
+        // Extract user information if available
+        currentUser = lastResponse.jsonPath().getMap("response.user");
+        
+        log.debug("Extracted tokens - Access token present: {}, Refresh token present: {}, User info present: {}", 
+                currentAccessToken != null, currentRefreshToken != null, currentUser != null);
     }
 }
