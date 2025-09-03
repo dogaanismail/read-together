@@ -41,8 +41,7 @@ class ReadingPreferencesControllerIntegrationTests extends BaseIntegrationTest {
         RegisterRequest register = RequestFixtures.createRegisterRequest(email,
                 password,
                 "RP",
-                "Default",
-                "user"
+                "Default"
         );
 
         mockMvc.perform(post("/api/v1/users/register")
@@ -74,8 +73,7 @@ class ReadingPreferencesControllerIntegrationTests extends BaseIntegrationTest {
         RegisterRequest register = RequestFixtures.createRegisterRequest(email,
                 password,
                 "RP",
-                "Update",
-                "user"
+                "Update"
         );
 
         mockMvc.perform(post("/api/v1/users/register")
@@ -120,11 +118,11 @@ class ReadingPreferencesControllerIntegrationTests extends BaseIntegrationTest {
         // Given: register and login, then update
         String email = "rp.user.playback@test.local";
         String password = "Password1!";
+
         RegisterRequest registerRequest = RequestFixtures.createRegisterRequest(email,
                 password,
                 "RP",
-                "Playback",
-                "user"
+                "Playback"
         );
 
         mockMvc.perform(post("/api/v1/users/register")

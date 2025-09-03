@@ -54,8 +54,7 @@ class UserControllerIntegrationTests extends BaseIntegrationTest {
                 "john.doe+reg@test.local",
                 "Password1!",
                 "John",
-                "Doe",
-                "user"
+                "Doe"
         );
 
         // When / Then
@@ -79,12 +78,12 @@ class UserControllerIntegrationTests extends BaseIntegrationTest {
         // Given: register
         String email = "jane.doe+current@test.local";
         String password = "Password1!";
+
         RegisterRequest register = RequestFixtures.createRegisterRequest(
                 "jane.doe+current@test.local",
                 "Password1!",
                 "Jane",
-                "Doe",
-                "user"
+                "Doe"
         );
 
         mockMvc.perform(post("/api/v1/users/register")
@@ -124,12 +123,12 @@ class UserControllerIntegrationTests extends BaseIntegrationTest {
         // Given: register and login to get token and id
         String email = "alex.smith+byid@test.local";
         String password = "Password1!";
+
         RegisterRequest register = RequestFixtures.createRegisterRequest(
                 email,
                 password,
                 "Alex",
-                "Smith",
-                "user"
+                "Smith"
         );
 
         mockMvc.perform(post("/api/v1/users/register")
@@ -166,12 +165,12 @@ class UserControllerIntegrationTests extends BaseIntegrationTest {
         // Given: register and login
         String email = "linda.parker+logout@test.local";
         String password = "Password1!";
+
         RegisterRequest register = RequestFixtures.createRegisterRequest(
                 email,
                 password,
                 "Linda",
-                "Parker",
-                "user"
+                "Parker"
         );
 
         mockMvc.perform(post("/api/v1/users/register")

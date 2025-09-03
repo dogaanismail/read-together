@@ -35,6 +35,7 @@ public class UserController {
             .initialize();
 
     @PostMapping("/register")
+    @PreAuthorize("permitAll()")
     public CustomResponse<Void> register(
             @RequestBody @Validated RegisterRequest registerRequest) {
 
@@ -44,6 +45,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
+    @PreAuthorize("permitAll()")
     public CustomResponse<TokenResponse> login(
             @RequestBody @Valid LoginRequest loginRequest) {
 

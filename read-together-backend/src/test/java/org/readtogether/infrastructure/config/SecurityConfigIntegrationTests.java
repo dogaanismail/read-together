@@ -34,8 +34,7 @@ class SecurityConfigIntegrationTests extends BaseIntegrationTest {
                 "security.test@test.local",
                 "Password1!",
                 "Security",
-                "Test",
-                "user"
+                "Test"
         );
 
         // When / Then - should allow registration without authentication

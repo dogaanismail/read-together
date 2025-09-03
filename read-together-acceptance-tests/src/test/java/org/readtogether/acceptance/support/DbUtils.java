@@ -76,7 +76,7 @@ public class DbUtils {
             password = postgresContainer.getPassword();
         } else {
             // Local mode - use a default local database
-            jdbcUrl = "jdbc:postgresql://localhost:5434/read-together-app-db";
+            jdbcUrl = "jdbc:postgresql://localhost:5433/read-together-app-db";
             username = "default";
             password = "default";
         }
@@ -97,19 +97,16 @@ public class DbUtils {
         
         try (Connection connection = getDatabaseConnection();
              Statement statement = connection.createStatement()) {
-            
-            // Disable foreign key checks temporarily
-            statement.execute("SET FOREIGN_KEY_CHECKS = 0");
-            
+
             // Truncate tables in dependency order (children first)
             String[] tablesToTruncate = {
-                "invalid_tokens",
-                "user_reading_preferences", 
-                "user_privacy_settings",
-                "user_notification_preferences",
-                "reading_room_participants",
+                "invalid_token",
+                "reading_preferences",
+                "privacy_settings",
+                "notification_preferences",
+                "reading_room_participant",
                 "reading_room_settings",
-                "reading_rooms",
+                "reading_room",
                 "users"
             };
             
@@ -122,10 +119,7 @@ public class DbUtils {
                     log.debug("Could not truncate table {}: {}", table, e.getMessage());
                 }
             }
-            
-            // Re-enable foreign key checks
-            statement.execute("SET FOREIGN_KEY_CHECKS = 1");
-            
+
             log.debug("Test data cleanup completed");
             
         } catch (SQLException e) {
@@ -151,7 +145,7 @@ public class DbUtils {
      */
     public static boolean isDatabaseAccessible() {
         try (Connection connection = getDatabaseConnection()) {
-            return connection.isValid(5); // 5 second timeout
+            return connection.isValid(5);
         } catch (SQLException e) {
             log.debug("Database not accessible: {}", e.getMessage());
             return false;

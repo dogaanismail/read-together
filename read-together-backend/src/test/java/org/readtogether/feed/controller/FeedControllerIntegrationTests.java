@@ -321,8 +321,7 @@ class FeedControllerIntegrationTests extends BaseIntegrationTest {
                 email,
                 password,
                 "Feed",
-                "User",
-                "user"
+                "User"
         );
 
         mockMvc.perform(post("/api/v1/users/register")

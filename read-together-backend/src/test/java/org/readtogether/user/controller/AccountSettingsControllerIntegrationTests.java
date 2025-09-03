@@ -41,11 +41,11 @@ class AccountSettingsControllerIntegrationTests extends BaseIntegrationTest {
         // Given: register and login
         String email = "as.user.default@test.local";
         String password = "Password1!";
+
         RegisterRequest register = RequestFixtures.createRegisterRequest(email,
                 password,
                 "AS",
-                "Default",
-                "user"
+                "Default"
         );
 
         mockMvc.perform(post("/api/v1/users/register")
@@ -91,11 +91,11 @@ class AccountSettingsControllerIntegrationTests extends BaseIntegrationTest {
         // Given: register and login
         String email = "as.user.update@test.local";
         String password = "Password1!";
+
         RegisterRequest register = RequestFixtures.createRegisterRequest(email,
                 password,
                 "AS",
-                "Update",
-                "user"
+                "Update"
         );
 
         mockMvc.perform(post("/api/v1/users/register")
@@ -155,7 +155,13 @@ class AccountSettingsControllerIntegrationTests extends BaseIntegrationTest {
         // Given: register and login
         String email = "as.user.notifonly@test.local";
         String password = "Password1!";
-        RegisterRequest registerRequest = RequestFixtures.createRegisterRequest(email, password, "AS", "NotifOnly", "user");
+
+        RegisterRequest registerRequest = RequestFixtures.createRegisterRequest(
+                email,
+                password,
+                "AS",
+                "NotifOnly"
+        );
 
         mockMvc.perform(post("/api/v1/users/register")
                         .contentType(MediaType.APPLICATION_JSON)

@@ -281,8 +281,7 @@ class SessionControllerIntegrationTests extends BaseIntegrationTest {
                 email,
                 password,
                 "Test",
-                "User",
-                "user"
+                "User"
         );
 
         mockMvc.perform(post("/api/v1/users/register")

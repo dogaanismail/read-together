@@ -14,7 +14,6 @@ public class RequestFixtures {
                 .email("newuser@example.com")
                 .firstName("New")
                 .lastName("User")
-                .role("user")
                 .build();
     }
 
@@ -24,21 +23,18 @@ public class RequestFixtures {
                 .email("newadmin@example.com")
                 .firstName("New")
                 .lastName("Admin")
-                .role("admin")
                 .build();
     }
 
     public static RegisterRequest createRegisterRequest(
             String email,
             String firstName,
-            String lastName,
-            String role) {
+            String lastName) {
 
         return RegisterRequest.builder()
                 .email(email)
                 .firstName(firstName)
                 .lastName(lastName)
-                .role(role)
                 .build();
     }
 
@@ -46,15 +42,13 @@ public class RequestFixtures {
             String email,
             String password,
             String firstName,
-            String lastName,
-            String role) {
+            String lastName) {
 
         return RegisterRequest.builder()
                 .email(email)
                 .password(password)
                 .firstName(firstName)
                 .lastName(lastName)
-                .role(role)
                 .build();
     }
 

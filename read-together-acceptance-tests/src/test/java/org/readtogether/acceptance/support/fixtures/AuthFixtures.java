@@ -34,7 +34,7 @@ public class AuthFixtures {
     }
     
     /**
-     * Create login request with invalid credentials.
+     * Create a login request with invalid credentials.
      */
     public static Map<String, Object> createInvalidLoginRequest() {
         return createLoginRequest("nonexistent@test.local", "WrongPassword");
@@ -59,7 +59,7 @@ public class AuthFixtures {
     }
     
     /**
-     * Create login request with empty fields.
+     * Create a login request with empty fields.
      */
     public static Map<String, Object> createEmptyFieldsLoginRequest() {
         return createLoginRequest("", "");

@@ -236,8 +236,7 @@ class RoomAccessControllerIntegrationTests extends BaseIntegrationTest {
                 email,
                 password,
                 firstName,
-                lastName,
-                "user"
+                lastName
         );
 
         mockMvc.perform(post("/api/v1/users/register")

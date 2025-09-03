@@ -44,8 +44,12 @@ class BookSessionControllerIntegrationTests extends BaseIntegrationTest {
         // Given: register and login user
         String email = "session.reader@test.local";
         String password = "Password1!";
+
         RegisterRequest register = RequestFixtures.createRegisterRequest(
-                email, password, "Session", "Reader", "user"
+                email,
+                password,
+                "Session",
+                "Reader"
         );
 
         mockMvc.perform(post("/api/v1/users/register")
@@ -68,8 +72,12 @@ class BookSessionControllerIntegrationTests extends BaseIntegrationTest {
         // Given: register and login user
         String email = "book.session.reader@test.local";
         String password = "Password1!";
+
         RegisterRequest register = RequestFixtures.createRegisterRequest(
-                email, password, "BookSession", "Reader", "user"
+                email,
+                password,
+                "BookSession",
+                "Reader"
         );
 
         mockMvc.perform(post("/api/v1/users/register")
@@ -93,8 +101,12 @@ class BookSessionControllerIntegrationTests extends BaseIntegrationTest {
         // Given: register and login user
         String email = "recent.session.reader@test.local";
         String password = "Password1!";
+
         RegisterRequest register = RequestFixtures.createRegisterRequest(
-                email, password, "RecentSession", "Reader", "user"
+                email,
+                password,
+                "RecentSession",
+                "Reader"
         );
 
         mockMvc.perform(post("/api/v1/users/register")
@@ -108,7 +120,7 @@ class BookSessionControllerIntegrationTests extends BaseIntegrationTest {
         UUID sessionId = UUID.fromString(createSessionAndGetId(token));
         UUID bookId = UUID.fromString(createBookAndGetId(token));
 
-        bookSessionService.createBookSession(sessionId, bookId, userId, 0, 10 );
+        bookSessionService.createBookSession(sessionId, bookId, userId, 0, 10);
 
         // When: get recent sessions
         mockMvc.perform(get("/api/v1/library/sessions/user/recent")
@@ -129,8 +141,12 @@ class BookSessionControllerIntegrationTests extends BaseIntegrationTest {
         // Given: register and login user
         String email = "reading.time.stats@test.local";
         String password = "Password1!";
+
         RegisterRequest register = RequestFixtures.createRegisterRequest(
-                email, password, "ReadingTime", "Stats", "user"
+                email,
+                password,
+                "ReadingTime",
+                "Stats"
         );
 
         mockMvc.perform(post("/api/v1/users/register")
@@ -154,8 +170,12 @@ class BookSessionControllerIntegrationTests extends BaseIntegrationTest {
         // Given: register and login user
         String email = "pages.read.stats@test.local";
         String password = "Password1!";
+
         RegisterRequest register = RequestFixtures.createRegisterRequest(
-                email, password, "PagesRead", "Stats", "user"
+                email,
+                password,
+                "PagesRead",
+                "Stats"
         );
 
         mockMvc.perform(post("/api/v1/users/register")
@@ -179,8 +199,12 @@ class BookSessionControllerIntegrationTests extends BaseIntegrationTest {
         // Given: register and login user
         String email = "session.count.stats@test.local";
         String password = "Password1!";
+
         RegisterRequest register = RequestFixtures.createRegisterRequest(
-                email, password, "SessionCount", "Stats", "user"
+                email,
+                password,
+                "SessionCount",
+                "Stats"
         );
 
         mockMvc.perform(post("/api/v1/users/register")
@@ -204,8 +228,12 @@ class BookSessionControllerIntegrationTests extends BaseIntegrationTest {
         // Given: register and login user
         String email = "session.deleter@test.local";
         String password = "Password1!";
+
         RegisterRequest register = RequestFixtures.createRegisterRequest(
-                email, password, "Session", "Deleter", "user"
+                email,
+                password,
+                "Session",
+                "Deleter"
         );
 
         mockMvc.perform(post("/api/v1/users/register")
@@ -232,8 +260,12 @@ class BookSessionControllerIntegrationTests extends BaseIntegrationTest {
         // Given: register and login user
         String email = "session.checker@test.local";
         String password = "Password1!";
+
         RegisterRequest register = RequestFixtures.createRegisterRequest(
-                email, password, "Session", "Checker", "user"
+                email,
+                password,
+                "Session",
+                "Checker"
         );
 
         mockMvc.perform(post("/api/v1/users/register")
@@ -277,8 +309,12 @@ class BookSessionControllerIntegrationTests extends BaseIntegrationTest {
         // Given: register and login user
         String email = "average.progress@test.local";
         String password = "Password1!";
+
         RegisterRequest register = RequestFixtures.createRegisterRequest(
-                email, password, "Average", "Progress", "user"
+                email,
+                password,
+                "Average",
+                "Progress"
         );
 
         mockMvc.perform(post("/api/v1/users/register")

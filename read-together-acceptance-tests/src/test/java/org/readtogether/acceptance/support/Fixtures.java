@@ -27,8 +27,12 @@ public class Fixtures {
         }
         
         public static Map<String, Object> createRegisterRequest(
-                String email, String password, String firstName, String lastName, String role) {
-            return UserFixtures.createRegisterRequest(email, password, firstName, lastName, role);
+                String email,
+                String password,
+                String firstName,
+                String lastName) {
+
+            return UserFixtures.createRegisterRequest(email, password, firstName, lastName);
         }
         
         public static String generateUniqueEmail() {

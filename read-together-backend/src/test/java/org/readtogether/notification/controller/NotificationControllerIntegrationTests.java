@@ -217,7 +217,12 @@ class NotificationControllerIntegrationTests extends BaseIntegrationTest {
              String password) throws Exception {
 
         // Register user
-        RegisterRequest registerRequest = RequestFixtures.createRegisterRequest(email, password, "Test", "User", "user");
+        RegisterRequest registerRequest = RequestFixtures.createRegisterRequest(
+                email,
+                password,
+                "Test",
+                "User"
+        );
 
         mockMvc.perform(post("/api/v1/users/register")
                         .contentType(MediaType.APPLICATION_JSON)

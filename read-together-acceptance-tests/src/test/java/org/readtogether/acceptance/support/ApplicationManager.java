@@ -33,11 +33,11 @@ public class ApplicationManager {
         log.info("Starting Spring Boot application for embedded mode...");
         
         try {
-            // Set system properties for the application to use testcontainer database
-            System.setProperty("server.port", "7031");
+            // Set system properties for the application to use the testcontainer database
+            System.setProperty("server.port", "5006");
             System.setProperty("management.server.port", "7032");
             
-            // Create SpringApplication
+            // Create a SpringApplication
             SpringApplication app = new SpringApplication(ReadTogetherApplication.class);
             
             // Set active profiles for testing

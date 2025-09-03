@@ -46,11 +46,11 @@ class PrivacySettingsControllerIntegrationTests extends BaseIntegrationTest {
         // Given: register and login
         String email = "ps.user.default@test.local";
         String password = "Password1!";
+
         RegisterRequest register = RequestFixtures.createRegisterRequest(email,
                 password,
                 "PS",
-                "Default",
-                "user"
+                "Default"
         );
 
         mockMvc.perform(post("/api/v1/users/register")
@@ -78,11 +78,11 @@ class PrivacySettingsControllerIntegrationTests extends BaseIntegrationTest {
         // Given: register and login
         String email = "ps.user.update@test.local";
         String password = "Password1!";
+
         RegisterRequest register = RequestFixtures.createRegisterRequest(email,
                 password,
                 "PS",
-                "Update",
-                "user"
+                "Update"
         );
 
         mockMvc.perform(post("/api/v1/users/register")
@@ -125,11 +125,11 @@ class PrivacySettingsControllerIntegrationTests extends BaseIntegrationTest {
         // Given: target user A with FOLLOWERS visibility
         String emailA = "ps.target.followers@test.local";
         String pwdA = "Password1!";
+
         RegisterRequest registerRequest = RequestFixtures.createRegisterRequest(emailA,
                 pwdA,
                 "A",
-                "Target",
-                "user"
+                "Target"
         );
 
         mockMvc.perform(post("/api/v1/users/register")
@@ -155,7 +155,7 @@ class PrivacySettingsControllerIntegrationTests extends BaseIntegrationTest {
         String pwdB = "Password1!";
         mockMvc.perform(post("/api/v1/users/register")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(RequestFixtures.createRegisterRequest(emailB, pwdB, "B", "User", "user"))))
+                        .content(objectMapper.writeValueAsString(RequestFixtures.createRegisterRequest(emailB, pwdB, "B", "User"))))
                 .andExpect(status().isOk());
 
         String tokenB = loginAndGetAccessToken(emailB, pwdB);
@@ -198,11 +198,12 @@ class PrivacySettingsControllerIntegrationTests extends BaseIntegrationTest {
         // Given: target user A with PRIVATE and allowMessages=false
         String emailA = "ps.target.private@test.local";
         String pwdA = "Password1!";
-        RegisterRequest registerRequest = RequestFixtures.createRegisterRequest(emailA,
+
+        RegisterRequest registerRequest = RequestFixtures.createRegisterRequest(
+                emailA,
                 pwdA,
                 "A",
-                "Private",
-                "user"
+                "Private"
         );
 
         mockMvc.perform(post("/api/v1/users/register")
@@ -227,7 +228,7 @@ class PrivacySettingsControllerIntegrationTests extends BaseIntegrationTest {
         String pwdB = "Password1!";
         mockMvc.perform(post("/api/v1/users/register")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(RequestFixtures.createRegisterRequest(emailB, pwdB, "B", "Visitor", "user"))))
+                        .content(objectMapper.writeValueAsString(RequestFixtures.createRegisterRequest(emailB, pwdB, "B", "Visitor"))))
                 .andExpect(status().isOk());
         String tokenB = loginAndGetAccessToken(emailB, pwdB);
 
@@ -253,11 +254,12 @@ class PrivacySettingsControllerIntegrationTests extends BaseIntegrationTest {
         // Given: user A with PRIVATE and allowMessages=true
         String emailA = "ps.owner@test.local";
         String pwdA = "Password1!";
-        RegisterRequest registerRequest = RequestFixtures.createRegisterRequest(emailA,
+
+        RegisterRequest registerRequest = RequestFixtures.createRegisterRequest(
+                emailA,
                 pwdA,
                 "Owner",
-                "User",
-                "user"
+                "User"
         );
 
         mockMvc.perform(post("/api/v1/users/register")

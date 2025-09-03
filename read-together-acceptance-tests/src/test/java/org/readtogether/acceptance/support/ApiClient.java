@@ -85,7 +85,7 @@ public class ApiClient {
     }
     
     /**
-     * Get a request specification with Bearer token authentication using provided token.
+     * Get a request specification with Bearer token authentication using the provided token.
      */
     public static RequestSpecification getAuthenticatedRequest(String accessToken) {
         return getRequest()

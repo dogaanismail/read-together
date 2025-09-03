@@ -33,7 +33,7 @@ class ApplicationManagerTest {
     void canStartBackendApplication() {
         log.info("Testing backend application startup...");
         
-        // Start database first
+        // Start a database first
         DbUtils.startEmbeddedDatabase();
         log.info("Database started successfully");
         
@@ -41,7 +41,7 @@ class ApplicationManagerTest {
         ApplicationManager.startApplication();
         log.info("Application started successfully");
         
-        // Verify application is running
+        // Verify the application is running
         assert ApplicationManager.isApplicationRunning() : "Application should be running";
         
         log.info("Backend application startup test completed successfully");

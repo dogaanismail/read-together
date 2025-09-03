@@ -37,8 +37,12 @@ class BookControllerIntegrationTests extends BaseIntegrationTest {
         // Given: register and login user
         String email = "book.creator@test.local";
         String password = "Password1!";
+
         RegisterRequest register = RequestFixtures.createRegisterRequest(
-                email, password, "Book", "Creator", "user"
+                email,
+                password,
+                "Book",
+                "Creator"
         );
 
         mockMvc.perform(post("/api/v1/users/register")
@@ -81,8 +85,12 @@ class BookControllerIntegrationTests extends BaseIntegrationTest {
         // Given: register and login user
         String email = "book.reader@test.local";
         String password = "Password1!";
+
         RegisterRequest register = RequestFixtures.createRegisterRequest(
-                email, password, "Book", "Reader", "user"
+                email,
+                password,
+                "Book",
+                "Reader"
         );
 
         mockMvc.perform(post("/api/v1/users/register")
@@ -124,8 +132,12 @@ class BookControllerIntegrationTests extends BaseIntegrationTest {
         // Given: register and login user
         String email = "book.counter@test.local";
         String password = "Password1!";
+
         RegisterRequest register = RequestFixtures.createRegisterRequest(
-                email, password, "Book", "Counter", "user"
+                email,
+                password,
+                "Book",
+                "Counter"
         );
 
         mockMvc.perform(post("/api/v1/users/register")
@@ -162,8 +174,12 @@ class BookControllerIntegrationTests extends BaseIntegrationTest {
         // Given: register and login user
         String email = "public.book.creator@test.local";
         String password = "Password1!";
+
         RegisterRequest register = RequestFixtures.createRegisterRequest(
-                email, password, "Public", "Creator", "user"
+                email,
+                password,
+                "Public",
+                "Creator"
         );
 
         mockMvc.perform(post("/api/v1/users/register")
@@ -196,8 +212,12 @@ class BookControllerIntegrationTests extends BaseIntegrationTest {
         // Given: register and login user
         String email = "book.updater@test.local";
         String password = "Password1!";
+
         RegisterRequest register = RequestFixtures.createRegisterRequest(
-                email, password, "Book", "Updater", "user"
+                email,
+                password,
+                "Book",
+                "Updater"
         );
 
         mockMvc.perform(post("/api/v1/users/register")
@@ -241,8 +261,12 @@ class BookControllerIntegrationTests extends BaseIntegrationTest {
         // Given: register and login user
         String email = "book.searcher@test.local";
         String password = "Password1!";
+
         RegisterRequest register = RequestFixtures.createRegisterRequest(
-                email, password, "Book", "Searcher", "user"
+                email,
+                password,
+                "Book",
+                "Searcher"
         );
 
         mockMvc.perform(post("/api/v1/users/register")
@@ -302,8 +326,12 @@ class BookControllerIntegrationTests extends BaseIntegrationTest {
         // Given: register and login user
         String email = "book.deleter@test.local";
         String password = "Password1!";
+
         RegisterRequest register = RequestFixtures.createRegisterRequest(
-                email, password, "Book", "Deleter", "user"
+                email,
+                password,
+                "Book",
+                "Deleter"
         );
 
         mockMvc.perform(post("/api/v1/users/register")

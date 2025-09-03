@@ -212,13 +212,11 @@ class ChatControllerIntegrationTests extends BaseIntegrationTest {
             String firstName,
             String lastName) throws Exception {
 
-        // Register user
         RegisterRequest registerRequest = RequestFixtures.createRegisterRequest(
                 email,
                 password,
                 firstName,
-                lastName,
-                "user"
+                lastName
         );
 
         mockMvc.perform(post("/api/v1/users/register")

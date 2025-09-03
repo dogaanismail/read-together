@@ -25,12 +25,12 @@ public class AuthorizationSteps {
     
     @When("I attempt to access the second user's private information")
     public void i_attempt_to_access_the_second_users_private_information() {
-        // Try to access sensitive user profile endpoint
+        // Try to access the sensitive user profile endpoint
         // Assuming we have the second user ID stored somewhere
         if (targetUserId != null) {
             lastResponse = ApiClient.getAuthenticated("/users/" + targetUserId + "/profile");
         } else {
-            // Fallback to attempting to access admin endpoint
+            // Fallback to attempting to access the admin endpoint
             lastResponse = ApiClient.getAuthenticated("/admin/users");
         }
         

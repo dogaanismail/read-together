@@ -58,8 +58,7 @@ class RegisterServiceTests {
                 "new.user@example.com",
                 "plain-pass",
                 "New",
-                "User",
-                "user"
+                "User"
         );
 
         when(userRepository.existsByEmail(request.getEmail())).thenReturn(false);
@@ -86,36 +85,6 @@ class RegisterServiceTests {
 
         verify(mapper).map(saved);
         verifyNoMoreInteractions(userRepository, passwordEncoder, mapper);
-    }
-
-    @Test
-    @DisplayName("Should register admin successfully when role is admin")
-    void shouldRegisterAdminSuccessfully() {
-        // Given
-        RegisterRequest request = RequestFixtures.createRegisterRequest(
-                "admin@example.com",
-                "admin-pass",
-                "Alice",
-                "Admin",
-                "ADMIN"
-        );
-
-        when(userRepository.existsByEmail(request.getEmail())).thenReturn(false);
-        when(passwordEncoder.encode(request.getPassword())).thenReturn("encoded-admin");
-        when(userRepository.save(any(UserEntity.class))).thenAnswer(inv -> inv.getArgument(0));
-
-        // When
-        registerService.registerUser(request);
-
-        // Then
-        ArgumentCaptor<UserEntity> entityCaptor = ArgumentCaptor.forClass(UserEntity.class);
-        verify(userRepository).save(entityCaptor.capture());
-
-        UserEntity saved = entityCaptor.getValue();
-        assertThat(saved.getUserType().name()).isEqualTo("ADMIN");
-        assertThat(saved.getPassword()).isEqualTo("encoded-admin");
-
-        verify(mapper).map(saved);
     }
 
     @Test

@@ -12,7 +12,7 @@ import java.util.UUID;
  */
 @UtilityClass
 public class UserFixtures {
-    
+
     /**
      * Create a default user registration payload.
      */
@@ -21,11 +21,10 @@ public class UserFixtures {
                 generateUniqueEmail(),
                 "Password1!",
                 "John",
-                "Doe",
-                "user"
+                "Doe"
         );
     }
-    
+
     /**
      * Create a custom user registration payload.
      */
@@ -33,19 +32,17 @@ public class UserFixtures {
             String email,
             String password,
             String firstName,
-            String lastName,
-            String role) {
-        
+            String lastName) {
+
         Map<String, Object> request = new HashMap<>();
         request.put("email", email);
         request.put("password", password);
         request.put("firstName", firstName);
         request.put("lastName", lastName);
-        request.put("role", role);
-        
+
         return request;
     }
-    
+
     /**
      * Create profile update payload.
      */
@@ -53,22 +50,22 @@ public class UserFixtures {
             String firstName,
             String lastName,
             String bio) {
-        
+
         Map<String, Object> request = new HashMap<>();
         request.put("firstName", firstName);
         request.put("lastName", lastName);
         request.put("bio", bio);
-        
+
         return request;
     }
-    
+
     /**
      * Generate a unique email address for testing.
      */
     public static String generateUniqueEmail() {
         return "test." + UUID.randomUUID().toString().substring(0, 8) + "@test.local";
     }
-    
+
     /**
      * Create user with invalid email format.
      */
@@ -77,11 +74,10 @@ public class UserFixtures {
                 "invalid-email",
                 "Password1!",
                 "John",
-                "Doe",
-                "user"
+                "Doe"
         );
     }
-    
+
     /**
      * Create user with weak password.
      */
@@ -90,18 +86,16 @@ public class UserFixtures {
                 generateUniqueEmail(),
                 "weak",
                 "John",
-                "Doe",
-                "user"
+                "Doe"
         );
     }
-    
+
     /**
-     * Create user with missing required fields.
+     * Create a user with missing required fields.
      */
     public static Map<String, Object> createIncompleteRequest() {
         Map<String, Object> request = new HashMap<>();
         request.put("email", generateUniqueEmail());
-        // Missing password, firstName, lastName, userType
         return request;
     }
 }

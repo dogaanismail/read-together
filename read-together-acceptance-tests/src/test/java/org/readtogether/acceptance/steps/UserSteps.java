@@ -45,13 +45,11 @@ public class UserSteps {
                 email,
                 password,
                 "Test",
-                "User",
-                "user"
+                "User"
         );
         
         Response registerResponse = ApiClient.post("/users/register", registerRequest);
-        
-        // Registration might fail if user already exists - that's acceptable
+
         if (registerResponse.getStatusCode() == 200) {
             log.debug("Successfully registered new user with email: {}", email);
         } else if (registerResponse.getStatusCode() == 409) {
@@ -60,16 +58,14 @@ public class UserSteps {
             log.warn("Unexpected registration response for {}: {} - {}", 
                     email, registerResponse.getStatusCode(), registerResponse.getBody().asString());
         }
-        
-        // Verify user can login (this is the real verification)
+
         Map<String, Object> loginRequest = Fixtures.Auth.createLoginRequest(email, password);
         Response loginResponse = ApiClient.post("/users/login", loginRequest);
         
         assertThat(loginResponse.getStatusCode())
                 .as("User should be able to login after registration/verification")
                 .isEqualTo(200);
-        
-        // Store user information for later use
+
         if (loginResponse.getStatusCode() == 200) {
             currentUserData = loginResponse.jsonPath().getMap("response.user");
             if (currentUserData != null) {
@@ -86,8 +82,7 @@ public class UserSteps {
                 userData.get("email"),
                 userData.get("password"),
                 userData.get("firstName"),
-                userData.get("lastName"),
-                userData.get("userType")
+                userData.get("lastName")
         );
         
         lastResponse = ApiClient.post("/users/register", registerRequest);
@@ -102,8 +97,7 @@ public class UserSteps {
                 email,
                 Fixtures.Common.DEFAULT_PASSWORD,
                 "Test",
-                "User",
-                "user"
+                "User"
         );
         
         lastResponse = ApiClient.post("/users/register", registerRequest);
