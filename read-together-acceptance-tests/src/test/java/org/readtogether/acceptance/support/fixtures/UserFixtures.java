@@ -34,14 +34,14 @@ public class UserFixtures {
             String password,
             String firstName,
             String lastName,
-            String userType) {
+            String role) {
         
         Map<String, Object> request = new HashMap<>();
         request.put("email", email);
         request.put("password", password);
         request.put("firstName", firstName);
         request.put("lastName", lastName);
-        request.put("userType", userType);
+        request.put("role", role);
         
         return request;
     }

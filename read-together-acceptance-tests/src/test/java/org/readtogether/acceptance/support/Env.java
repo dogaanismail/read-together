@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 @UtilityClass
 public class Env {
     
-    public static final String DEFAULT_BASE_URL = "http://localhost:5006";
+    public static final String DEFAULT_BASE_URL = "http://localhost:7031";
     public static final String DEFAULT_MODE = "embedded";
     
     private static String getPropOrEnv(String key, String defaultValue) {

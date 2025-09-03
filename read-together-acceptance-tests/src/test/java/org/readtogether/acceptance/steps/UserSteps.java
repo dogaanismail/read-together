@@ -418,15 +418,6 @@ public class UserSteps {
         the_response_should_not_contain_sensitive_information_like_password();
     }
     
-    @Then("the response should contain an authentication error")
-    public void the_response_should_contain_an_authentication_error() {
-        String httpStatus = lastResponse.jsonPath().getString("httpStatus");
-        
-        assertThat(httpStatus)
-                .as("Response should indicate UNAUTHORIZED status")
-                .isEqualTo("UNAUTHORIZED");
-    }
-    
     @Then("the response should contain an error about user not found")
     public void the_response_should_contain_an_error_about_user_not_found() {
         String message = lastResponse.jsonPath().getString("message");
