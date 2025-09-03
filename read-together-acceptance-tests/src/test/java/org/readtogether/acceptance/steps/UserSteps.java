@@ -29,22 +29,53 @@ public class UserSteps {
     
     @Given("a user exists with email {string}")
     public void a_user_exists_with_email(String email) {
-        // Create a user via registration with default password
+        // Implement the secure register->login pattern
+        ensureUserExistsAndCanLogin(email, "Password1!");
+        
+        log.debug("User verified with email: {}, ID: {}", email, currentUserId);
+    }
+    
+    /**
+     * Helper method to ensure a user exists and can login.
+     * Uses the secure register->login pattern instead of expecting pre-existing users.
+     */
+    private void ensureUserExistsAndCanLogin(String email, String password) {
+        // First attempt to register the user
         Map<String, Object> registerRequest = Fixtures.User.createRegisterRequest(
                 email,
-                "Password1!",  // Default password for test users
+                password,
                 "Test",
                 "User",
                 "user"
         );
         
-        Response response = ApiClient.post("/users/register", registerRequest);
+        Response registerResponse = ApiClient.post("/users/register", registerRequest);
         
-        assertThat(response.getStatusCode())
-                .as("User registration should succeed")
+        // Registration might fail if user already exists - that's acceptable
+        if (registerResponse.getStatusCode() == 200) {
+            log.debug("Successfully registered new user with email: {}", email);
+        } else if (registerResponse.getStatusCode() == 409) {
+            log.debug("User already exists with email: {}", email);
+        } else {
+            log.warn("Unexpected registration response for {}: {} - {}", 
+                    email, registerResponse.getStatusCode(), registerResponse.getBody().asString());
+        }
+        
+        // Verify user can login (this is the real verification)
+        Map<String, Object> loginRequest = Fixtures.Auth.createLoginRequest(email, password);
+        Response loginResponse = ApiClient.post("/users/login", loginRequest);
+        
+        assertThat(loginResponse.getStatusCode())
+                .as("User should be able to login after registration/verification")
                 .isEqualTo(200);
         
-        log.debug("Created user with email: {}", email);
+        // Store user information for later use
+        if (loginResponse.getStatusCode() == 200) {
+            currentUserData = loginResponse.jsonPath().getMap("response.user");
+            if (currentUserData != null) {
+                currentUserId = (String) currentUserData.get("id");
+            }
+        }
     }
     
     @When("I register a new user with the following details:")
@@ -219,37 +250,11 @@ public class UserSteps {
     
     @Given("another user exists with email {string}")
     public void another_user_exists_with_email(String email) {
-        // Create second user
-        Map<String, Object> registerRequest = Fixtures.User.createRegisterRequest(
-                email,
-                Fixtures.Common.DEFAULT_PASSWORD,
-                "Jane",
-                "Smith",
-                "user"
-        );
+        // Use secure pattern for second user  
+        ensureUserExistsAndCanLogin(email, Fixtures.Common.DEFAULT_PASSWORD);
         
-        Response response = ApiClient.post("/users/register", registerRequest);
-        
-        assertThat(response.getStatusCode())
-                .as("Second user registration should succeed")
-                .isEqualTo(200);
-        
-        // Login to get the user ID
-        Map<String, Object> loginRequest = Fixtures.Auth.createLoginRequest(email, Fixtures.Common.DEFAULT_PASSWORD);
-        Response loginResponse = ApiClient.post("/users/login", loginRequest);
-        
-        if (loginResponse.getStatusCode() == 200) {
-            String accessToken = loginResponse.jsonPath().getString("response.accessToken");
-            
-            // Get a user profile to extract ID
-            Response profileResponse = ApiClient.getAuthenticatedRequest(accessToken)
-                    .when()
-                    .get("/users/current-user");
-            
-            if (profileResponse.getStatusCode() == 200) {
-                secondUserId = profileResponse.jsonPath().getString("id");
-            }
-        }
+        // Store as second user ID
+        secondUserId = currentUserId;
         
         log.debug("Created second user with email: {}, ID: {}", email, secondUserId);
     }

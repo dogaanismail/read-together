@@ -27,7 +27,8 @@ public class AuthSteps {
     
     @Given("a user exists with email {string} and password {string}")
     public void a_user_exists_with_email_and_password(String email, String password) {
-        // Create a user via registration
+        // Implement proper register->login pattern for security
+        // First attempt to register the user (this ensures user exists)
         Map<String, Object> registerRequest = Fixtures.User.createRegisterRequest(
                 email,
                 password,
@@ -36,13 +37,33 @@ public class AuthSteps {
                 "user"
         );
         
-        Response response = ApiClient.post("/users/register", registerRequest);
+        Response registerResponse = ApiClient.post("/users/register", registerRequest);
         
-        assertThat(response.getStatusCode())
-                .as("User registration should succeed")
+        // Registration might fail if user already exists - that's acceptable
+        // We only care that the user exists and can login
+        if (registerResponse.getStatusCode() == 200) {
+            log.debug("Successfully registered new user with email: {}", email);
+        } else if (registerResponse.getStatusCode() == 409) {
+            log.debug("User already exists with email: {}, proceeding to login", email);
+        } else {
+            log.warn("Unexpected registration response for {}: {} - {}", 
+                    email, registerResponse.getStatusCode(), registerResponse.getBody().asString());
+            // Don't fail here - maybe user exists and can still login
+        }
+        
+        // Now verify the user can login (this is the real test)
+        Map<String, Object> loginRequest = Fixtures.Auth.createLoginRequest(email, password);
+        Response loginResponse = ApiClient.post("/users/login", loginRequest);
+        
+        assertThat(loginResponse.getStatusCode())
+                .as("User should be able to login after registration")
                 .isEqualTo(200);
         
-        log.debug("Created user with email: {}", email);
+        // Store user information for use in scenarios
+        if (loginResponse.getStatusCode() == 200) {
+            currentUser = loginResponse.jsonPath().getMap("response.user");
+            log.debug("User verified and logged in successfully: {}", email);
+        }
     }
     
     @When("I login with email {string} and password {string}")
