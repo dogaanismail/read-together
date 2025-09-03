@@ -5,11 +5,13 @@ import org.readtogether.user.model.User;
 import org.readtogether.user.entity.UserEntity;
 import org.readtogether.user.exception.UserNotFoundException;
 import org.readtogether.user.mapper.UserEntityToUserMapper;
+import org.readtogether.user.model.request.UpdateProfileRequest;
 import org.readtogether.user.repository.UserRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -43,6 +45,50 @@ public class UserService {
 
         UserEntity userEntity = optionalUserEntity.get();
         return userEntityToUserMapper.map(userEntity);
+    }
+
+    @Transactional
+    public User updateCurrentUser(UpdateProfileRequest updateProfileRequest) {
+        
+        Optional<String> userId = getCurrentIdFromJwt();
+        if (userId.isEmpty()) {
+            throw new IllegalStateException("No authenticated user found");
+        }
+
+        UserEntity userEntity = findUserEntityById(UUID.fromString(userId.get()));
+        
+        // Update only non-null fields from the request
+        if (updateProfileRequest.getFirstName() != null) {
+            if (updateProfileRequest.getFirstName().trim().isEmpty()) {
+                throw new IllegalArgumentException("First name cannot be empty");
+            }
+            userEntity.setFirstName(updateProfileRequest.getFirstName().trim());
+        }
+        
+        if (updateProfileRequest.getLastName() != null) {
+            if (updateProfileRequest.getLastName().trim().isEmpty()) {
+                throw new IllegalArgumentException("Last name cannot be empty");
+            }
+            userEntity.setLastName(updateProfileRequest.getLastName().trim());
+        }
+        
+        if (updateProfileRequest.getBio() != null) {
+            userEntity.setBio(updateProfileRequest.getBio().trim());
+        }
+        
+        if (updateProfileRequest.getProfilePictureUrl() != null) {
+            userEntity.setProfilePictureUrl(updateProfileRequest.getProfilePictureUrl().trim());
+        }
+        
+        if (updateProfileRequest.getUsername() != null) {
+            if (updateProfileRequest.getUsername().trim().isEmpty()) {
+                throw new IllegalArgumentException("Username cannot be empty");
+            }
+            userEntity.setUsername(updateProfileRequest.getUsername().trim());
+        }
+
+        UserEntity savedUserEntity = userRepository.save(userEntity);
+        return userEntityToUserMapper.map(savedUserEntity);
     }
 
     public UserEntity findUserEntityById(

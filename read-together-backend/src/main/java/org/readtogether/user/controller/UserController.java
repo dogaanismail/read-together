@@ -9,12 +9,14 @@ import org.readtogether.user.model.User;
 import org.readtogether.security.model.request.TokenInvalidateRequest;
 import org.readtogether.user.model.request.LoginRequest;
 import org.readtogether.user.model.request.RegisterRequest;
+import org.readtogether.user.model.request.UpdateProfileRequest;
 import org.readtogether.security.model.response.TokenResponse;
 import org.readtogether.user.mapper.TokenToTokenResponseMapper;
 import org.readtogether.user.service.LogoutService;
 import org.readtogether.user.service.RegisterService;
 import org.readtogether.user.service.UserLoginService;
 import org.readtogether.user.service.UserService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -59,6 +61,7 @@ public class UserController {
     }
 
     @PostMapping("/logout")
+    @PreAuthorize("hasAuthority('USER')")
     public CustomResponse<Void> logout(
             @RequestBody @Valid TokenInvalidateRequest tokenInvalidateRequest) {
 
@@ -84,6 +87,16 @@ public class UserController {
         log.info("Received a request to get current user");
         User user = userService.getCurrentUser();
         return CustomResponse.successOf(user);
+    }
+
+    @PutMapping("/current-user")
+    @PreAuthorize("hasAuthority('USER')")
+    public CustomResponse<User> updateCurrentUser(
+            @RequestBody @Valid UpdateProfileRequest updateProfileRequest) {
+
+        log.info("Received a request to update current user profile");
+        User updatedUser = userService.updateCurrentUser(updateProfileRequest);
+        return CustomResponse.successOf(updatedUser);
     }
 
 }
