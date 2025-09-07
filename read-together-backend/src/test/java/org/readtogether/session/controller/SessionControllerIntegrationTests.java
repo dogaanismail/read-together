@@ -50,9 +50,9 @@ class SessionControllerIntegrationTests extends BaseIntegrationTest {
         mockMvc.perform(get("/api/v1/sessions/{id}", savedSession.getId())
                         .header("Authorization", "Bearer " + accessToken))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(savedSession.getId().toString()))
-                .andExpect(jsonPath("$.title").value(savedSession.getTitle()))
-                .andExpect(jsonPath("$.mediaType").value(savedSession.getMediaType().toString()));
+                .andExpect(jsonPath("$.response.id").value(savedSession.getId().toString()))
+                .andExpect(jsonPath("$.response.title").value(savedSession.getTitle()))
+                .andExpect(jsonPath("$.response.mediaType").value(savedSession.getMediaType().toString()));
     }
 
     @Test
@@ -72,10 +72,10 @@ class SessionControllerIntegrationTests extends BaseIntegrationTest {
                         .param("size", "10")
                         .header("Authorization", "Bearer " + accessToken))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.content").isArray())
-                .andExpect(jsonPath("$.content.length()").value(2))
-                .andExpect(jsonPath("$.pageable.pageNumber").value(0))
-                .andExpect(jsonPath("$.pageable.pageSize").value(10));
+                .andExpect(jsonPath("$.response.content").isArray())
+                .andExpect(jsonPath("$.response.content.length()").value(2))
+                .andExpect(jsonPath("$.response.pageable.pageNumber").value(0))
+                .andExpect(jsonPath("$.response.pageable.pageSize").value(10));
     }
 
     @Test
@@ -94,8 +94,8 @@ class SessionControllerIntegrationTests extends BaseIntegrationTest {
                         .param("page", "0")
                         .param("size", "10"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.content").isArray())
-                .andExpect(jsonPath("$.pageable.pageNumber").value(0));
+                .andExpect(jsonPath("$.response.content").isArray())
+                .andExpect(jsonPath("$.response.pageable.pageNumber").value(0));
     }
 
     @Test
@@ -133,7 +133,7 @@ class SessionControllerIntegrationTests extends BaseIntegrationTest {
                         .param("mediaType", "AUDIO")
                         .header("Authorization", "Bearer " + accessToken))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.content").isArray());
+                .andExpect(jsonPath("$.response.content").isArray());
     }
 
     @Test
@@ -201,9 +201,9 @@ class SessionControllerIntegrationTests extends BaseIntegrationTest {
                         .file(file)
                         .header("Authorization", "Bearer " + accessToken))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.title").value(request.getTitle()))
-                .andExpect(jsonPath("$.mediaType").value(request.getMediaType().toString()))
-                .andExpect(jsonPath("$.public").value(request.isPublic()));
+                .andExpect(jsonPath("$.response.title").value(request.getTitle()))
+                .andExpect(jsonPath("$.response.mediaType").value(request.getMediaType().toString()))
+                .andExpect(jsonPath("$.response.public").value(request.isPublic()));
     }
 
     @Test
@@ -249,14 +249,14 @@ class SessionControllerIntegrationTests extends BaseIntegrationTest {
                         .param("size", "2")
                         .header("Authorization", "Bearer " + accessToken))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.content").isArray())
-                .andExpect(jsonPath("$.content.length()").value(2))
-                .andExpect(jsonPath("$.pageable.pageNumber").value(0))
-                .andExpect(jsonPath("$.pageable.pageSize").value(2))
-                .andExpect(jsonPath("$.totalElements").value(5))
-                .andExpect(jsonPath("$.totalPages").value(3))
-                .andExpect(jsonPath("$.first").value(true))
-                .andExpect(jsonPath("$.last").value(false));
+                .andExpect(jsonPath("$.response.content").isArray())
+                .andExpect(jsonPath("$.response.content.length()").value(2))
+                .andExpect(jsonPath("$.response.pageable.pageNumber").value(0))
+                .andExpect(jsonPath("$.response.pageable.pageSize").value(2))
+                .andExpect(jsonPath("$.response.totalElements").value(5))
+                .andExpect(jsonPath("$.response.totalPages").value(3))
+                .andExpect(jsonPath("$.response.first").value(true))
+                .andExpect(jsonPath("$.response.last").value(false));
 
         // When / Then - Test last page
         mockMvc.perform(get("/api/v1/sessions")
@@ -264,12 +264,12 @@ class SessionControllerIntegrationTests extends BaseIntegrationTest {
                         .param("size", "2")
                         .header("Authorization", "Bearer " + accessToken))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.content").isArray())
-                .andExpect(jsonPath("$.content.length()").value(1))
-                .andExpect(jsonPath("$.pageable.pageNumber").value(2))
-                .andExpect(jsonPath("$.pageable.pageSize").value(2))
-                .andExpect(jsonPath("$.first").value(false))
-                .andExpect(jsonPath("$.last").value(true));
+                .andExpect(jsonPath("$.response.content").isArray())
+                .andExpect(jsonPath("$.response.content.length()").value(1))
+                .andExpect(jsonPath("$.response.pageable.pageNumber").value(2))
+                .andExpect(jsonPath("$.response.pageable.pageSize").value(2))
+                .andExpect(jsonPath("$.response.first").value(false))
+                .andExpect(jsonPath("$.response.last").value(true));
     }
 
     private String registerAndLoginUser(

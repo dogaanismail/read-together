@@ -1,6 +1,7 @@
 package org.readtogether.notification.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.readtogether.common.model.response.CustomResponse;
 import org.readtogether.common.utils.SecurityUtils;
 import org.readtogether.notification.entity.NotificationPreferenceEntity;
 import org.readtogether.notification.factory.NotificationPreferencesResponseFactory;
@@ -23,34 +24,39 @@ public class NotificationPreferencesController {
 
     @GetMapping
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<NotificationPreferencesResponse> getPreferences(
+    public CustomResponse<NotificationPreferencesResponse> getPreferences(
             Authentication authentication) {
 
         UUID userId = SecurityUtils.getCurrentUserId(authentication);
         NotificationPreferenceEntity preferences = preferencesService.getUserPreferences(userId);
-        return ResponseEntity.ok(NotificationPreferencesResponseFactory.createFromEntity(preferences));
+
+        return CustomResponse.successOf(
+                NotificationPreferencesResponseFactory.createFromEntity(preferences));
     }
 
     @PutMapping
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<NotificationPreferencesResponse> updatePreferences(
+    public CustomResponse<NotificationPreferencesResponse> updatePreferences(
             @RequestBody NotificationPreferencesUpdateRequest request,
             Authentication authentication) {
 
         UUID userId = SecurityUtils.getCurrentUserId(authentication);
         NotificationPreferenceEntity updated = preferencesService.updatePreferences(userId, request);
-        return ResponseEntity.ok(NotificationPreferencesResponseFactory.createFromEntity(updated));
+
+        return CustomResponse.successOf(
+                NotificationPreferencesResponseFactory.createFromEntity(updated));
     }
 
     @PostMapping("/push-subscription")
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<Void> updatePushSubscription(
+    public CustomResponse<Void> updatePushSubscription(
             @RequestBody PushSubscriptionRequest request,
             Authentication authentication) {
 
         UUID userId = SecurityUtils.getCurrentUserId(authentication);
         preferencesService.updatePushSubscription(userId, request.endpoint, request.keys);
-        return ResponseEntity.ok().build();
+
+        return CustomResponse.SUCCESS;
     }
 
     public static class PushSubscriptionRequest {

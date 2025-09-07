@@ -26,6 +26,7 @@ public class UserService {
     private final UserEntityToUserMapper userEntityToUserMapper =
             UserEntityToUserMapper.initialize();
 
+    @Transactional(readOnly = true)
     public User getCurrentUser() {
 
         Optional<String> userId = getCurrentIdFromJwt();
@@ -34,6 +35,7 @@ public class UserService {
                 .orElse(null);
     }
 
+    @Transactional(readOnly = true)
     public User getUser(
             UUID userId) {
 
@@ -49,14 +51,14 @@ public class UserService {
 
     @Transactional
     public User updateCurrentUser(UpdateProfileRequest updateProfileRequest) {
-        
+
         Optional<String> userId = getCurrentIdFromJwt();
         if (userId.isEmpty()) {
             throw new IllegalStateException("No authenticated user found");
         }
 
         UserEntity userEntity = findUserEntityById(UUID.fromString(userId.get()));
-        
+
         // Update only non-null fields from the request
         if (updateProfileRequest.getFirstName() != null) {
             if (updateProfileRequest.getFirstName().trim().isEmpty()) {
@@ -64,22 +66,22 @@ public class UserService {
             }
             userEntity.setFirstName(updateProfileRequest.getFirstName().trim());
         }
-        
+
         if (updateProfileRequest.getLastName() != null) {
             if (updateProfileRequest.getLastName().trim().isEmpty()) {
                 throw new IllegalArgumentException("Last name cannot be empty");
             }
             userEntity.setLastName(updateProfileRequest.getLastName().trim());
         }
-        
+
         if (updateProfileRequest.getBio() != null) {
             userEntity.setBio(updateProfileRequest.getBio().trim());
         }
-        
+
         if (updateProfileRequest.getProfilePictureUrl() != null) {
             userEntity.setProfilePictureUrl(updateProfileRequest.getProfilePictureUrl().trim());
         }
-        
+
         if (updateProfileRequest.getUsername() != null) {
             if (updateProfileRequest.getUsername().trim().isEmpty()) {
                 throw new IllegalArgumentException("Username cannot be empty");
@@ -91,6 +93,7 @@ public class UserService {
         return userEntityToUserMapper.map(savedUserEntity);
     }
 
+    @Transactional(readOnly = true)
     public UserEntity findUserEntityById(
             UUID userId) {
 

@@ -10,7 +10,6 @@ import org.readtogether.security.model.request.TokenRefreshRequest;
 import org.readtogether.security.service.RefreshTokenService;
 import org.readtogether.security.service.TokenService;
 import org.readtogether.user.mapper.TokenToTokenResponseMapper;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,12 +25,13 @@ public class AuthController {
             .initialize();
 
     @PostMapping("/validate-token")
-    public ResponseEntity<Void> validateToken(
+    public CustomResponse<Void> validateToken(
             @RequestParam(name = "token") String token) {
 
         log.info("Received a request to validate a token");
         tokenService.verifyAndValidate(token);
-        return ResponseEntity.ok().build();
+
+        return CustomResponse.SUCCESS;
     }
 
     @PostMapping("/refresh-token")
@@ -41,16 +41,18 @@ public class AuthController {
         log.info("Received a request to refresh a user's token");
         Token token = refreshTokenService.refreshToken(tokenRefreshRequest);
         TokenResponse tokenResponse = tokenToTokenResponseMapper.map(token);
+
         return CustomResponse.successOf(tokenResponse);
     }
 
     @GetMapping("/authenticate")
-    public ResponseEntity<UsernamePasswordAuthenticationToken> getAuthentication(
+    public CustomResponse<UsernamePasswordAuthenticationToken> getAuthentication(
             @RequestParam(name = "token") String token) {
 
         log.info("Received a request to get authentication for a token");
         UsernamePasswordAuthenticationToken authentication = tokenService.getAuthentication(token);
-        return ResponseEntity.ok(authentication);
+
+        return CustomResponse.successOf(authentication);
     }
 
 }

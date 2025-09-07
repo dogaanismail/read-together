@@ -75,6 +75,7 @@ public class FeedbackService {
         return bugReportResponseMapper.map(savedEntity);
     }
 
+    @Transactional(readOnly = true)
     public Page<FeatureRequestResponse> getFeatureRequests(
             FeatureRequestCategory category,
             FeatureRequestStatus status,
@@ -99,6 +100,7 @@ public class FeedbackService {
         return entities.map(featureRequestResponseMapper::map);
     }
 
+    @Transactional(readOnly = true)
     public Page<BugReportResponse> getBugReports(
             Pageable pageable) {
 
@@ -116,6 +118,7 @@ public class FeedbackService {
         log.info("Vote added successfully for feature request ID: {}", featureRequestId);
     }
 
+    @Transactional(readOnly = true)
     public FeedbackStatisticsResponse getFeedbackStatistics() {
 
         log.info("Retrieving feedback statistics");

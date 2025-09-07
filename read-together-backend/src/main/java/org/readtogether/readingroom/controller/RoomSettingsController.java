@@ -5,11 +5,11 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.readtogether.common.model.response.CustomResponse;
 import org.readtogether.common.utils.AuthenticationUtils;
 import org.readtogether.readingroom.model.request.UpdateRoomSettingsRequest;
 import org.readtogether.readingroom.model.response.RoomSettingsResponse;
 import org.readtogether.readingroom.service.RoomSettingsService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -27,7 +27,7 @@ public class RoomSettingsController {
     @PutMapping
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     @Operation(summary = "Update room settings (host only)")
-    public ResponseEntity<RoomSettingsResponse> updateRoomSettings(
+    public CustomResponse<RoomSettingsResponse> updateRoomSettings(
             @Parameter(description = "Room ID") @PathVariable UUID roomId,
             @Valid @RequestBody UpdateRoomSettingsRequest request,
             Authentication authentication) {
@@ -35,27 +35,29 @@ public class RoomSettingsController {
         UUID userId = AuthenticationUtils.extractUserIdFromAuth(authentication);
         RoomSettingsResponse response = roomSettingsService.updateRoomSettings(roomId, request, userId);
 
-        return ResponseEntity.ok(response);
+        return CustomResponse.successOf(response);
     }
 
     @GetMapping
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     @Operation(summary = "Get room settings")
-    public ResponseEntity<RoomSettingsResponse> getRoomSettings(
+    public CustomResponse<RoomSettingsResponse> getRoomSettings(
             @Parameter(description = "Room ID") @PathVariable UUID roomId) {
 
         RoomSettingsResponse response = roomSettingsService.getRoomSettings(roomId);
-        return ResponseEntity.ok(response);
+
+        return CustomResponse.successOf(response);
     }
 
     @PostMapping("/validate-password")
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     @Operation(summary = "Validate room password")
-    public ResponseEntity<Boolean> validateRoomPassword(
+    public CustomResponse<Boolean> validateRoomPassword(
             @Parameter(description = "Room ID") @PathVariable UUID roomId,
             @RequestBody String password) {
 
         boolean isValid = roomSettingsService.validateRoomPassword(roomId, password);
-        return ResponseEntity.ok(isValid);
+
+        return CustomResponse.successOf(isValid);
     }
 }

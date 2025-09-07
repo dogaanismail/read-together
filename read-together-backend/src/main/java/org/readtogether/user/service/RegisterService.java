@@ -9,6 +9,7 @@ import org.readtogether.user.mapper.UserEntityToUserMapper;
 import org.readtogether.user.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -19,6 +20,7 @@ public class RegisterService {
     private final UserEntityToUserMapper userEntityToUserMapper =
             UserEntityToUserMapper.initialize();
 
+    @Transactional
     public void registerUser(
             RegisterRequest registerRequest) {
 

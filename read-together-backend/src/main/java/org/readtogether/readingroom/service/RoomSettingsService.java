@@ -50,7 +50,7 @@ public class RoomSettingsService {
         return mapToResponse(savedSettings);
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public RoomSettingsResponse getRoomSettings(
             UUID roomId) {
 
@@ -88,6 +88,7 @@ public class RoomSettingsService {
         RoomSettingsResponseFactory.createResponse(savedSettings);
     }
 
+    @Transactional(readOnly = true)
     public ReadingRoomSettingsEntity getSettingsEntity(
             UUID roomId) {
 

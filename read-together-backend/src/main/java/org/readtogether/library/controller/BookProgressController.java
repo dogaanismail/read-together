@@ -2,11 +2,11 @@ package org.readtogether.library.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.readtogether.common.model.response.CustomResponse;
 import org.readtogether.common.utils.SecurityUtils;
 import org.readtogether.library.model.response.BookProgressResponse;
 import org.readtogether.library.model.request.BookProgressUpdateRequest;
 import org.readtogether.library.service.BookProgressService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +23,7 @@ public class BookProgressController {
 
     @PutMapping("/{bookId}")
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<BookProgressResponse> updateProgress(
+    public CustomResponse<BookProgressResponse> updateProgress(
             @PathVariable UUID bookId,
             @Valid @RequestBody BookProgressUpdateRequest request,
             Authentication authentication) {
@@ -31,130 +31,130 @@ public class BookProgressController {
         UUID userId = SecurityUtils.getCurrentUserId(authentication);
         BookProgressResponse response = bookProgressService.createOrUpdateProgress(userId, bookId, request);
 
-        return ResponseEntity.ok(response);
+        return CustomResponse.successOf(response);
     }
 
     @GetMapping("/{bookId}")
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<BookProgressResponse> getBookProgress(
+    public CustomResponse<BookProgressResponse> getBookProgress(
             @PathVariable UUID bookId,
             Authentication authentication) {
 
         UUID userId = SecurityUtils.getCurrentUserId(authentication);
         BookProgressResponse response = bookProgressService.getUserBookProgress(userId, bookId);
 
-        return ResponseEntity.ok(response);
+        return CustomResponse.successOf(response);
     }
 
     @GetMapping("/my-progress")
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<List<BookProgressResponse>> getUserProgress(
+    public CustomResponse<List<BookProgressResponse>> getUserProgress(
             Authentication authentication) {
 
         UUID userId = SecurityUtils.getCurrentUserId(authentication);
         List<BookProgressResponse> response = bookProgressService.getUserBookProgress(userId);
 
-        return ResponseEntity.ok(response);
+        return CustomResponse.successOf(response);
     }
 
     @GetMapping("/currently-reading")
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<List<BookProgressResponse>> getCurrentlyReadingBooks(
+    public CustomResponse<List<BookProgressResponse>> getCurrentlyReadingBooks(
             Authentication authentication) {
 
         UUID userId = SecurityUtils.getCurrentUserId(authentication);
         List<BookProgressResponse> response = bookProgressService.getCurrentlyReadingBooks(userId);
 
-        return ResponseEntity.ok(response);
+        return CustomResponse.successOf(response);
     }
 
     @GetMapping("/completed")
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<List<BookProgressResponse>> getCompletedBooks(
+    public CustomResponse<List<BookProgressResponse>> getCompletedBooks(
             Authentication authentication) {
 
         UUID userId = SecurityUtils.getCurrentUserId(authentication);
         List<BookProgressResponse> response = bookProgressService.getCompletedBooks(userId);
 
-        return ResponseEntity.ok(response);
+        return CustomResponse.successOf(response);
     }
 
     @GetMapping("/favorites")
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<List<BookProgressResponse>> getFavoriteBooks(
+    public CustomResponse<List<BookProgressResponse>> getFavoriteBooks(
             Authentication authentication) {
 
         UUID userId = SecurityUtils.getCurrentUserId(authentication);
         List<BookProgressResponse> response = bookProgressService.getFavoriteBooks(userId);
 
-        return ResponseEntity.ok(response);
+        return CustomResponse.successOf(response);
     }
 
     @GetMapping("/recent")
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<List<BookProgressResponse>> getRecentlyReadBooks(
+    public CustomResponse<List<BookProgressResponse>> getRecentlyReadBooks(
             @RequestParam(defaultValue = "30") int days,
             Authentication authentication) {
 
         UUID userId = SecurityUtils.getCurrentUserId(authentication);
         List<BookProgressResponse> response = bookProgressService.getRecentlyReadBooks(userId, days);
 
-        return ResponseEntity.ok(response);
+        return CustomResponse.successOf(response);
     }
 
     @GetMapping("/stats/reading-time")
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<Long> getTotalReadingTime(
+    public CustomResponse<Long> getTotalReadingTime(
             Authentication authentication) {
 
         UUID userId = SecurityUtils.getCurrentUserId(authentication);
         Long totalTime = bookProgressService.getTotalReadingTime(userId);
 
-        return ResponseEntity.ok(totalTime != null ? totalTime : 0L);
+        return CustomResponse.successOf(totalTime);
     }
 
     @GetMapping("/stats/completed-count")
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<Long> getCompletedBooksCount(
+    public CustomResponse<Long> getCompletedBooksCount(
             Authentication authentication) {
 
         UUID userId = SecurityUtils.getCurrentUserId(authentication);
         long count = bookProgressService.getCompletedBooksCount(userId);
 
-        return ResponseEntity.ok(count);
+        return CustomResponse.successOf(count);
     }
 
     @GetMapping("/stats/in-progress-count")
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<Long> getInProgressBooksCount(
+    public CustomResponse<Long> getInProgressBooksCount(
             Authentication authentication) {
 
         UUID userId = SecurityUtils.getCurrentUserId(authentication);
         long count = bookProgressService.getInProgressBooksCount(userId);
 
-        return ResponseEntity.ok(count);
+        return CustomResponse.successOf(count);
     }
 
     @GetMapping("/stats/average-progress")
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<Double> getAverageProgress(
+    public CustomResponse<Double> getAverageProgress(
             Authentication authentication) {
 
         UUID userId = SecurityUtils.getCurrentUserId(authentication);
         Double averageProgress = bookProgressService.getAverageProgress(userId);
 
-        return ResponseEntity.ok(averageProgress != null ? averageProgress : 0.0);
+        return CustomResponse.successOf(averageProgress);
     }
 
     @DeleteMapping("/{bookId}")
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<Void> deleteProgress(
+    public CustomResponse<Void> deleteProgress(
             @PathVariable UUID bookId,
             Authentication authentication) {
 
         UUID userId = SecurityUtils.getCurrentUserId(authentication);
         bookProgressService.deleteProgress(userId, bookId);
 
-        return ResponseEntity.noContent().build();
+        return CustomResponse.SUCCESS;
     }
 }

@@ -73,6 +73,7 @@ public class NotificationPreferencesService {
         preferencesRepository.save(preferences);
     }
 
+    @Transactional(readOnly = true)
     public boolean shouldSendEmailNotification(
             UUID userId,
             NotificationPreferenceType preferenceType) {
@@ -82,6 +83,7 @@ public class NotificationPreferencesService {
         return NotificationPreferencesUtils.shouldSendEmailNotification(preferences, preferenceType);
     }
 
+    @Transactional(readOnly = true)
     public boolean shouldSendPushNotification(
             UUID userId,
             NotificationPreferenceType preferenceType) {

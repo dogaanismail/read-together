@@ -43,6 +43,7 @@ public class PrivacySettingsService {
         return privacySettingsRepository.save(existing);
     }
 
+    @Transactional(readOnly = true)
     public boolean canAccessProfile(
             UUID targetUserId,
             UUID currentUserId,
@@ -55,6 +56,7 @@ public class PrivacySettingsService {
         return PrivacySettingsUtils.isProfileAccessible(settings, isFollowing, isOwner);
     }
 
+    @Transactional(readOnly = true)
     public boolean canSendMessage(
             UUID targetUserId,
             UUID currentUserId,
@@ -67,6 +69,7 @@ public class PrivacySettingsService {
         return PrivacySettingsUtils.canSendMessage(settings, isFollowing, isOwner);
     }
 
+    @Transactional(readOnly = true)
     public boolean shouldShowEmail(
             UUID userId) {
 
@@ -75,6 +78,7 @@ public class PrivacySettingsService {
         return settings.isShowEmail();
     }
 
+    @Transactional(readOnly = true)
     public boolean shouldShowOnlineStatus(
             UUID userId) {
 
@@ -83,6 +87,7 @@ public class PrivacySettingsService {
         return settings.isShowOnlineStatus();
     }
 
+    @Transactional(readOnly = true)
     public boolean shouldShowReadingSessions(
             UUID userId) {
 
@@ -91,6 +96,7 @@ public class PrivacySettingsService {
         return settings.isShowReadingSessions();
     }
 
+    @Transactional(readOnly = true)
     public boolean isSearchable(
             UUID userId) {
 

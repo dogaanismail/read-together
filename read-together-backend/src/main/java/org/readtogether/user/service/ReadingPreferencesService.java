@@ -43,6 +43,7 @@ public class ReadingPreferencesService {
         return readingPreferencesRepository.save(existing);
     }
 
+    @Transactional(readOnly = true)
     public double getSpeedMultiplier(
             UUID userId) {
 
@@ -51,6 +52,7 @@ public class ReadingPreferencesService {
         return ReadingPreferencesUtils.getSpeedMultiplier(preferences.getReadingSpeed());
     }
 
+    @Transactional(readOnly = true)
     public String getVideoQualityResolution(
             UUID userId) {
 
@@ -59,6 +61,7 @@ public class ReadingPreferencesService {
         return ReadingPreferencesUtils.getVideoQualityResolution(preferences.getVideoQuality());
     }
 
+    @Transactional(readOnly = true)
     public String getLanguageCode(
             UUID userId) {
 
@@ -67,6 +70,7 @@ public class ReadingPreferencesService {
         return ReadingPreferencesUtils.getLanguageCode(preferences.getDefaultLanguage());
     }
 
+    @Transactional(readOnly = true)
     public boolean shouldEnableSubtitles(
             UUID userId) {
 
@@ -75,6 +79,7 @@ public class ReadingPreferencesService {
         return preferences.isSubtitlesEnabled();
     }
 
+    @Transactional(readOnly = true)
     public boolean shouldAutoplay(
             UUID userId) {
 

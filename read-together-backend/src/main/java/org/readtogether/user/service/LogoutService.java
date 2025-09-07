@@ -5,6 +5,7 @@ import org.readtogether.security.model.request.TokenInvalidateRequest;
 import org.readtogether.security.service.InvalidTokenService;
 import org.readtogether.security.service.TokenService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Set;
 
@@ -15,6 +16,7 @@ public class LogoutService {
     private final TokenService tokenService;
     private final InvalidTokenService invalidTokenService;
 
+    @Transactional
     public void logout(
             TokenInvalidateRequest tokenInvalidateRequest) {
 

@@ -1,10 +1,10 @@
 package org.readtogether.library.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.readtogether.common.model.response.CustomResponse;
 import org.readtogether.common.utils.SecurityUtils;
 import org.readtogether.library.entity.BookSessionEntity;
 import org.readtogether.library.service.BookSessionService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +21,7 @@ public class BookSessionController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<BookSessionEntity> createBookSession(
+    public CustomResponse<BookSessionEntity> createBookSession(
             @RequestParam UUID sessionId,
             @RequestParam UUID bookId,
             @RequestParam(required = false) Integer pagesRead,
@@ -37,12 +37,12 @@ public class BookSessionController {
                 readingTimeSeconds
         );
 
-        return ResponseEntity.ok(response);
+        return CustomResponse.successOf(response);
     }
 
     @PutMapping("/{sessionId}")
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<BookSessionEntity> updateBookSession(
+    public CustomResponse<BookSessionEntity> updateBookSession(
             @PathVariable UUID sessionId,
             @RequestParam(required = false) Integer pagesRead,
             @RequestParam(required = false) Integer readingTimeSeconds,
@@ -58,105 +58,110 @@ public class BookSessionController {
                 difficultyRating,
                 comprehensionRating
         );
-        return ResponseEntity.ok(response);
+
+        return CustomResponse.successOf(response);
     }
 
     @GetMapping("/book/{bookId}")
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<List<BookSessionEntity>> getBookSessions(
+    public CustomResponse<List<BookSessionEntity>> getBookSessions(
             @PathVariable UUID bookId) {
 
         //TODO: We have to fix here, no exposing entity, have to use dto
         List<BookSessionEntity> response = bookSessionService.getBookSessions(bookId);
-        return ResponseEntity.ok(response);
+
+        return CustomResponse.successOf(response);
     }
 
     @GetMapping("/user")
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<List<BookSessionEntity>> getUserSessions(
+    public CustomResponse<List<BookSessionEntity>> getUserSessions(
             Authentication authentication) {
 
         //TODO: We have to fix here, no exposing entity, have to use dto
         UUID userId = SecurityUtils.getCurrentUserId(authentication);
         List<BookSessionEntity> response = bookSessionService.getUserSessions(userId);
 
-        return ResponseEntity.ok(response);
+        return CustomResponse.successOf(response);
     }
 
     @GetMapping("/user/book/{bookId}")
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<List<BookSessionEntity>> getUserBookSessions(
+    public CustomResponse<List<BookSessionEntity>> getUserBookSessions(
             @PathVariable UUID bookId,
             Authentication authentication) {
 
         UUID userId = SecurityUtils.getCurrentUserId(authentication);
         List<BookSessionEntity> response = bookSessionService.getUserBookSessions(userId, bookId);
 
-        return ResponseEntity.ok(response);
+        return CustomResponse.successOf(response);
     }
 
     @GetMapping("/user/recent")
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<List<BookSessionEntity>> getRecentUserSessions(
+    public CustomResponse<List<BookSessionEntity>> getRecentUserSessions(
             @RequestParam(defaultValue = "30") int days,
             @RequestHeader("User-ID") UUID userId) {
 
         //TODO: We have to fix here, no exposing entity, have to use dto
         List<BookSessionEntity> response = bookSessionService.getRecentUserSessions(userId, days);
-        return ResponseEntity.ok(response);
+
+        return CustomResponse.successOf(response);
     }
 
     @GetMapping("/stats/reading-time/{bookId}")
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<Long> getTotalReadingTimeForBook(
+    public CustomResponse<Long> getTotalReadingTimeForBook(
             @PathVariable UUID bookId,
             Authentication authentication) {
 
         UUID userId = SecurityUtils.getCurrentUserId(authentication);
         Long totalTime = bookSessionService.getTotalReadingTimeForUserBook(userId, bookId);
 
-        return ResponseEntity.ok(totalTime != null ? totalTime : 0L);
+        return CustomResponse.successOf(totalTime != null ? totalTime : 0L);
     }
 
     @GetMapping("/stats/pages-read/{bookId}")
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<Integer> getTotalPagesReadForBook(
+    public CustomResponse<Integer> getTotalPagesReadForBook(
             @PathVariable UUID bookId,
             Authentication authentication) {
 
         UUID userId = SecurityUtils.getCurrentUserId(authentication);
         Integer totalPages = bookSessionService.getTotalPagesReadForUserBook(userId, bookId);
 
-        return ResponseEntity.ok(totalPages != null ? totalPages : 0);
+        return CustomResponse.successOf(totalPages != null ? totalPages : 0);
     }
 
     @GetMapping("/stats/session-count/{bookId}")
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<Long> getSessionCountForBook(
+    public CustomResponse<Long> getSessionCountForBook(
             @PathVariable UUID bookId,
             Authentication authentication) {
 
         UUID userId = SecurityUtils.getCurrentUserId(authentication);
         long count = bookSessionService.getSessionCountForUserBook(userId, bookId);
 
-        return ResponseEntity.ok(count);
+        return CustomResponse.successOf(count);
     }
 
     @DeleteMapping("/{sessionId}")
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<Void> deleteBookSession(
+    public CustomResponse<Void> deleteBookSession(
             @PathVariable UUID sessionId) {
 
         bookSessionService.deleteBookSession(sessionId);
-        return ResponseEntity.noContent().build();
+
+        return CustomResponse.SUCCESS;
     }
 
     @GetMapping("/{sessionId}/exists")
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<Boolean> sessionExists(
+    public CustomResponse<Boolean> sessionExists(
             @PathVariable UUID sessionId) {
 
         boolean exists = bookSessionService.existsBySessionId(sessionId);
-        return ResponseEntity.ok(exists);
+
+        return CustomResponse.successOf(exists);
     }
 }

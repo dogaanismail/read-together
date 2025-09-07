@@ -2,6 +2,7 @@ package org.readtogether.session.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.readtogether.common.exception.RecordNotFoundException;
 import org.readtogether.common.utils.SecurityUtils;
 import org.readtogether.common.utils.StoragePathUtils;
 import org.readtogether.feed.service.FeedService;
@@ -83,6 +84,7 @@ public class SessionService {
                 });
     }
 
+    @Transactional
     public SessionResponse createSession(
             SessionCreateRequest request,
             MultipartFile file,
@@ -184,7 +186,7 @@ public class SessionService {
 
         UUID userId = SecurityUtils.getCurrentUserId(authentication);
         SessionEntity session = sessionRepository.findByIdAndUserId(sessionId, userId)
-                .orElseThrow(() -> new RuntimeException("Session not found"));
+                .orElseThrow(() -> new RecordNotFoundException("Session not found"));
 
         SessionUpdateUtils.applyUpdates(session, request);
 
@@ -199,7 +201,7 @@ public class SessionService {
 
         UUID userId = SecurityUtils.getCurrentUserId(authentication);
         SessionEntity session = sessionRepository.findByIdAndUserId(sessionId, userId)
-                .orElseThrow(() -> new RuntimeException("Session not found"));
+                .orElseThrow(() -> new RecordNotFoundException("Session not found"));
 
         try {
             storageService.deleteFile(session.getMediaUrl());
@@ -217,10 +219,8 @@ public class SessionService {
             UUID userId) {
 
         try {
-            updateProcessingStatus(sessionId, PROCESSING);
-
             SessionEntity session = sessionRepository.findById(sessionId)
-                    .orElseThrow(() -> new RuntimeException("Session not found"));
+                    .orElseThrow(() -> new RecordNotFoundException("Session not found"));
             notificationService.notifySessionProcessingStarted(userId, session);
 
             String fileName = StoragePathUtils.generateFileName(file.getOriginalFilename());
@@ -233,6 +233,7 @@ public class SessionService {
         }
     }
 
+    @Transactional(readOnly = true)
     public Optional<SessionResponse> getSessionById(UUID sessionId) {
 
         return sessionRepository.findById(sessionId)
@@ -251,7 +252,7 @@ public class SessionService {
             String mediaUrl) {
 
         SessionEntity session = sessionRepository.findById(sessionId)
-                .orElseThrow(() -> new RuntimeException("Session not found"));
+                .orElseThrow(() -> new RecordNotFoundException("Session not found"));
 
         session.setMediaUrl(mediaUrl);
         session.setProcessingStatus(COMPLETED);
@@ -270,7 +271,7 @@ public class SessionService {
                     session.setProcessingError(error);
                     return sessionRepository.save(session);
                 })
-                .orElseThrow(() -> new RuntimeException("Session not found"));
+                .orElseThrow(() -> new RecordNotFoundException("Session not found"));
     }
 
     private void updateProcessingStatus(

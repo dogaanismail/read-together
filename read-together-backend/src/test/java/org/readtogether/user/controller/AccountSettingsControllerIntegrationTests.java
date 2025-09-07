@@ -60,29 +60,29 @@ class AccountSettingsControllerIntegrationTests extends BaseIntegrationTest {
                         .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
                 // privacy defaults
-                .andExpect(jsonPath("$.privacy.profileVisibility").value("public"))
-                .andExpect(jsonPath("$.privacy.showEmail").value(false))
-                .andExpect(jsonPath("$.privacy.showOnlineStatus").value(true))
-                .andExpect(jsonPath("$.privacy.allowMessages").value(true))
-                .andExpect(jsonPath("$.privacy.showReadingSessions").value(true))
-                .andExpect(jsonPath("$.privacy.searchable").value(true))
+                    .andExpect(jsonPath("$.response.privacy.profileVisibility").value("public"))
+                .andExpect(jsonPath("$.response.privacy.showEmail").value(false))
+                .andExpect(jsonPath("$.response.privacy.showOnlineStatus").value(true))
+                .andExpect(jsonPath("$.response.privacy.allowMessages").value(true))
+                .andExpect(jsonPath("$.response.privacy.showReadingSessions").value(true))
+                .andExpect(jsonPath("$.response.privacy.searchable").value(true))
                 // reading defaults
-                .andExpect(jsonPath("$.reading.defaultLanguage").value("english"))
-                .andExpect(jsonPath("$.reading.readingSpeed").value("normal"))
-                .andExpect(jsonPath("$.reading.subtitlesEnabled").value(true))
-                .andExpect(jsonPath("$.reading.autoplay").value(false))
-                .andExpect(jsonPath("$.reading.quality").value("high"))
-                .andExpect(jsonPath("$.reading.fontSize").value("medium"))
-                .andExpect(jsonPath("$.reading.theme").value("light"))
+                .andExpect(jsonPath("$.response.reading.defaultLanguage").value("english"))
+                .andExpect(jsonPath("$.response.reading.readingSpeed").value("normal"))
+                .andExpect(jsonPath("$.response.reading.subtitlesEnabled").value(true))
+                .andExpect(jsonPath("$.response.reading.autoplay").value(false))
+                .andExpect(jsonPath("$.response.reading.quality").value("high"))
+                .andExpect(jsonPath("$.response.reading.fontSize").value("medium"))
+                .andExpect(jsonPath("$.response.reading.theme").value("light"))
                 // notification defaults
-                .andExpect(jsonPath("$.notifications.emailNotifications").value(true))
-                .andExpect(jsonPath("$.notifications.pushNotifications").value(true))
-                .andExpect(jsonPath("$.notifications.sessionLikes").value(true))
-                .andExpect(jsonPath("$.notifications.newFollowers").value(true))
-                .andExpect(jsonPath("$.notifications.liveStreamAlerts").value(true))
-                .andExpect(jsonPath("$.notifications.weeklyDigest").value(true))
-                .andExpect(jsonPath("$.notifications.marketingEmails").value(false))
-                .andExpect(jsonPath("$.notifications.uploadStatus").value(true));
+                .andExpect(jsonPath("$.response.notifications.emailNotifications").value(true))
+                .andExpect(jsonPath("$.response.notifications.pushNotifications").value(true))
+                .andExpect(jsonPath("$.response.notifications.sessionLikes").value(true))
+                .andExpect(jsonPath("$.response.notifications.newFollowers").value(true))
+                .andExpect(jsonPath("$.response.notifications.liveStreamAlerts").value(true))
+                .andExpect(jsonPath("$.response.notifications.weeklyDigest").value(true))
+                .andExpect(jsonPath("$.response.notifications.marketingEmails").value(false))
+                .andExpect(jsonPath("$.response.notifications.uploadStatus").value(true));
     }
 
     @Test
@@ -117,36 +117,36 @@ class AccountSettingsControllerIntegrationTests extends BaseIntegrationTest {
                         .content(objectMapper.writeValueAsString(update)))
                 .andExpect(status().isOk())
                 // privacy
-                .andExpect(jsonPath("$.privacy.profileVisibility").value("followers"))
-                .andExpect(jsonPath("$.privacy.showEmail").value(true))
-                .andExpect(jsonPath("$.privacy.showOnlineStatus").value(false))
-                .andExpect(jsonPath("$.privacy.allowMessages").value(true))
-                .andExpect(jsonPath("$.privacy.showReadingSessions").value(false))
-                .andExpect(jsonPath("$.privacy.searchable").value(false))
+                .andExpect(jsonPath("$.response.privacy.profileVisibility").value("followers"))
+                .andExpect(jsonPath("$.response.privacy.showEmail").value(true))
+                .andExpect(jsonPath("$.response.privacy.showOnlineStatus").value(false))
+                .andExpect(jsonPath("$.response.privacy.allowMessages").value(true))
+                .andExpect(jsonPath("$.response.privacy.showReadingSessions").value(false))
+                .andExpect(jsonPath("$.response.privacy.searchable").value(false))
                 // reading
-                .andExpect(jsonPath("$.reading.defaultLanguage").value("spanish"))
-                .andExpect(jsonPath("$.reading.readingSpeed").value("fast"))
-                .andExpect(jsonPath("$.reading.subtitlesEnabled").value(false))
-                .andExpect(jsonPath("$.reading.autoplay").value(true))
-                .andExpect(jsonPath("$.reading.quality").value("medium"))
-                .andExpect(jsonPath("$.reading.fontSize").value("large"))
-                .andExpect(jsonPath("$.reading.theme").value("dark"))
+                .andExpect(jsonPath("$.response.reading.defaultLanguage").value("spanish"))
+                .andExpect(jsonPath("$.response.reading.readingSpeed").value("fast"))
+                .andExpect(jsonPath("$.response.reading.subtitlesEnabled").value(false))
+                .andExpect(jsonPath("$.response.reading.autoplay").value(true))
+                .andExpect(jsonPath("$.response.reading.quality").value("medium"))
+                .andExpect(jsonPath("$.response.reading.fontSize").value("large"))
+                .andExpect(jsonPath("$.response.reading.theme").value("dark"))
                 // notifications
-                .andExpect(jsonPath("$.notifications.newFollowers").value(false))
-                .andExpect(jsonPath("$.notifications.liveStreamAlerts").value(false))
-                .andExpect(jsonPath("$.notifications.weeklyDigest").value(false))
-                .andExpect(jsonPath("$.notifications.emailAddress").value("notifications@example.com"))
-                .andExpect(jsonPath("$.notifications.pushSubscriptionEndpoint").value("https://push.example.com/sub/123"));
+                .andExpect(jsonPath("$.response.notifications.newFollowers").value(false))
+                .andExpect(jsonPath("$.response.notifications.liveStreamAlerts").value(false))
+                .andExpect(jsonPath("$.response.notifications.weeklyDigest").value(false))
+                .andExpect(jsonPath("$.response.notifications.emailAddress").value("notifications@example.com"))
+                .andExpect(jsonPath("$.response.notifications.pushSubscriptionEndpoint").value("https://push.example.com/sub/123"));
 
         // Then: GET to verify persistence
         mockMvc.perform(get("/api/v1/account-settings")
                         .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.privacy.profileVisibility").value("followers"))
-                .andExpect(jsonPath("$.reading.defaultLanguage").value("spanish"))
-                .andExpect(jsonPath("$.notifications.weeklyDigest").value(false))
-                .andExpect(jsonPath("$.notifications.marketingEmails").value(false))
-                .andExpect(jsonPath("$.notifications.uploadStatus").value(true));
+                .andExpect(jsonPath("$.response.privacy.profileVisibility").value("followers"))
+                .andExpect(jsonPath("$.response.reading.defaultLanguage").value("spanish"))
+                .andExpect(jsonPath("$.response.notifications.weeklyDigest").value(false))
+                .andExpect(jsonPath("$.response.notifications.marketingEmails").value(false))
+                .andExpect(jsonPath("$.response.notifications.uploadStatus").value(true));
     }
 
     @Test
@@ -181,20 +181,20 @@ class AccountSettingsControllerIntegrationTests extends BaseIntegrationTest {
                         .content(objectMapper.writeValueAsString(update)))
                 .andExpect(status().isOk())
                 // notifications changed
-                .andExpect(jsonPath("$.notifications.emailNotifications").value(false))
-                .andExpect(jsonPath("$.notifications.pushNotifications").value(false))
+                .andExpect(jsonPath("$.response.notifications.emailNotifications").value(false))
+                .andExpect(jsonPath("$.response.notifications.pushNotifications").value(false))
                 // privacy still default
-                .andExpect(jsonPath("$.privacy.profileVisibility").value("public"))
+                .andExpect(jsonPath("$.response.privacy.profileVisibility").value("public"))
                 // reading still defaults
-                .andExpect(jsonPath("$.reading.defaultLanguage").value("english"));
+                .andExpect(jsonPath("$.response.reading.defaultLanguage").value("english"));
 
         // Then: GET to verify modules
         mockMvc.perform(get("/api/v1/account-settings")
                         .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.notifications.uploadStatus").value(false))
-                .andExpect(jsonPath("$.privacy.showEmail").value(false))
-                .andExpect(jsonPath("$.reading.quality").value("high"));
+                .andExpect(jsonPath("$.response.notifications.uploadStatus").value(false))
+                .andExpect(jsonPath("$.response.privacy.showEmail").value(false))
+                .andExpect(jsonPath("$.response.reading.quality").value("high"));
     }
 
     @Test

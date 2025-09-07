@@ -55,13 +55,13 @@ class ReadingPreferencesControllerIntegrationTests extends BaseIntegrationTest {
         mockMvc.perform(get("/api/v1/reading-preferences")
                         .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.defaultLanguage").value("english"))
-                .andExpect(jsonPath("$.readingSpeed").value("normal"))
-                .andExpect(jsonPath("$.subtitlesEnabled").value(true))
-                .andExpect(jsonPath("$.autoplay").value(false))
-                .andExpect(jsonPath("$.quality").value("high"))
-                .andExpect(jsonPath("$.fontSize").value("medium"))
-                .andExpect(jsonPath("$.theme").value("light"));
+                .andExpect(jsonPath("$.response.defaultLanguage").value("english"))
+                .andExpect(jsonPath("$.response.readingSpeed").value("normal"))
+                .andExpect(jsonPath("$.response.subtitlesEnabled").value(true))
+                .andExpect(jsonPath("$.response.autoplay").value(false))
+                .andExpect(jsonPath("$.response.quality").value("high"))
+                .andExpect(jsonPath("$.response.fontSize").value("medium"))
+                .andExpect(jsonPath("$.response.theme").value("light"));
     }
 
     @Test
@@ -91,25 +91,25 @@ class ReadingPreferencesControllerIntegrationTests extends BaseIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(update)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.defaultLanguage").value("spanish"))
-                .andExpect(jsonPath("$.readingSpeed").value("fast"))
-                .andExpect(jsonPath("$.subtitlesEnabled").value(false))
-                .andExpect(jsonPath("$.autoplay").value(true))
-                .andExpect(jsonPath("$.quality").value("medium"))
-                .andExpect(jsonPath("$.fontSize").value("large"))
-                .andExpect(jsonPath("$.theme").value("dark"));
+                .andExpect(jsonPath("$.response.defaultLanguage").value("spanish"))
+                .andExpect(jsonPath("$.response.readingSpeed").value("fast"))
+                .andExpect(jsonPath("$.response.subtitlesEnabled").value(false))
+                .andExpect(jsonPath("$.response.autoplay").value(true))
+                .andExpect(jsonPath("$.response.quality").value("medium"))
+                .andExpect(jsonPath("$.response.fontSize").value("large"))
+                .andExpect(jsonPath("$.response.theme").value("dark"));
 
         // Then: fetch again to verify persistence
         mockMvc.perform(get("/api/v1/reading-preferences")
                         .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.defaultLanguage").value("spanish"))
-                .andExpect(jsonPath("$.readingSpeed").value("fast"))
-                .andExpect(jsonPath("$.subtitlesEnabled").value(false))
-                .andExpect(jsonPath("$.autoplay").value(true))
-                .andExpect(jsonPath("$.quality").value("medium"))
-                .andExpect(jsonPath("$.fontSize").value("large"))
-                .andExpect(jsonPath("$.theme").value("dark"));
+                .andExpect(jsonPath("$.response.defaultLanguage").value("spanish"))
+                .andExpect(jsonPath("$.response.readingSpeed").value("fast"))
+                .andExpect(jsonPath("$.response.subtitlesEnabled").value(false))
+                .andExpect(jsonPath("$.response.autoplay").value(true))
+                .andExpect(jsonPath("$.response.quality").value("medium"))
+                .andExpect(jsonPath("$.response.fontSize").value("large"))
+                .andExpect(jsonPath("$.response.theme").value("dark"));
     }
 
     @Test
@@ -143,11 +143,11 @@ class ReadingPreferencesControllerIntegrationTests extends BaseIntegrationTest {
         mockMvc.perform(get("/api/v1/reading-preferences/playback-settings")
                         .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.speedMultiplier").value(1.25))
-                .andExpect(jsonPath("$.videoQuality").value("720p"))
-                .andExpect(jsonPath("$.languageCode").value("es"))
-                .andExpect(jsonPath("$.subtitlesEnabled").value(false))
-                .andExpect(jsonPath("$.autoplay").value(true));
+                .andExpect(jsonPath("$.response.speedMultiplier").value(1.25))
+                .andExpect(jsonPath("$.response.videoQuality").value("720p"))
+                .andExpect(jsonPath("$.response.languageCode").value("es"))
+                .andExpect(jsonPath("$.response.subtitlesEnabled").value(false))
+                .andExpect(jsonPath("$.response.autoplay").value(true));
     }
 
     @Test
@@ -182,4 +182,3 @@ class ReadingPreferencesControllerIntegrationTests extends BaseIntegrationTest {
     }
 
 }
-

@@ -1,8 +1,9 @@
 package org.readtogether.user.exception;
 
+import org.readtogether.common.exception.BadRequestException;
 import java.io.Serial;
 
-public class UserStatusNotValidException extends RuntimeException {
+public class UserStatusNotValidException extends BadRequestException {
 
     @Serial
     private static final long serialVersionUID = 3440177088502218750L;

@@ -28,6 +28,7 @@ public class AccountSettingsService {
     private final ReadingPreferencesService readingPreferencesService;
     private final NotificationPreferencesService notificationPreferencesService;
 
+    @Transactional(readOnly = true)
     public AccountSettingsResponse getAllSettings(
             UUID userId) {
 

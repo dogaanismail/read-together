@@ -1,8 +1,9 @@
 package org.readtogether.security.exception;
 
+import org.readtogether.common.exception.ConflictException;
 import java.io.Serial;
 
-public class TokenAlreadyInvalidatedException extends RuntimeException {
+public class TokenAlreadyInvalidatedException extends ConflictException {
 
     @Serial
     private static final long serialVersionUID = -3922046409563858698L;

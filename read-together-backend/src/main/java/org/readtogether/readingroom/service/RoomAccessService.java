@@ -19,6 +19,7 @@ public class RoomAccessService {
     private final RoomInvitationService invitationService;
     private final RoomSettingsService settingsService;
 
+    @Transactional(readOnly = true)
     public InvitationResponse getRoomFromInvitation(
             String token) {
 

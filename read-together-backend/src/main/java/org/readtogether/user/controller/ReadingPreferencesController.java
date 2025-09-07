@@ -1,13 +1,13 @@
 package org.readtogether.user.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.readtogether.common.model.response.CustomResponse;
 import org.readtogether.common.utils.SecurityUtils;
 import org.readtogether.user.entity.ReadingPreferencesEntity;
 import org.readtogether.user.factory.ReadingPreferencesResponseFactory;
 import org.readtogether.user.model.response.ReadingPreferencesResponse;
 import org.readtogether.user.model.request.ReadingPreferencesUpdateRequest;
 import org.readtogether.user.service.ReadingPreferencesService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -24,28 +24,30 @@ public class ReadingPreferencesController {
 
     @GetMapping
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<ReadingPreferencesResponse> getReadingPreferences(
+    public CustomResponse<ReadingPreferencesResponse> getReadingPreferences(
             Authentication authentication) {
 
         UUID userId = SecurityUtils.getCurrentUserId(authentication);
         ReadingPreferencesEntity preferences = readingPreferencesService.getUserReadingPreferences(userId);
-        return ResponseEntity.ok(ReadingPreferencesResponseFactory.createFromEntity(preferences));
+
+        return CustomResponse.successOf(ReadingPreferencesResponseFactory.createFromEntity(preferences));
     }
 
     @PutMapping
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<ReadingPreferencesResponse> updateReadingPreferences(
+    public CustomResponse<ReadingPreferencesResponse> updateReadingPreferences(
             @RequestBody ReadingPreferencesUpdateRequest request,
             Authentication authentication) {
 
         UUID userId = SecurityUtils.getCurrentUserId(authentication);
         ReadingPreferencesEntity updated = readingPreferencesService.updateReadingPreferences(userId, request);
-        return ResponseEntity.ok(ReadingPreferencesResponseFactory.createFromEntity(updated));
+
+        return CustomResponse.successOf(ReadingPreferencesResponseFactory.createFromEntity(updated));
     }
 
     @GetMapping("/playback-settings")
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<Map<String, Object>> getPlaybackSettings(
+    public CustomResponse<Map<String, Object>> getPlaybackSettings(
             Authentication authentication) {
 
         UUID userId = SecurityUtils.getCurrentUserId(authentication);
@@ -58,6 +60,6 @@ public class ReadingPreferencesController {
                 "autoplay", readingPreferencesService.shouldAutoplay(userId)
         );
 
-        return ResponseEntity.ok(playbackSettings);
+        return CustomResponse.successOf(playbackSettings);
     }
 }

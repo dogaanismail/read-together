@@ -16,7 +16,6 @@ import org.readtogether.user.service.LogoutService;
 import org.readtogether.user.service.RegisterService;
 import org.readtogether.user.service.UserLoginService;
 import org.readtogether.user.service.UserService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -43,6 +42,7 @@ public class UserController {
 
         log.info("Received a request to register a new user");
         registerService.registerUser(registerRequest);
+
         return CustomResponse.SUCCESS;
     }
 
@@ -67,6 +67,7 @@ public class UserController {
 
         log.info("Received a request to logout a user");
         logoutService.logout(tokenInvalidateRequest);
+
         return CustomResponse.SUCCESS;
     }
 
@@ -77,6 +78,7 @@ public class UserController {
 
         log.info("Received a request to get user by id, {}", userId);
         User user = userService.getUser(userId);
+
         return CustomResponse.successOf(user);
     }
 
@@ -86,6 +88,7 @@ public class UserController {
 
         log.info("Received a request to get current user");
         User user = userService.getCurrentUser();
+
         return CustomResponse.successOf(user);
     }
 
@@ -96,6 +99,7 @@ public class UserController {
 
         log.info("Received a request to update current user profile");
         User updatedUser = userService.updateCurrentUser(updateProfileRequest);
+
         return CustomResponse.successOf(updatedUser);
     }
 

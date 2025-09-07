@@ -1,8 +1,9 @@
 package org.readtogether.chat.exception;
 
+import org.readtogether.common.exception.BadRequestException;
 import java.io.Serial;
 
-public class InvalidFileException extends RuntimeException {
+public class InvalidFileException extends BadRequestException {
 
     @Serial
     private static final long serialVersionUID = -3952215105519401568L;

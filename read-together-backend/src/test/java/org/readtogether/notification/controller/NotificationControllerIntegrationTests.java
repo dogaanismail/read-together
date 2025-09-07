@@ -42,9 +42,9 @@ class NotificationControllerIntegrationTests extends BaseIntegrationTest {
                         .param("size", "10")
                         .header("Authorization", "Bearer " + accessToken))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.content").isArray())
-                .andExpect(jsonPath("$.pageable.pageNumber").value(0))
-                .andExpect(jsonPath("$.pageable.pageSize").value(10));
+                .andExpect(jsonPath("$.response.content").isArray())
+                .andExpect(jsonPath("$.response.pageable.pageNumber").value(0))
+                .andExpect(jsonPath("$.response.pageable.pageSize").value(10));
     }
 
     @Test
@@ -64,7 +64,7 @@ class NotificationControllerIntegrationTests extends BaseIntegrationTest {
         mockMvc.perform(get("/api/v1/notifications/unread-count")
                         .header("Authorization", "Bearer " + accessToken))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.unreadCount").isNumber());
+                .andExpect(jsonPath("$.response.unreadCount").isNumber());
     }
 
     @Test
@@ -103,7 +103,7 @@ class NotificationControllerIntegrationTests extends BaseIntegrationTest {
         mockMvc.perform(put("/api/v1/notifications/mark-all-read")
                         .header("Authorization", "Bearer " + accessToken))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.markedAsRead").isNumber());
+                .andExpect(jsonPath("$.response.markedAsRead").isNumber());
     }
 
     @Test
@@ -207,9 +207,9 @@ class NotificationControllerIntegrationTests extends BaseIntegrationTest {
                         .param("size", "5")
                         .header("Authorization", "Bearer " + accessToken))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.content").isArray())
-                .andExpect(jsonPath("$.pageable.pageNumber").value(1))
-                .andExpect(jsonPath("$.pageable.pageSize").value(5));
+                .andExpect(jsonPath("$.response.content").isArray())
+                .andExpect(jsonPath("$.response.pageable.pageNumber").value(1))
+                .andExpect(jsonPath("$.response.pageable.pageSize").value(5));
     }
 
     private String registerAndLoginUser
