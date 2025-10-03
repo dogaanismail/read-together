@@ -58,15 +58,15 @@ class RoomSettingsControllerIntegrationTests extends BaseIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updateRequest)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.isPublic").value(false))
-                .andExpect(jsonPath("$.requireHostApproval").value(true))
-                .andExpect(jsonPath("$.enableChat").value(true))
-                .andExpect(jsonPath("$.enableAudio").value(true))
-                .andExpect(jsonPath("$.enableVideo").value(false))
-                .andExpect(jsonPath("$.autoMuteNewJoiners").value(true))
-                .andExpect(jsonPath("$.roomVolume").value(70))
-                .andExpect(jsonPath("$.enableLiveTranscription").value(true))
-                .andExpect(jsonPath("$.transcriptionLanguage").value("SPANISH"));
+                .andExpect(jsonPath("$.response.isPublic").value(false))
+                .andExpect(jsonPath("$.response.requireHostApproval").value(true))
+                .andExpect(jsonPath("$.response.enableChat").value(true))
+                .andExpect(jsonPath("$.response.enableAudio").value(true))
+                .andExpect(jsonPath("$.response.enableVideo").value(false))
+                .andExpect(jsonPath("$.response.autoMuteNewJoiners").value(true))
+                .andExpect(jsonPath("$.response.roomVolume").value(70))
+                .andExpect(jsonPath("$.response.enableLiveTranscription").value(true))
+                .andExpect(jsonPath("$.response.transcriptionLanguage").value("SPANISH"));
     }
 
     @Test
@@ -92,15 +92,15 @@ class RoomSettingsControllerIntegrationTests extends BaseIntegrationTest {
         mockMvc.perform(get("/api/v1/rooms/" + roomId + "/settings")
                         .header("Authorization", "Bearer " + hostToken))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.isPublic").value(true))
-                .andExpect(jsonPath("$.requireHostApproval").value(false))
-                .andExpect(jsonPath("$.enableChat").value(true))
-                .andExpect(jsonPath("$.enableAudio").value(true))
-                .andExpect(jsonPath("$.enableVideo").value(true))
-                .andExpect(jsonPath("$.autoMuteNewJoiners").value(true))
-                .andExpect(jsonPath("$.roomVolume").value(80))
-                .andExpect(jsonPath("$.enableLiveTranscription").value(false))
-                .andExpect(jsonPath("$.transcriptionLanguage").value("ENGLISH"));
+                .andExpect(jsonPath("$.response.isPublic").value(true))
+                .andExpect(jsonPath("$.response.requireHostApproval").value(false))
+                .andExpect(jsonPath("$.response.enableChat").value(true))
+                .andExpect(jsonPath("$.response.enableAudio").value(true))
+                .andExpect(jsonPath("$.response.enableVideo").value(true))
+                .andExpect(jsonPath("$.response.autoMuteNewJoiners").value(true))
+                .andExpect(jsonPath("$.response.roomVolume").value(80))
+                .andExpect(jsonPath("$.response.enableLiveTranscription").value(false))
+                .andExpect(jsonPath("$.response.transcriptionLanguage").value("ENGLISH"));
     }
 
     @Test
@@ -137,7 +137,7 @@ class RoomSettingsControllerIntegrationTests extends BaseIntegrationTest {
                         .contentType(MediaType.TEXT_PLAIN)
                         .content("newPassword123"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$").value(true));
+                .andExpect(jsonPath("$.response").value(true));
 
         // And: validate incorrect password
         mockMvc.perform(post("/api/v1/rooms/" + roomId + "/settings/validate-password")
@@ -145,7 +145,7 @@ class RoomSettingsControllerIntegrationTests extends BaseIntegrationTest {
                         .contentType(MediaType.TEXT_PLAIN)
                         .content("wrongPassword"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$").value(false));
+                .andExpect(jsonPath("$.response").value(false));
     }
 
     @Test
@@ -185,8 +185,8 @@ class RoomSettingsControllerIntegrationTests extends BaseIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(updateRequest)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.isPublic").value(false))
-                .andExpect(jsonPath("$.requireHostApproval").value(true));
+                .andExpect(jsonPath("$.response.isPublic").value(false))
+                .andExpect(jsonPath("$.response.requireHostApproval").value(true));
 
         // Then: verify password can be validated
         mockMvc.perform(post("/api/v1/rooms/" + roomId + "/settings/validate-password")
@@ -194,7 +194,7 @@ class RoomSettingsControllerIntegrationTests extends BaseIntegrationTest {
                         .contentType(MediaType.TEXT_PLAIN)
                         .content("securePassword123"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$").value(true));
+                .andExpect(jsonPath("$.response").value(true));
     }
 
     @Test
@@ -221,8 +221,7 @@ class RoomSettingsControllerIntegrationTests extends BaseIntegrationTest {
                 email,
                 password,
                 firstName,
-                lastName,
-                "user"
+                lastName
         );
 
         mockMvc.perform(post("/api/v1/users/register")

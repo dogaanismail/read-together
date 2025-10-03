@@ -3,6 +3,7 @@ package org.readtogether.library.controller;
 import jakarta.annotation.security.PermitAll;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.readtogether.common.model.response.CustomResponse;
 import org.readtogether.common.utils.SecurityUtils;
 import org.readtogether.library.model.request.BookCreateRequest;
 import org.readtogether.library.model.response.BookResponse;
@@ -11,7 +12,6 @@ import org.readtogether.library.service.BookService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -28,21 +28,20 @@ public class BookController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<BookResponse> createBook(
+    @ResponseStatus(HttpStatus.CREATED)
+    public CustomResponse<BookResponse> createBook(
             @Valid @RequestBody BookCreateRequest request,
             Authentication authentication) {
 
         UUID userId = SecurityUtils.getCurrentUserId(authentication);
         BookResponse response = bookService.createBook(request, userId);
 
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(response);
+        return CustomResponse.createdOf(response);
     }
 
     @PutMapping("/{bookId}")
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<BookResponse> updateBook(
+    public CustomResponse<BookResponse> updateBook(
             @PathVariable UUID bookId,
             @Valid @RequestBody BookUpdateRequest request,
             Authentication authentication) {
@@ -50,112 +49,112 @@ public class BookController {
         UUID userId = SecurityUtils.getCurrentUserId(authentication);
         BookResponse response = bookService.updateBook(bookId, request, userId);
 
-        return ResponseEntity.ok(response);
+        return CustomResponse.successOf(response);
     }
 
     @DeleteMapping("/{bookId}")
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<Void> deleteBook(
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteBook(
             @PathVariable UUID bookId,
             Authentication authentication) {
 
         UUID userId = SecurityUtils.getCurrentUserId(authentication);
         bookService.deleteBook(bookId, userId);
-
-        return ResponseEntity
-                .noContent()
-                .build();
     }
 
     @GetMapping("/{bookId}")
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<BookResponse> getBook(
+    public CustomResponse<BookResponse> getBook(
             @PathVariable UUID bookId,
             Authentication authentication) {
 
         UUID userId = SecurityUtils.getCurrentUserId(authentication);
         BookResponse response = bookService.getBookById(bookId, userId);
 
-        return ResponseEntity.ok(response);
+        return CustomResponse.successOf(response);
     }
 
     @GetMapping("/my-books")
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<List<BookResponse>> getUserBooks(
+    public CustomResponse<List<BookResponse>> getUserBooks(
             Authentication authentication) {
 
         UUID userId = SecurityUtils.getCurrentUserId(authentication);
         List<BookResponse> response = bookService.getUserBooks(userId);
 
-        return ResponseEntity.ok(response);
+        return CustomResponse.successOf(response);
     }
 
     @GetMapping("/my-books/paged")
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<Page<BookResponse>> getUserBooksPaged(
+    public CustomResponse<Page<BookResponse>> getUserBooksPaged(
             Authentication authentication,
             Pageable pageable) {
 
         UUID userId = SecurityUtils.getCurrentUserId(authentication);
         Page<BookResponse> response = bookService.getUserBooks(userId, pageable);
 
-        return ResponseEntity.ok(response);
+        return CustomResponse.successOf(response);
     }
 
     @GetMapping("/public")
     @PermitAll
-    public ResponseEntity<List<BookResponse>> getPublicBooks() {
+    public CustomResponse<List<BookResponse>> getPublicBooks() {
 
         List<BookResponse> response = bookService.getPublicBooks();
-        return ResponseEntity.ok(response);
+
+        return CustomResponse.successOf(response);
     }
 
     @GetMapping("/public/paged")
     @PermitAll
-    public ResponseEntity<Page<BookResponse>> getPublicBooksPaged(
+    public CustomResponse<Page<BookResponse>> getPublicBooksPaged(
             Pageable pageable) {
 
         Page<BookResponse> response = bookService.getPublicBooks(pageable);
-        return ResponseEntity.ok(response);
+
+        return CustomResponse.successOf(response);
     }
 
     @GetMapping("/search/my-books")
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<List<BookResponse>> searchUserBooks(
+    public CustomResponse<List<BookResponse>> searchUserBooks(
             @RequestParam String query,
             Authentication authentication) {
 
         UUID userId = SecurityUtils.getCurrentUserId(authentication);
         List<BookResponse> response = bookService.searchUserBooks(userId, query);
 
-        return ResponseEntity.ok(response);
+        return CustomResponse.successOf(response);
     }
 
     @GetMapping("/search/public")
     @PermitAll
-    public ResponseEntity<List<BookResponse>> searchPublicBooks(
+    public CustomResponse<List<BookResponse>> searchPublicBooks(
             @RequestParam String query) {
 
         List<BookResponse> response = bookService.searchPublicBooks(query);
-        return ResponseEntity.ok(response);
+
+        return CustomResponse.successOf(response);
     }
 
     @GetMapping("/my-books/count")
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<Long> getUserBooksCount(
+    public CustomResponse<Long> getUserBooksCount(
             Authentication authentication) {
 
         UUID userId = SecurityUtils.getCurrentUserId(authentication);
         long count = bookService.getUserBooksCount(userId);
 
-        return ResponseEntity.ok(count);
+        return CustomResponse.successOf(count);
     }
 
     @GetMapping("/public/count")
     @PermitAll
-    public ResponseEntity<Long> getPublicBooksCount() {
+    public CustomResponse<Long> getPublicBooksCount() {
 
         long count = bookService.getPublicBooksCount();
-        return ResponseEntity.ok(count);
+        return CustomResponse.successOf(count);
     }
 }

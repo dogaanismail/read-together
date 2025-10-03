@@ -120,6 +120,7 @@ public class ReadingRoomService {
         return createRoomResponse(savedRoom);
     }
 
+    @Transactional(readOnly = true)
     public List<ReadingRoomResponse> getPublicWaitingRooms() {
 
         return readingRoomRepository.findPublicWaitingRooms()
@@ -128,6 +129,7 @@ public class ReadingRoomService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     public List<ReadingRoomResponse> getUserHostedRooms(
             UUID userId) {
 
@@ -137,6 +139,7 @@ public class ReadingRoomService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     public ReadingRoomResponse getRoomByCode(
             String roomCode) {
 

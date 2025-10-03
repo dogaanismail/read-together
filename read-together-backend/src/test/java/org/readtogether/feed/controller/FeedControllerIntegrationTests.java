@@ -59,10 +59,10 @@ class FeedControllerIntegrationTests extends BaseIntegrationTest {
         mockMvc.perform(get("/api/v1/feed")
                         .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.content").isArray())
-                .andExpect(jsonPath("$.totalElements").exists())
-                .andExpect(jsonPath("$.size").exists())
-                .andExpect(jsonPath("$.number").exists());
+                .andExpect(jsonPath("$.response.content").isArray())
+                .andExpect(jsonPath("$.response.totalElements").exists())
+                .andExpect(jsonPath("$.response.size").exists())
+                .andExpect(jsonPath("$.response.number").exists());
     }
 
     @Test
@@ -77,9 +77,9 @@ class FeedControllerIntegrationTests extends BaseIntegrationTest {
         mockMvc.perform(get("/api/v1/feed")
                         .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.content").isArray())
-                .andExpect(jsonPath("$.content").isEmpty())
-                .andExpect(jsonPath("$.totalElements").value(0));
+                .andExpect(jsonPath("$.response.content").isArray())
+                .andExpect(jsonPath("$.response.content").isEmpty())
+                .andExpect(jsonPath("$.response.totalElements").value(0));
     }
 
     @Test
@@ -104,7 +104,7 @@ class FeedControllerIntegrationTests extends BaseIntegrationTest {
                         .param("type", "SESSION")
                         .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.content").isArray());
+                .andExpect(jsonPath("$.response.content").isArray());
     }
 
     @Test
@@ -127,8 +127,8 @@ class FeedControllerIntegrationTests extends BaseIntegrationTest {
         mockMvc.perform(get("/api/v1/feed/trending")
                         .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.content").isArray())
-                .andExpect(jsonPath("$.totalElements").exists());
+                .andExpect(jsonPath("$.response.content").isArray())
+                .andExpect(jsonPath("$.response.totalElements").exists());
     }
 
     @Test
@@ -149,8 +149,8 @@ class FeedControllerIntegrationTests extends BaseIntegrationTest {
         mockMvc.perform(get("/api/v1/feed/user/" + targetUserId)
                         .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.content").isArray())
-                .andExpect(jsonPath("$.totalElements").exists());
+                .andExpect(jsonPath("$.response.content").isArray())
+                .andExpect(jsonPath("$.response.totalElements").exists());
     }
 
     @Test
@@ -228,8 +228,8 @@ class FeedControllerIntegrationTests extends BaseIntegrationTest {
         mockMvc.perform(get("/api/v1/feed/" + feedItem.getId() + "/comments")
                         .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.content").isArray())
-                .andExpect(jsonPath("$.totalElements").exists());
+                .andExpect(jsonPath("$.response.content").isArray())
+                .andExpect(jsonPath("$.response.totalElements").exists());
     }
 
     @Test
@@ -252,9 +252,9 @@ class FeedControllerIntegrationTests extends BaseIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(commentRequest)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").exists())
-                .andExpect(jsonPath("$.content").value(commentRequest.getContent()))
-                .andExpect(jsonPath("$.feedItemId").value(feedItem.getId().toString()));
+                .andExpect(jsonPath("$.response.id").exists())
+                .andExpect(jsonPath("$.response.content").value(commentRequest.getContent()))
+                .andExpect(jsonPath("$.response.feedItemId").value(feedItem.getId().toString()));
     }
 
     @Test
@@ -321,8 +321,7 @@ class FeedControllerIntegrationTests extends BaseIntegrationTest {
                 email,
                 password,
                 "Feed",
-                "User",
-                "user"
+                "User"
         );
 
         mockMvc.perform(post("/api/v1/users/register")

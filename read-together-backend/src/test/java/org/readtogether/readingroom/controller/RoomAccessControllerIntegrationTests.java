@@ -64,7 +64,7 @@ class RoomAccessControllerIntegrationTests extends BaseIntegrationTest {
                 .andReturn();
 
         JsonNode shareNode = objectMapper.readTree(shareResult.getResponse().getContentAsString());
-        String shareLink = shareNode.path("shareLink").asText();
+        String shareLink = shareNode.path("response").path("shareLink").asText();
 
         // Extract token from a share link (assuming format like "https://domain.com/join?token=TOKEN")
         String shareToken = shareLink.substring(shareLink.lastIndexOf("=") + 1);
@@ -73,9 +73,9 @@ class RoomAccessControllerIntegrationTests extends BaseIntegrationTest {
         mockMvc.perform(get("/api/v1/room/join")
                         .param("token", shareToken))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.readingRoomId").value(roomId))
-                .andExpect(jsonPath("$.invitationType").value("LINK_SHARE"))
-                .andExpect(jsonPath("$.invitationToken").value(shareToken));
+                .andExpect(jsonPath("$.response.readingRoomId").value(roomId))
+                .andExpect(jsonPath("$.response.invitationType").value("LINK_SHARE"))
+                .andExpect(jsonPath("$.response.invitationToken").value(shareToken));
     }
 
     @Test
@@ -126,8 +126,8 @@ class RoomAccessControllerIntegrationTests extends BaseIntegrationTest {
                         .param("token", invitationToken)
                         .header("Authorization", "Bearer " + inviteeToken))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.id").value(roomId))
-                .andExpect(jsonPath("$.currentParticipants").value(2)); // host + invitee
+                .andExpect(jsonPath("$.response.id").value(roomId))
+                .andExpect(jsonPath("$.response.currentParticipants").value(2)); // host + invitee
     }
 
     @Test
@@ -163,8 +163,8 @@ class RoomAccessControllerIntegrationTests extends BaseIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(joinRequest)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.roomCode").value(roomCode))
-                .andExpect(jsonPath("$.currentParticipants").value(2)); // host + joiner
+                .andExpect(jsonPath("$.response.roomCode").value(roomCode))
+                .andExpect(jsonPath("$.response.currentParticipants").value(2)); // host + joiner
     }
 
     @Test
@@ -213,8 +213,8 @@ class RoomAccessControllerIntegrationTests extends BaseIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(joinRequest)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.roomCode").value(roomCode))
-                .andExpect(jsonPath("$.currentParticipants").value(2)); // host + joiner
+                .andExpect(jsonPath("$.response.roomCode").value(roomCode))
+                .andExpect(jsonPath("$.response.currentParticipants").value(2));
     }
 
     @Test
@@ -236,8 +236,7 @@ class RoomAccessControllerIntegrationTests extends BaseIntegrationTest {
                 email,
                 password,
                 firstName,
-                lastName,
-                "user"
+                lastName
         );
 
         mockMvc.perform(post("/api/v1/users/register")

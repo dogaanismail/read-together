@@ -3,12 +3,13 @@ package org.readtogether.session.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.readtogether.common.exception.RecordNotFoundException;
+import org.readtogether.common.model.response.CustomResponse;
 import org.readtogether.session.model.request.SessionCreateRequest;
 import org.readtogether.session.model.response.SessionResponse;
 import org.readtogether.session.model.request.SessionUpdateRequest;
 import org.readtogether.session.service.SessionService;
 import org.springframework.data.domain.Page;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+
 import jakarta.annotation.security.PermitAll;
 
 @Slf4j
@@ -28,115 +30,104 @@ public class SessionController {
 
     @PostMapping
     @PreAuthorize("hasAuthority('USER')")
-    public CompletableFuture<ResponseEntity<SessionResponse>> createSessionAsync(
+    public CompletableFuture<CustomResponse<SessionResponse>> createSessionAsync(
             @Valid @RequestPart("session") SessionCreateRequest request,
             @RequestPart("file") MultipartFile file,
             Authentication authentication) {
 
         return sessionService.createSessionAsync(request, file, authentication)
-                .thenApply(ResponseEntity::ok)
-                .exceptionally(ex -> {
-                    log.error("Failed to create session", ex);
-                    return ResponseEntity.badRequest().build();
-                });
+                .thenApply(CustomResponse::successOf);
     }
 
     @PostMapping("/sync")
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<SessionResponse> createSessionSync(
+    public CustomResponse<SessionResponse> createSessionSync(
             @Valid @RequestPart("session") SessionCreateRequest request,
             @RequestPart("file") MultipartFile file,
             Authentication authentication) {
 
-        try {
-            SessionResponse session = sessionService.createSession(request, file, authentication);
-            return ResponseEntity.ok(session);
-        } catch (Exception e) {
-            log.error("Failed to create session synchronously", e);
-            return ResponseEntity.badRequest().build();
-        }
+        SessionResponse session = sessionService.createSession(request, file, authentication);
+
+        return CustomResponse.successOf(session);
     }
 
     @GetMapping
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<Page<SessionResponse>> getUserSessions(
+    public CustomResponse<Page<SessionResponse>> getUserSessions(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
             Authentication authentication) {
 
         Page<SessionResponse> sessions = sessionService.getUserSessions(page, size, authentication);
-        return ResponseEntity.ok(sessions);
+
+        return CustomResponse.successOf(sessions);
     }
 
     @GetMapping("/public")
     @PermitAll
-    public ResponseEntity<Page<SessionResponse>> getPublicSessions(
+    public CustomResponse<Page<SessionResponse>> getPublicSessions(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size) {
 
         Page<SessionResponse> sessions = sessionService.getPublicSessions(page, size);
-        return ResponseEntity.ok(sessions);
+
+        return CustomResponse.successOf(sessions);
     }
 
     @GetMapping("/feed")
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<Page<SessionResponse>> getFeed(
+    public CustomResponse<Page<SessionResponse>> getFeed(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size,
             @RequestParam(required = false) String mediaType,
             @RequestParam(required = false) String search) {
 
         Page<SessionResponse> sessions = sessionService.getFeed(page, size, mediaType, search);
-        return ResponseEntity.ok(sessions);
+
+        return CustomResponse.successOf(sessions);
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<SessionResponse> getSession(@PathVariable UUID id) {
+    public CustomResponse<SessionResponse> getSession(@PathVariable UUID id) {
 
         return sessionService.getSessionById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .map(CustomResponse::successOf)
+                .orElseThrow(() -> new RecordNotFoundException("Session not found: " + id));
     }
 
     @GetMapping("/my/{id}")
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<SessionResponse> getUserSession(
+    public CustomResponse<SessionResponse> getUserSession(
             @PathVariable UUID id,
             Authentication authentication) {
 
         return sessionService.getUserSession(id, authentication)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .map(CustomResponse::successOf)
+                .orElseThrow(() -> new RecordNotFoundException("Session not found for current user: " + id));
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<SessionResponse> updateSession(
+    public CustomResponse<SessionResponse> updateSession(
             @PathVariable UUID id,
             @Valid @RequestBody SessionUpdateRequest request,
             Authentication authentication) {
 
-        try {
-            SessionResponse session = sessionService.updateSession(id, request, authentication);
-            return ResponseEntity.ok(session);
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+        SessionResponse session = sessionService.updateSession(id, request, authentication);
+
+        return CustomResponse.successOf(session);
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('USER')")
-    public ResponseEntity<Void> deleteSession(
+    public CustomResponse<Void> deleteSession(
             @PathVariable UUID id,
             Authentication authentication) {
 
-        try {
-            sessionService.deleteSession(id, authentication);
-            return ResponseEntity.noContent().build();
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
+        sessionService.deleteSession(id, authentication);
+
+        return CustomResponse.SUCCESS;
     }
 
 }

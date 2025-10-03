@@ -243,6 +243,7 @@ public class NotificationService {
         log.info("Notified user {} about live stream from {}", userId, streamerUsername);
     }
 
+    @Transactional(readOnly = true)
     public Page<NotificationEntity> getUserNotifications(
             UUID userId,
             Pageable pageable) {
@@ -250,6 +251,7 @@ public class NotificationService {
         return notificationRepository.findByUserIdOrderByCreatedAtDesc(userId, pageable);
     }
 
+    @Transactional(readOnly = true)
     public long getUnreadCount(
             UUID userId) {
 

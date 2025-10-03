@@ -41,6 +41,16 @@ public class CustomResponse<T> {
                 .build();
     }
 
+    public static <T> CustomResponse<T> createdOf(
+            final T response) {
+
+        return CustomResponse.<T>builder()
+                .httpStatus(HttpStatus.CREATED)
+                .isSuccess(true)
+                .response(response)
+                .build();
+    }
+
     public static <T> CustomResponse<T> failOf(
             final T response) {
 

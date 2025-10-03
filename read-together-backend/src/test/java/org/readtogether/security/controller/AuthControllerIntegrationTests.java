@@ -201,8 +201,7 @@ class AuthControllerIntegrationTests extends BaseIntegrationTest {
                 email,
                 password,
                 "Auth",
-                "Test",
-                "user"
+                "Test"
         );
 
         mockMvc.perform(post("/api/v1/users/register")

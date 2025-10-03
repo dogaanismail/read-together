@@ -86,18 +86,21 @@ public class BookSessionService {
         return savedSession;
     }
 
+    @Transactional(readOnly = true)
     public List<BookSessionEntity> getBookSessions(
             UUID bookId) {
 
         return bookSessionRepository.findByBookIdOrderByCreatedAtDesc(bookId);
     }
 
+    @Transactional(readOnly = true)
     public List<BookSessionEntity> getUserSessions(
             UUID userId) {
 
         return bookSessionRepository.findByUserIdOrderByCreatedAtDesc(userId);
     }
 
+    @Transactional(readOnly = true)
     public List<BookSessionEntity> getUserBookSessions(
             UUID userId,
             UUID bookId) {
@@ -105,6 +108,7 @@ public class BookSessionService {
         return bookSessionRepository.findByUserIdAndBookIdOrderByCreatedAtDesc(userId, bookId);
     }
 
+    @Transactional(readOnly = true)
     public List<BookSessionEntity> getRecentUserSessions(
             UUID userId,
             int days) {
@@ -113,6 +117,7 @@ public class BookSessionService {
         return bookSessionRepository.findRecentSessionsByUserId(userId, sinceDate);
     }
 
+    @Transactional(readOnly = true)
     public Long getTotalReadingTimeForUserBook(
             UUID userId,
             UUID bookId) {
@@ -120,6 +125,7 @@ public class BookSessionService {
         return bookSessionRepository.getTotalReadingTimeForUserBook(userId, bookId);
     }
 
+    @Transactional(readOnly = true)
     public Integer getTotalPagesReadForUserBook(
             UUID userId,
             UUID bookId) {
@@ -127,6 +133,7 @@ public class BookSessionService {
         return bookSessionRepository.getTotalPagesReadForUserBook(userId, bookId);
     }
 
+    @Transactional(readOnly = true)
     public long getSessionCountForUserBook(
             UUID userId,
             UUID bookId) {
@@ -142,6 +149,7 @@ public class BookSessionService {
         log.info("Book session deleted for session: {}", sessionId);
     }
 
+    @Transactional(readOnly = true)
     public boolean existsBySessionId(
             UUID sessionId) {
 

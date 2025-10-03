@@ -1,8 +1,9 @@
 package org.readtogether.user.exception;
 
+import org.readtogether.common.exception.ConflictException;
 import java.io.Serial;
 
-public class UserAlreadyExistException extends RuntimeException {
+public class UserAlreadyExistException extends ConflictException {
 
     @Serial
     private static final long serialVersionUID = -2178948664026920647L;

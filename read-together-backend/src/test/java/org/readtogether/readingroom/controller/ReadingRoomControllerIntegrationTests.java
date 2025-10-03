@@ -37,11 +37,11 @@ class ReadingRoomControllerIntegrationTests extends BaseIntegrationTest {
         // Given: register and login
         String email = "room.creator@test.local";
         String password = "Password1!";
+
         RegisterRequest register = RequestFixtures.createRegisterRequest(email,
                 password,
                 "Room",
-                "Creator",
-                "user"
+                "Creator"
         );
 
         mockMvc.perform(post("/api/v1/users/register")
@@ -371,7 +371,13 @@ class ReadingRoomControllerIntegrationTests extends BaseIntegrationTest {
             String firstName,
             String lastName) throws Exception {
 
-        RegisterRequest register = RequestFixtures.createRegisterRequest(email, password, firstName, lastName, "user");
+        RegisterRequest register = RequestFixtures.createRegisterRequest(
+                email,
+                password,
+                firstName,
+                lastName
+        );
+
         mockMvc.perform(post("/api/v1/users/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(register)))

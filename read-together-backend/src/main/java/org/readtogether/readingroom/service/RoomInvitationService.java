@@ -115,6 +115,7 @@ public class RoomInvitationService {
         return mapToResponse(savedInvitation);
     }
 
+    @Transactional(readOnly = true)
     public List<InvitationResponse> getRoomInvitations(
             UUID roomId,
             UUID userId) {
@@ -132,6 +133,7 @@ public class RoomInvitationService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     public List<InvitationResponse> getUserPendingInvitations(
             UUID userId) {
 
@@ -146,6 +148,7 @@ public class RoomInvitationService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     public InvitationResponse getInvitationByToken(
             String invitationToken) {
 
@@ -155,6 +158,7 @@ public class RoomInvitationService {
         return mapToResponse(invitation);
     }
 
+    @Transactional(readOnly = true)
     public String generateShareLink(
             UUID roomId,
             UUID userId) {

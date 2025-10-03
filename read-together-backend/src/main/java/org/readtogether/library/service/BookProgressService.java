@@ -60,6 +60,7 @@ public class BookProgressService {
         log.info("Book progress updated from session for user: {} and book: {}", userId, bookId);
     }
 
+    @Transactional(readOnly = true)
     public BookProgressResponse getUserBookProgress(
             UUID userId,
             UUID bookId) {
@@ -70,6 +71,7 @@ public class BookProgressService {
         return BookProgressFactory.createProgressResponse(progressEntity);
     }
 
+    @Transactional(readOnly = true)
     public List<BookProgressResponse> getUserBookProgress(
             UUID userId) {
 
@@ -78,6 +80,7 @@ public class BookProgressService {
         return BookProgressFactory.createProgressResponses(progressList);
     }
 
+    @Transactional(readOnly = true)
     public List<BookProgressResponse> getCurrentlyReadingBooks(
             UUID userId) {
 
@@ -86,6 +89,7 @@ public class BookProgressService {
         return BookProgressFactory.createProgressResponses(progressList);
     }
 
+    @Transactional(readOnly = true)
     public List<BookProgressResponse> getCompletedBooks(
             UUID userId) {
 
@@ -94,6 +98,7 @@ public class BookProgressService {
         return BookProgressFactory.createProgressResponses(progressList);
     }
 
+    @Transactional(readOnly = true)
     public List<BookProgressResponse> getFavoriteBooks(
             UUID userId) {
 
@@ -102,6 +107,7 @@ public class BookProgressService {
         return BookProgressFactory.createProgressResponses(progressList);
     }
 
+    @Transactional(readOnly = true)
     public List<BookProgressResponse> getRecentlyReadBooks(
             UUID userId,
             int days) {
@@ -112,24 +118,28 @@ public class BookProgressService {
         return BookProgressFactory.createProgressResponses(progressList);
     }
 
+    @Transactional(readOnly = true)
     public Long getTotalReadingTime(
             UUID userId) {
 
         return bookProgressRepository.getTotalReadingTimeByUserId(userId);
     }
 
+    @Transactional(readOnly = true)
     public long getCompletedBooksCount(
             UUID userId) {
 
         return bookProgressRepository.countCompletedBooksByUserId(userId);
     }
 
+    @Transactional(readOnly = true)
     public long getInProgressBooksCount(
             UUID userId) {
 
         return bookProgressRepository.countInProgressBooksByUserId(userId);
     }
 
+    @Transactional(readOnly = true)
     public Double getAverageProgress(
             UUID userId) {
 

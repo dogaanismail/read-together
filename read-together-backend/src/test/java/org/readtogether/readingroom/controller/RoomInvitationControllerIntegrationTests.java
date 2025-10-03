@@ -64,14 +64,14 @@ class RoomInvitationControllerIntegrationTests extends BaseIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(inviteRequest)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$").isArray())
-                .andExpect(jsonPath("$.length()").value(2)) // 2 email invitations
-                .andExpect(jsonPath("$[0].invitationType").value("EMAIL"))
-                .andExpect(jsonPath("$[0].readingRoomId").value(roomId))
-                .andExpect(jsonPath("$[0].invitationToken").exists())
-                .andExpect(jsonPath("$[1].invitationType").value("EMAIL"))
-                .andExpect(jsonPath("$[1].readingRoomId").value(roomId))
-                .andExpect(jsonPath("$[1].invitationToken").exists());
+                .andExpect(jsonPath("$.response").isArray())
+                .andExpect(jsonPath("$.response.length()").value(2))
+                .andExpect(jsonPath("$.response[0].invitationType").value("EMAIL"))
+                .andExpect(jsonPath("$.response[0].readingRoomId").value(roomId))
+                .andExpect(jsonPath("$.response[0].invitationToken").exists())
+                .andExpect(jsonPath("$.response[1].invitationType").value("EMAIL"))
+                .andExpect(jsonPath("$.response[1].readingRoomId").value(roomId))
+                .andExpect(jsonPath("$.response[1].invitationToken").exists());
     }
 
     @Test
@@ -117,14 +117,14 @@ class RoomInvitationControllerIntegrationTests extends BaseIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(inviteRequest)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$").isArray())
-                .andExpect(jsonPath("$.length()").value(2)) // 2 direct invitations
-                .andExpect(jsonPath("$[0].invitationType").value("DIRECT_INVITE"))
-                .andExpect(jsonPath("$[0].readingRoomId").value(roomId))
-                .andExpect(jsonPath("$[0].invitationToken").exists())
-                .andExpect(jsonPath("$[1].invitationType").value("DIRECT_INVITE"))
-                .andExpect(jsonPath("$[1].readingRoomId").value(roomId))
-                .andExpect(jsonPath("$[1].invitationToken").exists());
+                .andExpect(jsonPath("$.response").isArray())
+                .andExpect(jsonPath("$.response.length()").value(2))
+                .andExpect(jsonPath("$.response[0].invitationType").value("DIRECT_INVITE"))
+                .andExpect(jsonPath("$.response[0].readingRoomId").value(roomId))
+                .andExpect(jsonPath("$.response[0].invitationToken").exists())
+                .andExpect(jsonPath("$.response[1].invitationType").value("DIRECT_INVITE"))
+                .andExpect(jsonPath("$.response[1].readingRoomId").value(roomId))
+                .andExpect(jsonPath("$.response[1].invitationToken").exists());
     }
 
     @Test
@@ -155,12 +155,12 @@ class RoomInvitationControllerIntegrationTests extends BaseIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(inviteRequest)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$").isArray())
-                .andExpect(jsonPath("$.length()").value(1)) // 1 share link invitation
-                .andExpect(jsonPath("$[0].invitationType").value("LINK_SHARE"))
-                .andExpect(jsonPath("$[0].readingRoomId").value(roomId))
-                .andExpect(jsonPath("$[0].invitationToken").exists())
-                .andExpect(jsonPath("$[0].shareLink").exists());
+                .andExpect(jsonPath("$.response").isArray())
+                .andExpect(jsonPath("$.response.length()").value(1))
+                .andExpect(jsonPath("$.response[0].invitationType").value("LINK_SHARE"))
+                .andExpect(jsonPath("$.response[0].readingRoomId").value(roomId))
+                .andExpect(jsonPath("$.response[0].invitationToken").exists())
+                .andExpect(jsonPath("$.response[0].shareLink").exists());
     }
 
     @Test
@@ -195,8 +195,8 @@ class RoomInvitationControllerIntegrationTests extends BaseIntegrationTest {
         mockMvc.perform(get("/api/v1/rooms/" + roomId + "/invitations")
                         .header("Authorization", "Bearer " + hostToken))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$").isArray())
-                .andExpect(jsonPath("$.length()").value(2)); // 2 email invitations
+                .andExpect(jsonPath("$.response").isArray())
+                .andExpect(jsonPath("$.response.length()").value(2));
     }
 
     @Test
@@ -223,8 +223,8 @@ class RoomInvitationControllerIntegrationTests extends BaseIntegrationTest {
         mockMvc.perform(post("/api/v1/rooms/" + roomId + "/invitations/share-link")
                         .header("Authorization", "Bearer " + hostToken))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.shareLink").exists())
-                .andExpect(jsonPath("$.shareLink").value(containsString("/room/join")));
+                .andExpect(jsonPath("$.response.shareLink").exists())
+                .andExpect(jsonPath("$.response.shareLink").value(containsString("/room/join")));
     }
 
     @Test
@@ -251,8 +251,7 @@ class RoomInvitationControllerIntegrationTests extends BaseIntegrationTest {
                 email,
                 password,
                 firstName,
-                lastName,
-                "user"
+                lastName
         );
 
         mockMvc.perform(post("/api/v1/users/register")

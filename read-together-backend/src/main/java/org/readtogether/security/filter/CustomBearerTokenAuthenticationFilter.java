@@ -36,17 +36,21 @@ public class CustomBearerTokenAuthenticationFilter extends OncePerRequestFilter 
         if (Token.isBearerToken(authorizationHeader)) {
             try {
                 String jwtToken = Token.getJwt(authorizationHeader);
+                tokenService.verifyAndValidate(jwtToken); // Validate token first
                 UsernamePasswordAuthenticationToken authentication = tokenService
                         .getAuthentication(jwtToken);
 
                 SecurityContextHolder
                         .getContext()
                         .setAuthentication(authentication);
+                        
+                log.debug("Successfully authenticated request with JWT token");
             } catch (Exception e) {
                 log.debug("Failed to authenticate JWT token: {}", e.getMessage());
-                // Do not set authentication in SecurityContext, let it remain null
-                // This will cause the request to be processed as unauthenticated
-                // and handled by the AuthenticationEntryPoint
+                // Clear any partial authentication
+                SecurityContextHolder.clearContext();
+                // Let the request continue without authentication
+                // The AuthenticationEntryPoint will handle unauthenticated requests
             }
         }
 

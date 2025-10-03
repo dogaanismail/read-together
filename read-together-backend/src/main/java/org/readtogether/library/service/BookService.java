@@ -67,6 +67,7 @@ public class BookService {
         log.info("Book deleted successfully with ID: {} by user: {}", bookId, userId);
     }
 
+    @Transactional(readOnly = true)
     public BookResponse getBookById(
             UUID bookId,
             UUID userId) {
@@ -75,6 +76,7 @@ public class BookService {
         return BookFactory.createBookResponse(bookEntity);
     }
 
+    @Transactional(readOnly = true)
     public List<BookResponse> getUserBooks(
             UUID userId) {
 
@@ -82,6 +84,7 @@ public class BookService {
         return BookFactory.createBookResponses(books);
     }
 
+    @Transactional(readOnly = true)
     public Page<BookResponse> getUserBooks(
             UUID userId,
             Pageable pageable) {
@@ -90,12 +93,14 @@ public class BookService {
         return books.map(BookFactory::createBookResponse);
     }
 
+    @Transactional(readOnly = true)
     public List<BookResponse> getPublicBooks() {
 
         List<BookEntity> books = bookRepository.findByIsPublicTrueOrderByCreatedAtDesc();
         return BookFactory.createBookResponses(books);
     }
 
+    @Transactional(readOnly = true)
     public Page<BookResponse> getPublicBooks(
             Pageable pageable) {
 
@@ -103,6 +108,7 @@ public class BookService {
         return books.map(BookFactory::createBookResponse);
     }
 
+    @Transactional(readOnly = true)
     public List<BookResponse> searchUserBooks(
             UUID userId,
             String searchTerm) {
@@ -111,6 +117,7 @@ public class BookService {
         return BookFactory.createBookResponses(books);
     }
 
+    @Transactional(readOnly = true)
     public List<BookResponse> searchPublicBooks(
             String searchTerm) {
 
@@ -118,16 +125,19 @@ public class BookService {
         return BookFactory.createBookResponses(books);
     }
 
+    @Transactional(readOnly = true)
     public long getUserBooksCount(
             UUID userId) {
 
         return bookRepository.countByAddedByUserId(userId);
     }
 
+    @Transactional(readOnly = true)
     public long getPublicBooksCount() {
 
         return bookRepository.countPublicBooks();
     }
+
 
     private BookEntity findBookByIdAndUserId(
             UUID bookId,

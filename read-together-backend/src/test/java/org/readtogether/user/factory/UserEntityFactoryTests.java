@@ -45,7 +45,6 @@ class UserEntityFactoryTests {
         assertThat(result.getEmail()).isEqualTo("newadmin@example.com");
         assertThat(result.getFirstName()).isEqualTo("New");
         assertThat(result.getLastName()).isEqualTo("Admin");
-        assertThat(result.getUserType()).isEqualTo(UserType.ADMIN);
     }
 
     @Test
@@ -62,38 +61,6 @@ class UserEntityFactoryTests {
         // Then
         assertThat(result).isNotNull();
         assertThat(result.getUserType()).isEqualTo(UserType.USER);
-    }
-
-    @Test
-    @DisplayName("Should handle case insensitive admin role")
-    void shouldHandleCaseInsensitiveAdminRole() {
-        // Given
-        RegisterRequest request = RequestFixtures.createRegisterRequest(
-                "admin@example.com", "Admin", "User", "ADMIN"
-        );
-
-        // When
-        UserEntity result = UserEntityFactory.getUserEntityByRegisterRequest(request);
-
-        // Then
-        assertThat(result).isNotNull();
-        assertThat(result.getUserType()).isEqualTo(UserType.ADMIN);
-    }
-
-    @Test
-    @DisplayName("Should handle mixed case admin role")
-    void shouldHandleMixedCaseAdminRole() {
-        // Given
-        RegisterRequest request = RequestFixtures.createRegisterRequest(
-                "admin@example.com", "Admin", "User", "Admin"
-        );
-
-        // When
-        UserEntity result = UserEntityFactory.getUserEntityByRegisterRequest(request);
-
-        // Then
-        assertThat(result).isNotNull();
-        assertThat(result.getUserType()).isEqualTo(UserType.ADMIN);
     }
 
     @Test
@@ -133,7 +100,10 @@ class UserEntityFactoryTests {
     void shouldHandleSpecialCharactersInNames() {
         // Given
         RegisterRequest request = RequestFixtures.createRegisterRequest(
-                "jose@example.com", "José", "García-López", "user"
+                "jose@example.com",
+                "password",
+                "José",
+                "García-López"
         );
 
         // When
@@ -152,9 +122,9 @@ class UserEntityFactoryTests {
         // Given
         RegisterRequest request = RequestFixtures.createRegisterRequest(
                 "longname@example.com",
+                "password1",
                 "VeryLongFirstNameThatExceedsNormalLength",
-                "VeryLongLastNameThatAlsoExceedsNormalLength",
-                "user"
+                "VeryLongLastNameThatAlsoExceedsNormalLength"
         );
 
         // When

@@ -1,0 +1,118 @@
+plugins {
+    id 'java'
+    id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'org.readtogether'
+version = '1.0-SNAPSHOT'
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:2025.0.0"
+        mavenBom "org.springframework.boot:spring-boot-dependencies:3.5.0"
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Backend application dependency for embedded mode
+    testImplementation project(':read-together-backend')
+    
+    // Cucumber BDD framework
+    testImplementation 'io.cucumber:cucumber-java:7.19.0'
+    testImplementation 'io.cucumber:cucumber-junit-platform-engine:7.19.0'
+    
+    // JUnit 5 Platform
+    testImplementation 'org.junit.platform:junit-platform-suite:1.10.1'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.1'
+    
+    // RestAssured for API testing
+    testImplementation 'io.rest-assured:rest-assured:5.4.0'
+    testImplementation 'io.rest-assured:json-path:5.4.0'
+    testImplementation 'io.rest-assured:json-schema-validator:5.4.0'
+    
+    // Testcontainers for database
+    testImplementation 'org.testcontainers:testcontainers:1.19.3'
+    testImplementation 'org.testcontainers:postgresql:1.19.3'
+    testImplementation 'org.testcontainers:junit-jupiter:1.19.3'
+    
+    // Spring Boot Test support for embedded mode (version managed by BOM)
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    
+    // JSON processing
+    testImplementation 'com.fasterxml.jackson.core:jackson-databind:2.16.1'
+    testImplementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.16.1'
+    
+    // Utility libraries
+    testImplementation 'org.apache.commons:commons-lang3:3.18.0'
+    testImplementation 'org.awaitility:awaitility:4.2.0'
+    
+    // AssertJ for fluent assertions
+    testImplementation 'org.assertj:assertj-core:3.25.1'
+    
+    // Optional: WireMock for external service mocking (updated to fix CVE-2023-44487)
+    testImplementation 'org.wiremock:wiremock:3.9.1'
+    
+    // PostgreSQL driver
+    testImplementation 'org.postgresql:postgresql:42.7.7'
+    
+    // Lombok for cleaner code
+    compileOnly 'org.projectlombok:lombok:1.18.30'
+    testCompileOnly 'org.projectlombok:lombok:1.18.30'
+    annotationProcessor 'org.projectlombok:lombok:1.18.30'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+test {
+    useJUnitPlatform()
+    
+    // Configure system properties for test execution
+    systemProperty 'cucumber.junit-platform.naming-strategy', 'long'
+    systemProperty 'cucumber.plugin', 'pretty,html:build/reports/cucumber.html,json:build/reports/cucumber.json'
+    
+    // Environment configuration
+    systemProperty 'E2E_BASE_URL', System.getProperty('E2E_BASE_URL', 'http://localhost:7031')
+    systemProperty 'E2E_MODE', System.getProperty('E2E_MODE', 'embedded')
+    systemProperty 'E2E_DEBUG', System.getProperty('E2E_DEBUG', 'false')
+    
+    // Test execution configuration
+    testLogging {
+        events 'passed', 'skipped', 'failed'
+        exceptionFormat 'full'
+    }
+    
+    // Parallel execution disabled for stable test execution
+    maxParallelForks = 1
+}
+
+// Task to run tests in local mode (assumes backend is running)
+tasks.register('testLocal', Test) {
+    useJUnitPlatform()
+    systemProperty 'E2E_MODE', 'local'
+    systemProperty 'E2E_BASE_URL', 'http://localhost:7031'
+}
+
+// Task to run tests in embedded mode (uses Testcontainers)
+tasks.register('testEmbedded', Test) {
+    useJUnitPlatform()
+    systemProperty 'E2E_MODE', 'embedded'
+}
+
+// Task to generate Cucumber reports
+tasks.register('cucumberReport') {
+    dependsOn test
+    doLast {
+        println "Cucumber reports generated:"
+        println "  HTML: ${project.layout.buildDirectory.get()}/reports/cucumber.html"
+        println "  JSON: ${project.layout.buildDirectory.get()}/reports/cucumber.json"
+    }
+}

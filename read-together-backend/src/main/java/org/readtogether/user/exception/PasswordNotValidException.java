@@ -1,8 +1,9 @@
 package org.readtogether.user.exception;
 
+import org.readtogether.common.exception.BadRequestException;
 import java.io.Serial;
 
-public class PasswordNotValidException extends RuntimeException {
+public class PasswordNotValidException extends BadRequestException {
 
     @Serial
     private static final long serialVersionUID = 7389659106153108528L;

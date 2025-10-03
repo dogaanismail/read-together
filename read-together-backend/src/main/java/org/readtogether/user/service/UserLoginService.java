@@ -10,6 +10,7 @@ import org.readtogether.user.exception.UserNotFoundException;
 import org.readtogether.user.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -21,6 +22,7 @@ public class UserLoginService {
     private final PasswordEncoder passwordEncoder;
     private final TokenService tokenService;
 
+    @Transactional
     public Token login(
             LoginRequest loginRequest) {
 

@@ -9,6 +9,7 @@ import org.readtogether.user.model.User;
 import org.readtogether.security.model.request.TokenInvalidateRequest;
 import org.readtogether.user.model.request.LoginRequest;
 import org.readtogether.user.model.request.RegisterRequest;
+import org.readtogether.user.model.request.UpdateProfileRequest;
 import org.readtogether.security.model.response.TokenResponse;
 import org.readtogether.user.mapper.TokenToTokenResponseMapper;
 import org.readtogether.user.service.LogoutService;
@@ -35,15 +36,18 @@ public class UserController {
             .initialize();
 
     @PostMapping("/register")
+    @PreAuthorize("permitAll()")
     public CustomResponse<Void> register(
             @RequestBody @Validated RegisterRequest registerRequest) {
 
         log.info("Received a request to register a new user");
         registerService.registerUser(registerRequest);
+
         return CustomResponse.SUCCESS;
     }
 
     @PostMapping("/login")
+    @PreAuthorize("permitAll()")
     public CustomResponse<TokenResponse> login(
             @RequestBody @Valid LoginRequest loginRequest) {
 
@@ -57,11 +61,13 @@ public class UserController {
     }
 
     @PostMapping("/logout")
+    @PreAuthorize("hasAuthority('USER')")
     public CustomResponse<Void> logout(
             @RequestBody @Valid TokenInvalidateRequest tokenInvalidateRequest) {
 
         log.info("Received a request to logout a user");
         logoutService.logout(tokenInvalidateRequest);
+
         return CustomResponse.SUCCESS;
     }
 
@@ -72,6 +78,7 @@ public class UserController {
 
         log.info("Received a request to get user by id, {}", userId);
         User user = userService.getUser(userId);
+
         return CustomResponse.successOf(user);
     }
 
@@ -81,7 +88,19 @@ public class UserController {
 
         log.info("Received a request to get current user");
         User user = userService.getCurrentUser();
+
         return CustomResponse.successOf(user);
+    }
+
+    @PutMapping("/current-user")
+    @PreAuthorize("hasAuthority('USER')")
+    public CustomResponse<User> updateCurrentUser(
+            @RequestBody @Valid UpdateProfileRequest updateProfileRequest) {
+
+        log.info("Received a request to update current user profile");
+        User updatedUser = userService.updateCurrentUser(updateProfileRequest);
+
+        return CustomResponse.successOf(updatedUser);
     }
 
 }
