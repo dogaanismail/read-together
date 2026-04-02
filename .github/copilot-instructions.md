@@ -6,9 +6,9 @@ Always reference these instructions first and fallback to search or bash command
 ## Working Effectively
 
 ### Essential Environment Setup
-Set Java 21 environment variables first - CRITICAL for backend operations:
+Set Java 25 environment variables first - CRITICAL for backend operations:
 ```bash
-export JAVA_HOME=/usr/lib/jvm/temurin-21-jdk-amd64
+export JAVA_HOME=/usr/lib/jvm/temurin-25-jdk-amd64
 export PATH=$JAVA_HOME/bin:$PATH
 ```
 
@@ -35,7 +35,7 @@ npm run build && npm run preview  # Serves production build on http://localhost:
 **Backend Server:**
 ```bash
 # REQUIRES PostgreSQL database setup - see Database Requirements below
-export JAVA_HOME=/usr/lib/jvm/temurin-21-jdk-amd64
+export JAVA_HOME=/usr/lib/jvm/temurin-25-jdk-amd64
 export PATH=$JAVA_HOME/bin:$PATH
 ./gradlew :read-together-backend:bootRun --no-daemon  # Runs on port 5006
 ```
@@ -58,7 +58,7 @@ The backend requires a PostgreSQL database to run. Without it, the backend will 
    - Access http://localhost:8080 to see the application UI
 
 2. **Backend Development Workflow:**
-   - Set Java 21 environment variables
+   - Set Java 25 environment variables
    - Run `./gradlew :read-together-backend:build --no-daemon` (3 minutes)
    - Run `./gradlew :read-together-backend:test --no-daemon` (20 seconds)
    - Attempt to run backend (will fail without database - this is expected)
@@ -78,7 +78,7 @@ The backend requires a PostgreSQL database to run. Without it, the backend will 
 ## Project Structure
 
 ### Backend (`read-together-backend/`)
-- **Framework**: Spring Boot 3.x with Java 21
+- **Framework**: Spring Boot 3.x with Java 25
 - **Build Tool**: Gradle with wrapper
 - **Database**: PostgreSQL + Redis
 - **Key Features**: JWT authentication, WebSocket, AWS S3 integration
@@ -111,7 +111,7 @@ The backend requires a PostgreSQL database to run. Without it, the backend will 
 
 ### Backend Issues  
 - **Database connection failures**: Expected without PostgreSQL setup
-- **Java version errors**: Ensure Java 21 is set with `JAVA_HOME` and `PATH`
+- **Java version errors**: Ensure Java 25 is set with `JAVA_HOME` and `PATH`
 - **Gradle daemon issues**: Use `--no-daemon` flag for consistency
 
 ## Integration and APIs
@@ -141,7 +141,7 @@ npm run preview  # Preview production build
 ```
 
 ## Always Follow These Rules
-- **Set Java 21 environment** before any backend operations
+- **Set Java 25 environment** before any backend operations
 - **Wait for npm install to complete** before frontend operations (10+ minutes)
 - **Use appropriate timeouts** for all build commands - don't cancel early
 - **Test actual functionality** after making changes - don't just build and stop

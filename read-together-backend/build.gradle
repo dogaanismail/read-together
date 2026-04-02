@@ -56,7 +56,7 @@ dependencies {
     implementation project(':read-together-db-migration-changelog')
 
     // AWS SDK for S3 and Cloud Storage - Simplified approach
-    implementation platform('software.amazon.awssdk:bom:2.20.26')
+    implementation platform('software.amazon.awssdk:bom:2.34.0')
     implementation 'software.amazon.awssdk:s3'
     implementation 'software.amazon.awssdk:auth'
     implementation 'software.amazon.awssdk:regions'
@@ -81,7 +81,7 @@ dependencies {
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
+        languageVersion = JavaLanguageVersion.of(25)
     }
 }
 
