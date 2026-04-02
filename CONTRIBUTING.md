@@ -3,7 +3,7 @@
 Thanks for your interest in improving Read Together. Contributions are welcome and appreciated.
 
 ## Development setup
-- Java 21 (set JAVA_HOME)
+- Java 25 (set JAVA_HOME)
 - Node.js 18+ and npm
 - Docker (for local PostgreSQL)
 
@@ -16,7 +16,7 @@ docker compose up -d
 
 ### Backend
 ```bash
-export JAVA_HOME=/usr/lib/jvm/temurin-21-jdk-amd64
+export JAVA_HOME=/usr/lib/jvm/temurin-25-jdk-amd64
 export PATH="$JAVA_HOME/bin:$PATH"
 
 ./gradlew :read-together-backend:build --no-daemon
@@ -32,7 +32,7 @@ npm run dev
 ```
 
 ## Coding guidelines
-- Backend: Spring Boot 3, Java 21. Keep modules cohesive (user, security, readingroom, chat, session, common). Prefer explicit validations and clear DTOs.
+- Backend: Spring Boot 3, Java 25. Keep modules cohesive (user, security, readingroom, chat, session, common). Prefer explicit validations and clear DTOs.
 - Frontend: React + TS. Favor functional components, hooks, and accessible UI. Tailwind and shadcn-ui for styling.
 - Write minimal tests for new behavior when feasible. Keep PRs focused and small.
 
@@ -48,7 +48,7 @@ If you find a security vulnerability, please open a private discussion or email 
 A compassionate, open-source platform that helps people who stutter practice reading together in supportive virtual rooms. Read Together offers live reading rooms with audio/video, real‑time chat, personal libraries, progress tracking, and gentle gamification to encourage consistent practice.
 
 - Frontend: React 18 + TypeScript (Vite, Tailwind, shadcn-ui)
-- Backend: Spring Boot 3 (Java 21), PostgreSQL, Liquibase, WebSocket, OpenAPI
+- Backend: Spring Boot 3 (Java 25), PostgreSQL, Liquibase, WebSocket, OpenAPI
 - Infra: Docker (PostgreSQL dev), AWS S3 optional for media storage
 
 
@@ -84,7 +84,7 @@ Note: Some older docs reference DB port 5434. The current code and docker-compos
 
 ## Quick start (local)
 Prerequisites:
-- Java 21 (ensure JAVA_HOME is set)
+- Java 25 (ensure JAVA_HOME is set)
 - Node.js 18+ and npm
 - Docker (optional but recommended for local PostgreSQL)
 
@@ -100,8 +100,8 @@ This starts Postgres on localhost:5433 with db/read-together-app-db and user/pas
 2) Backend – build, test, run
 
 ```bash
-# set Java 21 (adapt path for your OS)
-export JAVA_HOME=/usr/lib/jvm/temurin-21-jdk-amd64
+# set Java 25 (adapt path for your OS)
+export JAVA_HOME=/usr/lib/jvm/temurin-25-jdk-amd64
 export PATH="$JAVA_HOME/bin:$PATH"
 
 # from repo root

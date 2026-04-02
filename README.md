@@ -28,7 +28,7 @@ Additional highlights:
 
 
 ## Tech stack
-- Backend: Spring Boot 3 (Java 21), JPA, Liquibase, WebSocket, OpenAPI, Feign
+- Backend: Spring Boot 3 (Java 25), JPA, Liquibase, WebSocket, OpenAPI, Feign
 - Database: PostgreSQL (dev via Docker), optional AWS S3 for media
 - Frontend: React 18 + TypeScript, Vite, Tailwind CSS, shadcn-ui, Radix
 - State/data: React Query; charts: Recharts; mobile with Capacitor
@@ -48,7 +48,7 @@ Note: If you see older docs mentioning port 5434 for PostgreSQL, the current con
 ## Quick start (local development)
 
 Prerequisites:
-- Java 21 (set JAVA_HOME)
+- Java 25 (set JAVA_HOME)
 - Node.js 18+ and npm
 - Docker (optional but recommended for local PostgreSQL)
 
@@ -64,8 +64,8 @@ This starts PostgreSQL on localhost:5433 with database read-together-app-db and 
 2) Backend — build, test, run
 
 ```bash
-# set Java 21 (example path; adjust for your OS)
-export JAVA_HOME=/usr/lib/jvm/temurin-21-jdk-amd64
+# set Java 25 (example path; adjust for your OS)
+export JAVA_HOME=/usr/lib/jvm/temurin-25-jdk-amd64
 export PATH="$JAVA_HOME/bin:$PATH"
 
 # from repo root
